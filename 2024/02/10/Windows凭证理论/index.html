@@ -1,0 +1,1330 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="域，内网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Active Directory的利用">
+<meta property="og:url" content="https://c47sh4rk.github.io/2024/02/10/Windows%E5%87%AD%E8%AF%81%E7%90%86%E8%AE%BA/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="域，内网">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/image-20240205163744422.png">
+<meta property="og:image" content="https://raven-medicine.com/uploads/images/gallery/2023-05/scaled-1680-/btGeORh36mKZ29c7-image.png">
+<meta property="og:image" content="https://raven-medicine.com/uploads/images/gallery/2023-05/scaled-1680-/12rDfK7qSlpTPea0-image.png">
+<meta property="og:image" content="https://raven-medicine.com/uploads/images/gallery/2023-05/scaled-1680-/zXD6IsmFE7Y3rvKX-image.png">
+<meta property="og:image" content="https://raven-medicine.com/uploads/images/gallery/2023-05/scaled-1680-/3tqptp4QEbARp5xM-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/dXMwnLjeOrXOeEPV-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/zHJ63dyw3joZFn7a-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/OxWNNsJGkPGBJEEz-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/KsEWnSQRuKJiTpJq-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/TUVN01FJShwACT8X-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/NtleQGIKBQJKu2Ef-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/VlYOZSotxTwlKUfP-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/59HSDz7fSxZJRJKa-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/T8mFulvd9xQXaauC-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/RBIhrw2lk8eYr49H-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/st6xXEgAyg6aFv1z-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/X37fzk30wTSP2NQa-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/eNxrEXgiaXRcrArf-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/dv1ZqKGKSu8oaRxT-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/agNLdhl59GXagQhg-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/kCpMc0MLaDlIcBhT-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/g5j2dCToK0763Lon-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/zaxjDAkfkMnVD0nv-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/6ezkr0wBGhVGQL6t-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/PWgt1m95WL3GxrgV-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/tZ40LlRfNcMpHLoQ-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/qMaGkBS2UIQTWG40-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/k56RwP9qjBnYG5i3-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/eHbHZkcG1eA3jlTr-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/HwhfvguvIelUwHIl-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/qbQzDS1ZJXxaqOo4-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/A82qEKwatb53rbQu-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/QLBk4nOTBghAXHI7-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/xVwNhcOJTSkWd2zi-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/kfbk0gCicfIZwTkv-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/fPhImCnOduisi33y-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/Ue8NhXYTiz1BU12w-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/5jwlvvkQk7167Hlq-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/jpMJNgYHiBi9jlQk-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/o5o0WVQpJHak5fIE-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/WSDmMaF9O5PXUedU-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/SZL5Od34lhCLrEYp-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/JLjVpj6K8bzW1UQd-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/ZaciAH4AolMYkGMw-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/G1yexRwUyTy8KpZb-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/MDuY7wYyc2IJ1Rb3-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/KRwL6fE0TVSrFJz3-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/XgP4k7V7l4MSLUb6-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/FgMWP6p9ofvnsL7A-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/2VUMLAnjJYR7r4ck-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/YJ6lkEcZTAS0bR47-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/3UgDrnBXk5IJy8zc-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/cJElYIDOZeDxynPg-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/3C67VyO2QvsfpolW-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/5NWOE5SClNSDHigl-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/WF9mA2mMFGsv0yXg-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/Qvg2HrEA7YHyHhTR-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/JnsejAnQZ86t2FDv-WxNimage.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/RVj7grWywJU46Rom-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/uUop4KpWdxs6VjSJ-dmWimage.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/RrYkP0MPtKbG2ciM-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/H8CcTE0LUxWNdsC9-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/b1i8avM2gYlvjkMB-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/tFkxYHr7vvZ8UDTJ-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/uV8euuIaySfnNBSn-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/L5CyeSwieqxKryJr-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/JfDpjjMoX2bl5bIe-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/lhbRE19QYJBafpog-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/DTKCEfZ9m13LLRo1-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/kxhDgHOcCFkDuZT0-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/oWvMgQyADG5ps42L-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/IVpRquck7vE65Pgk-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/WAtRbvHwPangCayQ-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/uHTXLl1YkJ6dxSZk-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/Aq2vGVh61IFzAF7p-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/xmob5HpQYpMinxmT-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/tMZcOg9KvWfQq8WP-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/iifjTNSxyOxv4jnp-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/qtHrb2l7MLVYReKg-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/qCg7wOgB0pANUO8Z-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/O70ps8s67Fi0whbb-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/LepqaworT57wPnVV-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/4UE8CELvIXIQikQY-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/uHCKhOBLIxubbaqV-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/wfKY1ylbvSI4dDTb-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/0KDd5Bt6u5u6vMej-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/11vfYsMRQXEcRIfB-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/GMlGjNi2VmXfV5bi-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/qjnHOIipnb3OsnEu-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/ef2N0jJFkhhjkpZU-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/2jJu9rC4ViA1AfeL-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/u5z0upvv7RkG77Fe-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/jfeYCQvxvhUywzdx-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/dKBmTAsLfeqKUZv4-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/dsWFC98OgxCwaRCD-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/Iye9koeSKz1rPTPx-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/zmzWu5G8MFJW0mfj-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/Qp2zKUG2qSs9QNhk-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/jEXMwUdfy1VTHKsd-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/b1hoRPm2FZi9ICgm-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/9RaO0B8zbWzR5kUT-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/bFSpeXVEcUUQJX75-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/mXQj2mLrrsYnFV8B-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/U0wa1ZE0lgLCZ93l-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/MyfPX5xXnkkrPhDd-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/jI2CkzIYBf7bGOZP-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/VrmcuQHtckJsnknx-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/HMS318Ou9VfZgerM-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/BFHkgSJunkUwAfmS-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/Wcb3rDAR1AK3B99J-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/X6xiH77d3lWLyOww-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/ks7VTDnM7EmIVHkt-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/BEXzQVVaFu6nPpyQ-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/PiPOczMaUKeewBR8-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/DWcjlqWIdXXrcPrU-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/i6hTx0IYDyzuSxST-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/HdhTjSG8zvFf0a0f-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/Pa8fWvsdfmyowkOI-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/i7z4queQBSFOWhzu-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/Jgnxs6LMlUYPVQsq-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/NhmmReZLIq9v7ChD-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/n6njyctkdRQyouNB-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/1Aga8XjY78KHtuYa-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/uhtY6g6oMlmWQ3dK-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/3Hq4gG7EN6sx3O3s-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/NJMUhNZJd8ZURmIt-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/S67E1w5sh1DN8EgI-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/PZDs0Omr7Lj6M6WA-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/D7vmZydfmbZ1OfbQ-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/EmMio6bmYavaJ3lO-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/xp8V4g0jHQXlRGPr-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/gjIuxc4iAT6q2pqL-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/E7TNOmqICupgDmVD-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/H1ZyA4sq0rEO01jA-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/vEwihfS7zYcCWrn1-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/j3MlBwCZLp6p9Dbw-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/i8Zt7hEviHjSFgna-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/moYentOKoUXY3azT-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/nej5fZu90BYVN0UV-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/llUnLQr5okN9IOcK-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/aTv1iApduTlpmtG1-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/VPxW683nY4KjT1YL-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/kt1A1QMrjJoDY9uq-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/mdAWgS51eJLaPx0o-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/hT9Y9xmeEMuKF6j4-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/sSHOnh66xLoderWO-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/PqQo90YY3q0DU0xG-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/XulDfI5UR8EABYxg-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/Ome4zFXqFd7GaEBF-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/A6sjXcU6NKLvIi7w-image.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/IJJUYnrLv0zaLU7x-l3Zimage.png">
+<meta property="og:image" content="https://c47sh4rk.github.io/assets/s8kRMjKd4H5vZuAo-xYVimage.png">
+<meta property="article:published_time" content="2024-02-10T01:58:20.000Z">
+<meta property="article:modified_time" content="2024-02-05T08:59:33.769Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="内网">
+<meta property="article:tag" content="privite">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://c47sh4rk.github.io/assets/image-20240205163744422.png">
+  
+  
+  
+  <title>Active Directory的利用 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Active Directory的利用"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-10 09:58" pubdate>
+          2024年2月10日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          24k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          200 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Active Directory的利用</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="NTLM-认证"><a href="#NTLM-认证" class="headerlink" title="NTLM 认证"></a>NTLM 认证</h1><p>在之前的内容中，我们接触到了多种类型的凭证，包括了明文密码、NTLM 哈希、AES 256 密钥、NetNTLM 等。掌握明文密码显然是一项优势，然而，我们不是总能获得明文密码的，更多时候我们会得到 NTLM 哈希。如果用户设置了强密码，我们就无法破解 NTLM 哈希并快速恢复明文密码，但幸运的是，与许多其他类型的哈希不同，我们可以通过多种方式利用 NTLM 哈希进而实现认证。 </p>
+<h3 id="NTLM"><a href="#NTLM" class="headerlink" title="NTLM"></a><strong>NTLM</strong></h3><p>我们之前讨论过了 Kerberos 身份认证，它是 NTLM 身份认证的后继者。Kerberos 认证是基于票据的，而 NTLM 认证则是基于<strong>质询响应</strong>的机制。NTLM 是一套 Microsoft 安全协议，用于验证用户身份并确保其活动的完整性和机密性，当客户端通过 IP 地址向服务器进行身份认证时所使用。虽然 Kerberos 协议是当今 AD 的默认身份认证协议，NTLM 认证仍被支持，一些应用程序仍然偏好 NTLM 身份认证，而且如果 Kerberos 在某些情况下无法对用户进行身份认证时，NTLM 将作为备份。</p>
+<p>NTLM 身份认证协议由多个步骤组成，下面将对其进行深入说明。</p>
+<p>1：用户访问客户端电脑，提供<strong>域名</strong>、<strong>用户名</strong>、<strong>密码</strong>。客户端计算出密码的哈希并将明文用户名发送到服务器。</p>
+<p>2：服务器生成一个称为<strong>挑战</strong>的随机数，并将其发送回客户端。</p>
+<p>3：客户端用用户密码的哈希对挑战进行加密，并将结果 (<strong>响应</strong>) 返回给服务器。</p>
+<p>4：<strong>服务器</strong>向<strong>域控制器</strong>发送<strong>用户名</strong>、<strong>挑战</strong>和<strong>响应</strong></p>
+<p>5：域控制器根据用户密码查找哈希，它比较加密的挑战。</p>
+<p>6：服务器将响应发送回客户端，认证成功</p>
+<p><img src="/./assets/image-20240205163744422.png" srcset="/img/loading.gif" lazyload alt="image-20240205163744422"></p>
+<h1 id="SAM-安全账户管理器"><a href="#SAM-安全账户管理器" class="headerlink" title="SAM 安全账户管理器"></a>SAM 安全账户管理器</h1><p>安全帐户管理器 (SAM) 数据库以 NTLM 哈希格式存储本地 Windows 凭证。在本地登录期间，用户输入密码后，本地安全机构 (LSA) 通过根据存储在 SAM 中的数据验证凭证来验证登录尝试。当输入的密码的哈希与 SAM 中的 NTLM 哈希匹配时，登录成功。当我们在主机上得到了提升特权，我们就可以通过多种方式从 SAM 中提取凭证。在域环境中，本地帐户的凭证对我们来说可能看起来不那么令人兴奋。但是，考虑到密码重用的可能性，如果我们获得主机上本地管理员帐户的 NTLM 哈希或明文密码，域用户可能会在另一台主机上重用该凭证。一个实际生活中的例子可以是，某服务器管理员同时管理 2 个 SQL 数据库服务器，为了方便记忆，于是给这 2 台服务器设置了相同的本地管理员密码。</p>
+<p>至于从 SAM 中导出哈希，我们有多种方法，分别如下。</p>
+<h3 id="通过工具在线导出"><a href="#通过工具在线导出" class="headerlink" title="通过工具在线导出"></a><strong>通过工具在线导出</strong></h3><p>我们可以借助诸如 mimikatz 之类的工具在线导出 SAM 中的凭证，十分方便。我们需要获得一个受害主机的 SYSTEM 会话。</p>
+<h5 id="mimikatz"><a href="#mimikatz" class="headerlink" title="mimikatz"></a><strong>mimikatz</strong></h5><p>考虑到 Cobalt Strike 自带了 Mimikatz 的命令，我们可以直接使用内置的 mimikatz 导出 SAM 中的凭证。命令为 <strong>mimikatz lsadump::sam</strong></p>
+<p>不出所料，我们得到的都是本地帐号</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/btGeORh36mKZ29c7-image.png"><img src="https://raven-medicine.com/uploads/images/gallery/2023-05/scaled-1680-/btGeORh36mKZ29c7-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="C2-内置命令"><a href="#C2-内置命令" class="headerlink" title="C2 内置命令"></a><strong>C2 内置命令</strong></h5><p>导出 SAM 数据库中的凭证并不是 mimikatz 的独有功能，因此诸多 C2 也集成了导出 SAM 的内置命令，在 Cobalt Strike 中，也有这样的一个单独命令的存在，使用 <strong>hashdump</strong> 命令即可。</p>
+<p>输出十分简洁明了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/12rDfK7qSlpTPea0-image.png"><img src="https://raven-medicine.com/uploads/images/gallery/2023-05/scaled-1680-/12rDfK7qSlpTPea0-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="Impacket-远程导出"><a href="#Impacket-远程导出" class="headerlink" title="Impacket 远程导出"></a><strong>Impacket 远程导出</strong></h5><p>Impacket 中的 secretdump.py 脚本可以在提供凭证后远程导出 SAM 中的凭证，通过<strong>远程注册表</strong>的方法。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/zXD6IsmFE7Y3rvKX-image.png"><img src="https://raven-medicine.com/uploads/images/gallery/2023-05/scaled-1680-/zXD6IsmFE7Y3rvKX-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h3 id="离线导出"><a href="#离线导出" class="headerlink" title="离线导出"></a><strong>离线导出</strong></h3><p>使用 mimikatz 之类的工具在线导出固然很方便，我们也可以将相关文件复制或导出，然后进行离线解析从而获得之中的凭证。</p>
+<h5 id="注册表复制"><a href="#注册表复制" class="headerlink" title="注册表复制"></a><strong>注册表复制</strong></h5><p>分别从注册表 HKLM\SAM 和 HKTM\SYSTEM 的位置拷贝 SAM 数据库和 SYSTEM。</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs gauss">reg <span class="hljs-keyword">save</span> HKLM\<span class="hljs-keyword">SYSTEM</span> C:\Windows\Tasks\<span class="hljs-keyword">SYSTEM</span><br>reg <span class="hljs-keyword">save</span> HKLM\SAM C:\Windows\Tasks\SAM<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/3tqptp4QEbARp5xM-image.png"><img src="https://raven-medicine.com/uploads/images/gallery/2023-05/scaled-1680-/3tqptp4QEbARp5xM-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/dXMwnLjeOrXOeEPV-image.png"><img src="/./assets/dXMwnLjeOrXOeEPV-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/zHJ63dyw3joZFn7a-image.png"><img src="/./assets/zHJ63dyw3joZFn7a-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>为什么导出的是 SAM 与 SYSTEM 呢？SAM 用于存储本地账户的凭证，而SYSTEM 包含了用于解密 SAM 与 LSA 机密 (稍后会说) 的信息。</p>
+<p>在这之后，我们可以通过多种工具来解密，例如 mimikatz，impacket 等。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/OxWNNsJGkPGBJEEz-image.png"><img src="/./assets/OxWNNsJGkPGBJEEz-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="拷贝-SAM-数据库文件"><a href="#拷贝-SAM-数据库文件" class="headerlink" title="拷贝 SAM 数据库文件"></a><strong>拷贝 SAM 数据库文件</strong></h5><p>SAM 数据库的文件地址是 <strong>C:\Windows\System32\config\SAM</strong>，对应的 SYSTEM 则也在同目录下。我们是否可以直接复制&#x2F;下载该文件，然后通过工具来解密呢？</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/KsEWnSQRuKJiTpJq-image.png"><img src="/./assets/KsEWnSQRuKJiTpJq-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>实际上是不可行的，因为该文件被锁定了，无法对其进行读和写。但我们可以通过<strong>卷影复制</strong>实现。在提升特权的命令行中，使用 <strong>wmic</strong> 创建一个新的卷影并且指定来源磁盘，这样可以创建一个 C 盘的快照。我们可以用 <strong>vssadmin</strong> 命令来验证我们的操作。接着，我们可以从影拷贝中拷贝出 SAM 数据库 以及 SYSTEM 文件。之后用工具来解密 SAM 数据库。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">wmic shadowcopy <span class="hljs-keyword">call</span> <span class="hljs-keyword">create</span> Volume<span class="hljs-operator">=</span><span class="hljs-string">&#x27;C:\&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/TUVN01FJShwACT8X-image.png"><img src="/./assets/TUVN01FJShwACT8X-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>列举当前的所有卷影拷贝：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">vssadmin list shadows</span><br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/NtleQGIKBQJKu2Ef-image.png"><img src="/./assets/NtleQGIKBQJKu2Ef-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>可被复制与下载的 <strong>SAM</strong> 与 <strong>SYSTEM</strong> 在如下位置：</p>
+<figure class="highlight moonscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs moonscript">\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\Config\SAM<br>\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\Config\SYSTEM<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/VlYOZSotxTwlKUfP-image.png"><img src="/./assets/VlYOZSotxTwlKUfP-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h1 id="LSA-机密"><a href="#LSA-机密" class="headerlink" title="LSA 机密"></a>LSA 机密</h1><p>LSA，即 <strong>Local Security Authority</strong>，<strong>本地安全机构</strong>，是 Microsoft Windows 操作系统中安全子系统的核心组件。本地安全机构 (LSA) 负责管理系统的交互式登录、给用户分发安全访问令牌、实施本地安全策略等。 而LSA 机密是 Windows 中本地安全机构 (LSA) 使用的存储。</p>
+<p>LSA 的目的是管理系统的本地安全策略，根据定义，这意味着它将存储有关用户登录、用户身份验证及其 LSA 机密等的私人数据。只有 <strong>SYSTEM</strong> 权限才可以访问 LSA 机密。LSA 机密所存储系统敏感数据有<strong>用户密码</strong>、<strong>IE 密码</strong>、<strong>服务帐号密码</strong>、<strong>SQL 密码</strong>、系<strong>统账户密码</strong>、<strong>计划任务中配置的帐号密码</strong>等。</p>
+<p>提取 LSA 机密同样有多种方法，都类似于提取 SAM 中的凭证。</p>
+<h3 id="在线导出"><a href="#在线导出" class="headerlink" title="在线导出"></a><strong>在线导出</strong></h3><p>目前大部分 C2 尚未集成导出 LSA 机密的命令或功能，但我们可以依旧使用 mimikatz 或者 Impacket 导出。导出 LSA 机密的命令为 <strong>lsadump::secrets</strong></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/59HSDz7fSxZJRJKa-image.png"><img src="/./assets/59HSDz7fSxZJRJKa-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/T8mFulvd9xQXaauC-image.png"><img src="/./assets/T8mFulvd9xQXaauC-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h3 id="离线导出-1"><a href="#离线导出-1" class="headerlink" title="离线导出"></a><strong>离线导出</strong></h3><p>LSA 机密被保存在注册表的 <strong>HKEY_LOCAL_MACHINE\SECURITY\Policy\Secrets</strong> 位置，而文件则位于 <strong>C:\Windows\System32\Config\SECURITY</strong>。</p>
+<p>注册表 Hive <strong>HKLM\SECURITY</strong> 中存储了明文密码、域缓存凭证、NTLM 哈希等形式的凭证。</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs gauss">reg <span class="hljs-keyword">save</span> HKLM\<span class="hljs-keyword">SYSTEM</span> C:\Windows\Tasks\<span class="hljs-keyword">SYSTEM</span><br>reg <span class="hljs-keyword">save</span> HKLM\SECURITY C:\Windows\Tasks\SECURITY<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/RBIhrw2lk8eYr49H-image.png"><img src="/./assets/RBIhrw2lk8eYr49H-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h1 id="LSASS-本地安全机构子系统服务"><a href="#LSASS-本地安全机构子系统服务" class="headerlink" title="LSASS 本地安全机构子系统服务"></a>LSASS 本地安全机构子系统服务</h1><p>在上个小节讨论 LSA 机密的时候，提及了一下 LSA，即本地安全机构。在 Windows 上，有这么一个进程 <strong>lsass.exe</strong>，绝对是攻击者的首要攻击目标之一。虽然我们中的一些人知道可以从 lsass.exe 提取凭证，但 LSASS 本质上是什么呢，与 LSA 的联系又是什么呢？让我们先搞清楚这些。</p>
+<h3 id="名词与概念"><a href="#名词与概念" class="headerlink" title="名词与概念"></a><strong>名词与概念</strong></h3><p>本地安全机构 (LSA) 和本地安全机构子系统服务 (LSASS) 是 Windows 操作系统中处理安全和用户身份认证的密切相关组件。</p>
+<h5 id="本地安全机构"><a href="#本地安全机构" class="headerlink" title="本地安全机构"></a><strong>本地安全机构</strong></h5><p>LSA 是 Windows 操作系统的一个组件，可执行安全策略并管理用户身份认证。它为各种安全支持提供程序 (SSP) 提供框架，这些提供程序处理特定的身份验证协议，例如 NTLM、Kerberos 等。LSA 负责根据 SSP 提供的身份验证数据生成访问令牌和管理用户会话。LSA 还维护 SAM 数据库。</p>
+<h5 id="本地安全机构子系统服务"><a href="#本地安全机构子系统服务" class="headerlink" title="本地安全机构子系统服务"></a><strong>本地安全机构子系统服务</strong></h5><p>LSASS 是一个 Windows 进程 (lsass.exe)，实现了 LSA 概念并管理 SSP。它负责代表 LSA 执行安全策略和处理用户身份验证请求。LSASS 进程是 Windows 安全模型的重要组成部分，并以高权限运行，这使其成为寻求提取敏感信息（如密码或身份验证令牌）的攻击者的常见目标。</p>
+<p>总之，LSA 是 Windows 中管理用户身份认证和执行安全策略的安全组件，而 LSASS 是实现 LSA 并运行 SSP 的进程。 两者相互关联，LSASS 进程负责 LSA 组件的功能。</p>
+<h5 id="认证包-x2F-安全支持提供程序-AP-x2F-SSP"><a href="#认证包-x2F-安全支持提供程序-AP-x2F-SSP" class="headerlink" title="认证包&#x2F;安全支持提供程序 AP&#x2F;SSP"></a><strong>认证包&#x2F;安全支持提供程序 AP&#x2F;SSP</strong></h5><p>AP&#x2F;SSP 通过分析登陆数据来认证 Windows 用户，不同的 AP&#x2F;SSP 对多种登陆过程以及认证协议提供支持。AP&#x2F;SSP 以 DLL 形式存在，被 LSA 所加载和使用。常见的 AP&#x2F;SSP 有 NTLM，Kerberos，WDigest，Credman 等。</p>
+<h3 id="从-lsass-exe-进程中导出凭证"><a href="#从-lsass-exe-进程中导出凭证" class="headerlink" title="从 lsass.exe 进程中导出凭证"></a><strong>从 lsass.exe 进程中导出凭证</strong></h3><p>正因为 LSASS 用于处理用户身份认证，因此在内存中保存了凭证，而当攻击者获得提升特权后，可以从中提取出明文或哈希形式的凭证。大家所知的 Mimikatz 中的 sekurlsa::logonpasswords 正是用于从 LSASS 内存中提取凭证的命令，该命令针对多种被 Windows 所使用的 AP&#x2F;SSP，例如 Kerberos，MSV，WDigest。</p>
+<p>Cobalt Strike 自带 mimikatz 的功能，考虑到 <strong>sekurlsa::logonpasswords</strong> 的使用频率很高，也有着 <strong>logonpasswords</strong> 短命令的形式，功能是一样的。我们能看到，以下截图中的用户 (包括主机账户) 的凭证可以来源于多个 SSP，甚至存在着明文形式的密码。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/st6xXEgAyg6aFv1z-image.png"><img src="/./assets/st6xXEgAyg6aFv1z-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/X37fzk30wTSP2NQa-image.png"><img src="/./assets/X37fzk30wTSP2NQa-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>除了在线从 lsass.exe 中提取凭证，也可以将 lsass.exe 进程 (甚至整个内存) 导出成文件，让 mimikatz 等工具离线分析并提取凭证。导出的方式多种多样，使用系统内置方法的话，可以是任务管理员，导出 lsass.exe 进程。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/eNxrEXgiaXRcrArf-image.png"><img src="/./assets/eNxrEXgiaXRcrArf-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>Windows 的 system internal 中的 <strong>ProdDump</strong></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">procdump64.<span class="hljs-keyword">exe</span> -<span class="hljs-number">64</span> -accepteula -<span class="hljs-keyword">ma</span> lsass.<span class="hljs-keyword">exe</span> lsass.dmp<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/dv1ZqKGKSu8oaRxT-image.png"><img src="/./assets/dv1ZqKGKSu8oaRxT-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>将导出的文件下载到自己主机，用 <strong>pypykatz</strong> (<a target="_blank" rel="noopener" href="https://github.com/skelsec/pypykatz">https://github.com/skelsec/pypykatz</a>) 离线解析。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/agNLdhl59GXagQhg-image.png"><img src="/./assets/agNLdhl59GXagQhg-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>此外，BOF nanodump (<a target="_blank" rel="noopener" href="https://github.com/fortra/nanodump">https://github.com/fortra/nanodump</a>) 可以在进程内导出 lsass，避免了工具落入文件系统，通过反射式加载在进程内执行导出行为。而且 nanodump 支持多种特性与参数，以增强 OPSEC，甚至绕过特定的安全控制。</p>
+<p>克隆了该项目之后，导入 cna 脚本</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/kCpMc0MLaDlIcBhT-image.png"><img src="/./assets/kCpMc0MLaDlIcBhT-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>根据 Gitub 中的案例，我们通过“克隆”进程以间接地打开 <strong>lsass.exe</strong> 的句柄并导出。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/g5j2dCToK0763Lon-image.png"><img src="/./assets/g5j2dCToK0763Lon-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>总之，如今实现导出 lsass.exe 进程的工具与方法很多，我们需要尽可能以更 OPSEC 的方式去达成。</p>
+<h1 id="PPL"><a href="#PPL" class="headerlink" title="PPL"></a>PPL</h1><p>随着凭证导出被攻击者的滥用，微软也开发出了相应的防御措施，例如 PPL。对于 IT 管理员，PPL 非常容易部署，是一个 quick-win。虽然 PPL 是可以被绕过的，但还是给导出凭证的操作增添了额外的难度。我们之前说过，Windows 有 4 种完整度等级，而 PPL，则是更高级的，这意味着即便是 SYSTEM 权限也无法访问被 PPL 保护的进程，而 lsass 支持 PPL保护。我们可以在注册表的如下位置添加 RunAsPPL 从而启用 PPL。</p>
+<p><a target="_blank" rel="noopener" href="http://raven-medicine.com/uploads/images/gallery/2022-10/zaxjDAkfkMnVD0nv-image.png"><img src="/./assets/zaxjDAkfkMnVD0nv-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>对于启用了 PPL 的主机 <strong>SRV01</strong>，无论是用 nanodump 还是 mimikatz 或其他类似工具，我们都无法正常导出 lsass 进程。nanodump 的报错告诉我们，无法获得对 lsass.exe 进程的句柄，即便我们已经是 SYSTEM 特权了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/6ezkr0wBGhVGQL6t-image.png"><img src="/./assets/6ezkr0wBGhVGQL6t-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/PWgt1m95WL3GxrgV-image.png"><img src="/./assets/PWgt1m95WL3GxrgV-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>PID 748 正是 <strong>lsass.exe</strong></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/tZ40LlRfNcMpHLoQ-image.png"><img src="/./assets/tZ40LlRfNcMpHLoQ-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>那么，我们可以怎么绕过 PPL 的限制呢？具备管理员权限后，我们当然可以删除 RunAsPPL 的注册表然后重启，但这样对于提取 lsass.exe 中的凭证也无意义可言了。既然 PPL 是驱动级的，那么我们自然可以通过加载签名的驱动来反制。但是，编写这样的驱动并为其签名，并不是一个门槛很低的选项。因此，我们可以去加载存在任意代码执行的脆弱驱动，例如 <strong>RTCore64.sys</strong>。该驱动存在 <strong>CVE-2019-16098</strong> 的漏洞，因为允许用户读写任意内存、IO端口等，因此会导致高特权下的代码执行，进而可被用于绕过微软的驱动签名 (默认情况下只允许加载签名的驱动) 策略部署恶意代码。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/qMaGkBS2UIQTWG40-image.png"><img src="/./assets/qMaGkBS2UIQTWG40-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>类似的驱动还有 <strong>PROCEXP152.SYS</strong></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/k56RwP9qjBnYG5i3-image.png"><img src="/./assets/k56RwP9qjBnYG5i3-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>因此，我们可以通过加载这些脆弱的且具有签名的驱动，实现内核级的代码执行而绕过 PPL。PPLControl (<a target="_blank" rel="noopener" href="https://github.com/itm4n/PPLcontrol">https://github.com/itm4n/PPLcontrol</a>) 正是利用了脆弱的驱动从而实现 PPL 的绕过。我们需要得到 RTCore64.sys 这个驱动文件，以及编译后的 PPLcontrol.exe。</p>
+<p>一并上传到 Srv01 上，加载驱动并运行：</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">sc.exe <span class="hljs-keyword">create</span> RTCore64 <span class="hljs-built_in">type</span>= kernel <span class="hljs-keyword">start</span>= auto binPath= C:\windows\tasks\RTCore64.sys DisplayName= <span class="hljs-string">&quot;control&quot;</span><br>net <span class="hljs-keyword">start</span> RTCore64<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/eHbHZkcG1eA3jlTr-image.png"><img src="/./assets/eHbHZkcG1eA3jlTr-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>列举受保护的进程，我们发现<strong>本地安全机构</strong>也在其中。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/HwhfvguvIelUwHIl-image.png"><img src="/./assets/HwhfvguvIelUwHIl-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>记录下其 PID，然后将 PPL 保护给脱离。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/qbQzDS1ZJXxaqOo4-image.png"><img src="/./assets/qbQzDS1ZJXxaqOo4-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>这样，我们就能导出 lsass.exe 中的凭证了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/A82qEKwatb53rbQu-image.png"><img src="/./assets/A82qEKwatb53rbQu-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>恢复 LSA 的 PPL 保护，这样我们再次不能从 lsass.exe 中导出凭证了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/QLBk4nOTBghAXHI7-image.png"><img src="/./assets/QLBk4nOTBghAXHI7-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>实际上，我们甚至可以从用户态绕过 PPL。PPLDump (<a target="_blank" rel="noopener" href="https://github.com/itm4n/PPLdump">https://github.com/itm4n/PPLdump</a>) 就是这么一个工具。它利用了一个技巧，使得系统创建一个新的任意的<strong>已知 DLL</strong>。PPL 并不检查<strong>已知 DLL 的数字签名</strong>，因此从而进行了 DLL 劫持攻击并在 PPL 中实现代码执行。该工具随着去年的一次更新补丁而失效，但遇到不那么新的系统是可以尝试的。PPLmedic (<a target="_blank" rel="noopener" href="https://github.com/itm4n/PPLmedic">https://github.com/itm4n/PPLmedic</a>) 也是一款在用户态就能绕过 PPL 的工具。nanodump 都集成了这 2 个工具的功能，因此我们并不需要单独去下载和编译 它们了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/xVwNhcOJTSkWd2zi-image.png"><img src="/./assets/xVwNhcOJTSkWd2zi-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在 Srv01 上，PPLdump 的方法成功了，而 PPLmedic 却失败了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/kfbk0gCicfIZwTkv-image.png"><img src="/./assets/kfbk0gCicfIZwTkv-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h1 id="Credential-Guard-凭据保护"><a href="#Credential-Guard-凭据保护" class="headerlink" title="Credential Guard 凭据保护"></a>Credential Guard 凭据保护</h1><p><strong>Windows Defender Credential Guard 凭据保护</strong> 是一种虚拟化安全技术以防止 NTLM 哈希、Kerberos 票据、应用程序所存储的凭证的窃取进而组织。开启了凭据保护的主机，会分别有 <strong>Lsass.exe</strong> 进程以及 <strong>LsaIso.exe</strong> 进程。</p>
+<p>凭据保护使用基于虚拟化的安全性 (VBS) 来隔离机密。VBS 利用硬件虚拟化功能创建一个安全的内存区域，该区域与普通操作系统分开。要了解攻击者在处理凭据保护时面临的挑战，可以参考在一个虚拟机内运行的正常操作系统和在另一个具有单独内核的虚拟机内运行的安全进程。这些 VM 由 Hypervisor 管理。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/fPhImCnOduisi33y-image.png"><img src="/./assets/fPhImCnOduisi33y-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>即使攻击者在操作系统中获得内核级的代码执行，他们仍然需要通过攻击 Hypervisor 或安全虚拟机来实现逃逸，这就是基于虚拟化技术的安全性相关的话题了。</p>
+<p>小节开始说了，开启凭据保护的主机会有 2 个进程。LSAIso 进程将在安全虚拟机中运行，而 LSASS 和 LSAIso 可以通过高级本地过程调用 (ALPC) 进行通信。当 LSASS 进程想要保护一个秘密时，它可以调用 LSAIso 来加密它，然后将加密的秘密返回过来。理想情况下，只有 LSAIso 应该能够解密。一旦 NTLM 哈希受到保护，LSASS 进程仅持有一个隔离后的密文 (加密的 blob)。</p>
+<p><a target="_blank" rel="noopener" href="http://raven-medicine.com/uploads/images/gallery/2022-10/Ue8NhXYTiz1BU12w-image.png"><img src="/./assets/Ue8NhXYTiz1BU12w-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>如上图所示，LSAIso 进程具有 NTLM 支持。 当 LSASS 进程想要对加密的机密执行 NTLM 操作时，它可以调用 LSAIso 进程中的各种方法来执行操作。值得一提的是，LSAIso 没有网络访问权限。因此，即使 LSAIso 可以执行 NTLM 操作，LSASS 进程仍然负责执行操作前后的任何行为。例如，虽然 LSAIso 可以计算 NTLM 质询响应对，但 LSASS 负责接收和发送该对随机数。</p>
+<p>对于开启了凭据保护的主机，使用 mimikatz 读取的凭证是这样的：</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/5jwlvvkQk7167Hlq-image.png"><img src="/./assets/5jwlvvkQk7167Hlq-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在 2020 年，有个很有意思的绕过技巧。 <strong>WDigest</strong> 模块，即 <strong>wdigest.dll</strong>，具有 2 个全局变量分别是 <strong>g_IsCredGuardEnabled</strong> 和 <strong>g_fParameter_UseLogonCredential</strong>。这 2 个变量的名字就很直观，凭据保护是否启用，以及明文凭证是否应该存储在内存之中。通过将这两个变量的值进行修改，我们可以让 WDigest 误以为凭据保护未被启用，并且保存明文密码于内存之中。因此，在补丁 WDigest 之后的认证都会在内存中留下明文凭证。所以，我们需要做的是找到这 2 个变量的位置。我们可以在 <a target="_blank" rel="noopener" href="https://gist.github.com/N4kedTurtle/8238f64d18932c7184faa2d0af2f1240">https://gist.github.com/N4kedTurtle/8238f64d18932c7184faa2d0af2f1240</a> 找到一个 PoC，但是变量的偏移是<strong>硬编码</strong>的。至于如何动态地找到变量偏移，属于更加高深的内容范围，不在此展开。</p>
+<p><a target="_blank" rel="noopener" href="http://raven-medicine.com/uploads/images/gallery/2022-10/jpMJNgYHiBi9jlQk-image.png"><img src="/./assets/jpMJNgYHiBi9jlQk-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>以上方法的局限是，之后新认证的用户的凭证可以提取了，但之前的还是无法捕获。而工具 PassTheChallenge (<a target="_blank" rel="noopener" href="https://github.com/ly4k/PassTheChallenge">https://github.com/ly4k/PassTheChallenge</a>) 通过利用 LSAIso 进程的功能以及加密后的 NTLM 哈希来还原出 NTLM 哈希。背后的密码学或算法原理较为复杂，不详细展开。</p>
+<h1 id="域缓存凭证"><a href="#域缓存凭证" class="headerlink" title="域缓存凭证"></a>域缓存凭证</h1><p>当域用户曾经登陆过域主机，便会将凭证缓存下来，以防联系不上域控制器的时候也能实现本地登陆。一个实际的情景可以是，某员工携带着笔记本出差。域缓存凭证不能直接地用于认证，但是可以将其离线破解，尝试还原出明文密码。</p>
+<p>我们之前在使用 Impacket 导出 LSA 机密的时候，发现了下图所标注出来的域缓存凭证。实际上，这些缓存凭证存在于 <strong>HKLM\SECURITY</strong> 注册表 Hive。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/o5o0WVQpJHak5fIE-image.png"><img src="/./assets/o5o0WVQpJHak5fIE-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>我们还可以通过 Mimikatz 的命令 <strong>lsadump::cache</strong> 来提取。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/WSDmMaF9O5PXUedU-image.png"><img src="/./assets/WSDmMaF9O5PXUedU-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>但我们发现 mimikatz 提取出来的缓存凭证与 Impacket 提取出来的格式不同，我们需要手动将其转换成 <strong>$DCC2$&lt;迭代数&gt;#&lt;用户名&gt;#&lt;哈希&gt;</strong> 格式，然后再使用 hashcat 之类的工具离线破解。</p>
+<h1 id="DPAPI-数据保护应用接口"><a href="#DPAPI-数据保护应用接口" class="headerlink" title="DPAPI 数据保护应用接口"></a>DPAPI 数据保护应用接口</h1><p>DPAPI，即数据保护应用接口，是一个提供加解密数据块的 Windows组件。它使用与<strong>指定用户或主机</strong>绑定的密码学密钥并且允许原生 Windows 功能以及第三方应用来透明地保护&#x2F;解除保护给用户的数据。DPAPI 被 <strong>Windows 凭证管理器</strong>所使用于储存保存的秘密，凭证管理器数据块存放于用户的 <strong>AppData</strong> 文件夹中。</p>
+<p>那么，DPAPI 保护哪些呢？例如：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">Internet Explorer、Google Chrome 中的密码和表单自动填充数据<br>Outlook、Windows Mail、Windows Mail 等中的电子邮件帐户密码。<br>共享文件夹和资源访问密码<br>无线网络帐户密钥和密码<br>Windows CardSpace 和 Windows Vault 中的加密密钥<br>远程桌面连接密码，<span class="hljs-string">.NET</span> Passport<br>凭据管理器中的网络密码<br>使用 API 函数 CryptProtectData 以编程方式保护的任何应用程序中的个人数据。 例如，在 Skype、Windows Rights Management Services、Windows Media、MSN messenger、Google Talk 等<br><span class="hljs-string">...</span><br></code></pre></td></tr></table></figure>
+
+<p>我们可以使用原生工具 <strong>vaultcmd</strong> 来列举 <strong>AppData</strong> 中的数据块</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/SZL5Od34lhCLrEYp-image.png"><img src="/./assets/SZL5Od34lhCLrEYp-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>或者使用 <strong>mimikatz</strong> 中的 <strong>vault::list</strong> 命令。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/JLjVpj6K8bzW1UQd-image.png"><img src="/./assets/JLjVpj6K8bzW1UQd-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>以及Seatbelt 中的 <strong>WindowsVault 模块</strong> 也可以枚举出：</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/ZaciAH4AolMYkGMw-image.png"><img src="/./assets/ZaciAH4AolMYkGMw-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>如果前往<strong>控制面板 -&gt; 凭据管理器</strong>，并且选择 <strong>Windows 凭据</strong>，我们会看到这些凭据是如何出现在用户面前的。而如果打开RDP，这些凭据会被自动填充。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/G1yexRwUyTy8KpZb-image.png"><img src="/./assets/G1yexRwUyTy8KpZb-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/MDuY7wYyc2IJ1Rb3-image.png"><img src="/./assets/MDuY7wYyc2IJ1Rb3-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><strong>加密后的凭证文件</strong>存在于 <strong>C:\Users\username\AppData\Local\Microsoft\Credentials</strong> 文件夹下。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/KRwL6fE0TVSrFJz3-image.png"><img src="/./assets/KRwL6fE0TVSrFJz3-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>我们也可以使用 Seatbelt 的 <strong>WindowsCredentialFiles 模块</strong> 来列举：</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/XgP4k7V7l4MSLUb6-image.png"><img src="/./assets/XgP4k7V7l4MSLUb6-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/FgMWP6p9ofvnsL7A-image.png"><img src="/./assets/FgMWP6p9ofvnsL7A-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>为了解密这些凭证文件，我们需要找到<strong>主加密密钥</strong>，即 <strong>MasterKey</strong>。上图的输出我们能看到 MasterKey 的 <strong>GUID</strong>。而 MasterKey 文件存储在 <strong>%APPDATA%\Microsoft\Protect{SID}</strong> 目录下，其中 <strong>{SID}</strong> 是该用户的<strong>安全标识符</strong>，这些文件依旧是被加密的。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/2VUMLAnjJYR7r4ck-image.png"><img src="/./assets/2VUMLAnjJYR7r4ck-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>只有解密 MasterKey 获得实际的 AES256&#x2F;128 密钥后，我们方能使用该密钥解密凭证文件。有以下两种方法来解密：</p>
+<h5 id="LSASS-注入"><a href="#LSASS-注入" class="headerlink" title="LSASS 注入"></a><strong>LSASS 注入</strong></h5><p>当有本地管理员权限的时候并且密钥缓存 (近期访问或解密过凭证) 在 LSASS 中，我们可以通过mimikatz 的 !sekurlsa::dpapi 命令读取 MasterKey，注意与 GUID 的一一对应。我们得到的 MasterKey 为 <strong>137c32458ea484baaa62214a46caec2b0a24d0f793275ac7cfc85cde5939a9ba084a1156c31cd262ae547c27be8d22f2dc34483dd0168957dc58438bc5750f9a</strong></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/YJ6lkEcZTAS0bR47-image.png"><img src="/./assets/YJ6lkEcZTAS0bR47-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/3UgDrnBXk5IJy8zc-image.png"><img src="/./assets/3UgDrnBXk5IJy8zc-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>因为会与 LSASS 交互，所以会有 OPSEC 的风险。</p>
+<h5 id="MS-BKRP"><a href="#MS-BKRP" class="headerlink" title="MS-BKRP"></a><strong>MS-BKRP</strong></h5><p>MS-BKRP 是<strong>微软备份密钥远程协议</strong>，可用于向域控制器请求 MasterKey，不需要提升特权以及 LSASS 交互。这是为了以防用户修改或忘记密码，以及支持智能卡功能。</p>
+<p>我们需要在目标用户的上下文中运行以下命令之一 (取决于是否知道明文密码)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">dpapi::masterkey /in:C:\<span class="hljs-built_in">users</span>\&lt;用户名&gt;\AppData\Roaming\Microsoft\Protect\&lt;用户SID&gt;\&lt;MasterKey GUID&gt; /rpc<br>dpapi::masterkey /in:C:\<span class="hljs-built_in">users</span>\&lt;用户名&gt;\AppData\Roaming\Microsoft\Protect\&lt;用户SID&gt;\&lt;MasterKey GUID&gt; /sid:&lt;用户SID&gt; /password:&lt;密码&gt; /protected<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/cJElYIDOZeDxynPg-image.png"><img src="/./assets/cJElYIDOZeDxynPg-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/3C67VyO2QvsfpolW-image.png"><img src="/./assets/3C67VyO2QvsfpolW-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在获得主密钥之后，就可以进行最终的解密了，我们可以通过如下的 mimikatz 的命令进行解密。</p>
+<figure class="highlight bnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bnf">mimikatz dpapi::cred /in:C:\Users\<span class="hljs-attribute">&lt;用户&gt;</span>\AppData\Local\Microsoft\Credentials\<span class="hljs-attribute">&lt;凭证文件&gt;</span> /masterkey:<span class="hljs-attribute">&lt;MasterKey&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/5NWOE5SClNSDHigl-image.png"><img src="/./assets/5NWOE5SClNSDHigl-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>我们之前发现 serveradm 的目录下有 3 个凭证文件，我们并不知道哪个平整文件是我们想要的，这没有关系，分别查看一下。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/WF9mA2mMFGsv0yXg-image.png"><img src="/./assets/WF9mA2mMFGsv0yXg-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/Qvg2HrEA7YHyHhTR-image.png"><img src="/./assets/Qvg2HrEA7YHyHhTR-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>最终，我们获得了 serveradm 在 RDP 客户端中缓存的凭证，虽然 alice 的凭证我们已经之前知道了，但这是通过 DPAPI 得到的。此外，我们还知道了 Web02 上的 MSSQL sa 帐号的明文密码。</p>
+<h1 id="GPP-密码"><a href="#GPP-密码" class="headerlink" title="GPP 密码"></a>GPP 密码</h1><p><strong>注：本小节作为知识拓展，因为本 Lab 环境版本远高于 GPP 密码盛行的版本，因此尚未集成此内容。</strong></p>
+<p>为了阻止针对<strong>本地管理员密码</strong>的攻击，Windows曾经引入了 组策略偏好 Group Policy Preferences，即中心化管理本地管理员的密码。其具体做法是将<strong>加密后的密码</strong>以 <strong>XML</strong> 文件的形式保存在所有域主机都可访问的 <strong>SYSVOL</strong>目录下。</p>
+<p><a target="_blank" rel="noopener" href="http://raven-medicine.com/uploads/images/gallery/2022-09/JnsejAnQZ86t2FDv-WxNimage.png"><img src="/./assets/JnsejAnQZ86t2FDv-WxNimage.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>XML 文件中保存的密码经过了 <strong>AES-256</strong> 加密的，然而微软之前意外地将 AES 私钥放在了 MSDN 上 (<a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be?redirectedfrom=MSDN)%E3%80%82%E5%9B%A0%E6%AD%A4%EF%BC%8C%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E7%94%A8">https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be?redirectedfrom=MSDN)。因此，我们可以用</a> Get-GPPPassword 脚本来解密以获得明文密码。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/RVj7grWywJU46Rom-image.png"><img src="/./assets/RVj7grWywJU46Rom-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="http://raven-medicine.com/uploads/images/gallery/2022-09/uUop4KpWdxs6VjSJ-dmWimage.png"><img src="/./assets/uUop4KpWdxs6VjSJ-dmWimage.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在2014年，微软移除了该特性。尽管包含密码的 GPP文件不会再被创建，但我们依旧有可能找到过去遗留的文件并且从中获得明文密码。</p>
+<h1 id="NTDS-DIT"><a href="#NTDS-DIT" class="headerlink" title="NTDS.DIT"></a>NTDS.DIT</h1><p><strong>NTDS.DIT</strong> 文件是域控制器上存储 AD 数据的数据库，包含了域内对象的所有信息，例如用户，组，计算机，以及其他对象。更重要的是，该文件还存储域中所有用户的密码哈希，包括域管理员的。该文件位于 <strong>C:\Windows\NTDS\ntds.dit</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/RrYkP0MPtKbG2ciM-image.png"><img src="/./assets/RrYkP0MPtKbG2ciM-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在获得特定权限后，我们可以通过以下方式利用：</p>
+<h5 id="复制-NTDS-DIT-文件"><a href="#复制-NTDS-DIT-文件" class="headerlink" title="复制 NTDS.DIT 文件"></a><strong>复制 NTDS.DIT 文件</strong></h5><p>在获得了域管理员之后，我们可以在域控制器上复制 NTDS.DIT 文件。但是类似于复制 SAM 数据库，因为 NTDS.DIT 在被实时使用，因此是被锁定的状态。我们依旧可以通过<strong>卷影拷贝技术</strong>来获得 NTDS.DIT文件。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/H8CcTE0LUxWNdsC9-image.png"><img src="/./assets/H8CcTE0LUxWNdsC9-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>下载 <strong>C:\Windows\System32\Config\SYSTEM</strong> 以及 <strong>C:\Windows\NTDS\ntds.dit</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/b1i8avM2gYlvjkMB-image.png"><img src="/./assets/b1i8avM2gYlvjkMB-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>最后使用 Impacket 中的 secretdump 来离线解析</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/tFkxYHr7vvZ8UDTJ-image.png"><img src="/./assets/tFkxYHr7vvZ8UDTJ-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="使用工具远程导出"><a href="#使用工具远程导出" class="headerlink" title="使用工具远程导出"></a><strong>使用工具远程导出</strong></h5><p>有了域管理员的凭证后，我们可以使用诸如 impacket 之类的工具通过 RPC 协议远程导出 NTDS.DIT 中的哈希。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/uV8euuIaySfnNBSn-image.png"><img src="/./assets/uV8euuIaySfnNBSn-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h1 id="Windows-认证理论"><a href="#Windows-认证理论" class="headerlink" title="Windows 认证理论"></a>Windows 认证理论</h1><p>我们在之前已经讨论了 NTLM 认证、Kerberos 认证、LSA 与 LSASS、SAM 等概念。在这小节，我们将对 Windows 认证理论做一个整合、归纳以及延伸。</p>
+<p><em>本章节所使用的原理示意图和部分理论来自 <a target="_blank" rel="noopener" href="https://attl4s.github.io/assets/pdf/Understanding_Windows_Lateral_Movements_2023.pdf">https://attl4s.github.io/assets/pdf/Understanding_Windows_Lateral_Movements_2023.pdf</a> 。</em> </p>
+<h2 id="Windows-认证类型与形式"><a href="#Windows-认证类型与形式" class="headerlink" title="Windows 认证类型与形式"></a><strong>Windows 认证类型与形式</strong></h2><p>发生在 Windows 环境中的认证过程，可以是本地认证，以及域认证。</p>
+<h4 id="本地认证"><a href="#本地认证" class="headerlink" title="本地认证"></a><strong>本地认证</strong></h4><p>本地认证，例如是使用本地账户登陆主机。我们对于个人用的主机进行登陆往往就是本地登陆。本地用户只存在于特定系统，即只有该系统才知道有哪些本地用户，例如 <strong>SRV01\David</strong>。尽管系统与系统之间是互相独立的，但是不同的系统却可能有着相似甚至相同的帐号密码。例如 <strong>SRV01\David</strong>，<strong>SRV02\David</strong>。我们之前知道了本地系统的信息存储于 SAM 之中，当用户以本地账户认证的时候，Windows 会根据 SAM 中的记录验证凭证。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/L5CyeSwieqxKryJr-image.png"><img src="/./assets/L5CyeSwieqxKryJr-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h4 id="域认证"><a href="#域认证" class="headerlink" title="域认证"></a><strong>域认证</strong></h4><p>域认证，例如是员工通过分发的域账户登陆工作站并访问内部资源。总之，域认证与本地认证是不同的机制。域用户和群组呈现在具体的 AD 域中，所有的域系统， (或在受信任的域中) 知道如何应对认证，它们会将认证的流程委派给域控制器。域用户和主机数据存储于 NTDS (NT 目录服务) 数据库中，当有用户尝试认证，域控制器则根据记录来验证凭证。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/JfDpjjMoX2bl5bIe-image.png"><img src="/./assets/JfDpjjMoX2bl5bIe-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>而认证的形式，可以笼统地分为物理认证以及远程认证。</p>
+<h4 id="物理认证"><a href="#物理认证" class="headerlink" title="物理认证"></a><strong>物理认证</strong></h4><p>当用户在电脑面前，输入凭证并登陆，那么这是物理认证，适用于本地用户和域用户，只要目标系统知道认证的帐号。在 AD 中，默认情况下，<strong>任何域用户</strong>可以物理登陆<strong>任何域主机</strong>。但是，绝大多数情况下，我们没有机会在目标的环境中实现物理登陆。</p>
+<h4 id="远程认证"><a href="#远程认证" class="headerlink" title="远程认证"></a><strong>远程认证</strong></h4><p>与物理认证有所不同的是，默认情况下需要特定权限才能进行远程登陆，例如属于<strong>本地管理员分组</strong>，<strong>远程桌面用户分组</strong>。因此，我们应该关心的还是远程认证。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/lhbRE19QYJBafpog-image.png"><img src="/./assets/lhbRE19QYJBafpog-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>为了理解接下来的概念，我们需要对 Windows 认证机制很熟悉。 </p>
+<h2 id="Windows-认证重要概念"><a href="#Windows-认证重要概念" class="headerlink" title="Windows 认证重要概念"></a><strong>Windows 认证重要概念</strong></h2><h4 id="认证包-x2F-安全支持提供程序-AP-x2F-SSP-1"><a href="#认证包-x2F-安全支持提供程序-AP-x2F-SSP-1" class="headerlink" title="认证包&#x2F;安全支持提供程序 AP&#x2F;SSP"></a><strong>认证包&#x2F;安全支持提供程序 AP&#x2F;SSP</strong></h4><p>虽然在前面的小节有讨论过了，让我们再回顾一下。AP&#x2F;SSP 通过分析登陆数据来认证 Windows 用户，不同的 AP&#x2F;SSP 对多种登陆过程以及认证协议提供支持。AP&#x2F;SSP 以 <strong>DLL</strong> 形式存在，被 LSA 所加载和使用。常见的 AP&#x2F;SSP 有 NTLM，Kerberos，WDigest，Credman 等。微软所提供的 AP 有 <strong>CSSP</strong>，<strong>Microsoft Negotiate</strong>，<strong>Microsoft NTLM</strong>，<strong>Microsoft Kerberos</strong>，<strong>Microsoft Digest SSP</strong>，以及 <strong>Secure Channel</strong>。</p>
+<p>AP 提供了 Windows 充当客户端和认证服务器所需的逻辑。对于客户端，想要通过 Windows 认证连接到特定服务。对于服务器，想要让服务或应用程序支持 Windows 认证</p>
+<h4 id="SSP-接口"><a href="#SSP-接口" class="headerlink" title="SSP 接口"></a><strong>SSP 接口</strong></h4><p>微软提供 SSP 接口以简单地将应用程序与认证系统无缝继承。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/DTKCEfZ9m13LLRo1-image.png"><img src="/./assets/DTKCEfZ9m13LLRo1-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>SSPI 的作用主要有这些：<strong>安全包管理</strong>、<strong>凭证管理</strong>、<strong>安全上下文管理</strong>、<strong>消息支持</strong>。</p>
+<h4 id="交互式登陆-vs-非交互式登陆"><a href="#交互式登陆-vs-非交互式登陆" class="headerlink" title="交互式登陆 vs 非交互式登陆"></a><strong>交互式登陆 vs 非交互式登陆</strong></h4><p>本地认证与域认证、物理认证与远程认证，这样的分类还不够。认证还有<strong>交互式</strong>与<strong>非交互式</strong>之分。</p>
+<p>交互式登陆，通常需要<strong>指定明文凭证</strong>，例如通过 <strong>Windows 的登陆页面</strong>进行认证。最重要的一点是用户凭证会缓存在 LSA 进程的内存中，为各个 AP 做准备。缓存的凭证还能让 Windows 给用户提供 SSO 体验。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/kxhDgHOcCFkDuZT0-image.png"><img src="/./assets/kxhDgHOcCFkDuZT0-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/oWvMgQyADG5ps42L-image.png"><img src="/./assets/oWvMgQyADG5ps42L-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>而非交互式认证，应用程序代表用户使用缓存的凭证，也就是非交互式认证只应在<strong>交互式认证之后</strong>发生，也就是<strong>缓存凭证可用</strong>时。一些应用通过 SSPI 来实现这些认证。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/IVpRquck7vE65Pgk-image.png"><img src="/./assets/IVpRquck7vE65Pgk-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/WAtRbvHwPangCayQ-image.png"><img src="/./assets/WAtRbvHwPangCayQ-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h4 id="登陆会话"><a href="#登陆会话" class="headerlink" title="登陆会话"></a><strong>登陆会话</strong></h4><p>登陆会话会在成功的认证之后创建，无论是物理认证、远程认证、域认证、本地认证、交互式登陆还是非交互式登陆。<strong>AP 缓存的凭证</strong>绑定在了<strong>登陆会话</strong>上。而在用户登出后结束。</p>
+<p>当认证成功时，被选中的 AP 将执行这两个重要任务：<strong>创建一个新的登陆会话</strong>，以及<strong>向 LSA 提供认证用户的安全信息</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/uHTXLl1YkJ6dxSZk-image.png"><img src="/./assets/uHTXLl1YkJ6dxSZk-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><strong>LSA</strong> 使用该信息创建<strong>访问令牌</strong>来代表用户在系统中的的<strong>安全上下文</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/Aq2vGVh61IFzAF7p-image.png"><img src="/./assets/Aq2vGVh61IFzAF7p-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><strong>通常来说</strong>，登陆会话通常在交互式认证之后会有缓存的凭证，而非交互式的认证普遍会导致不缓存凭证的登陆会话。</p>
+<h4 id="登陆类型"><a href="#登陆类型" class="headerlink" title="登陆类型"></a><strong>登陆类型</strong></h4><p>在 Windows 中，所有的认证都应当作为以下登陆类型之一处理，无论是何种认证协议以及认证形式。</p>
+<table>
+<thead>
+<tr>
+<th><strong>登陆类型</strong></th>
+<th><strong>编号</strong></th>
+<th><strong>认证形式</strong></th>
+<th><strong>凭证是否存储于 LSA 中</strong></th>
+<th><strong>案例</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>交互式</td>
+<td>2</td>
+<td>密码，智能卡，其他</td>
+<td>是</td>
+<td>物理登陆runasIIS 6 之前的基本认证</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>3</td>
+<td>密码，NT 哈希，Kerberos 票据</td>
+<td>否 (除非委派被启用)</td>
+<td>NET USERRPC 调用远程注册表集成 Windows 认证的 IISSQL Windows 认证</td>
+</tr>
+<tr>
+<td>批处理</td>
+<td>4</td>
+<td>存储于 LSA 机密中的密码</td>
+<td>是</td>
+<td>计划任务</td>
+</tr>
+<tr>
+<td>服务</td>
+<td>5</td>
+<td>同上</td>
+<td>是</td>
+<td>Windows 服务</td>
+</tr>
+<tr>
+<td>网络明文</td>
+<td>8</td>
+<td>密码</td>
+<td>是</td>
+<td>IIS 6 及之后的基本认证带有 CredSSP 的 Windows PowerShell</td>
+</tr>
+<tr>
+<td>新凭证</td>
+<td>9</td>
+<td>密码</td>
+<td>是</td>
+<td>runas &#x2F;network</td>
+</tr>
+<tr>
+<td>远程交互式</td>
+<td>10</td>
+<td>密码，智能卡，其他</td>
+<td>是</td>
+<td>远程桌面</td>
+</tr>
+</tbody></table>
+<p>导入 Get-LogonSession.ps1 脚本 (<a target="_blank" rel="noopener" href="https://github.com/leechristensen/Random/blob/master/PowerShellScripts/Get-LogonSession.ps1)%E3%80%82%E6%9F%A5%E7%9C%8B">https://github.com/leechristensen/Random/blob/master/PowerShellScripts/Get-LogonSession.ps1)。查看</a> Web02 目前的会话列表 (大家自己操作得到的结果可能有所不同)，仅筛选出 white-bird 域中的用户</p>
+<figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dsconfig"><span class="hljs-built_in">get-logonsession</span> | <span class="hljs-string">where-object</span> &#123;$<span class="hljs-string">_</span>.<span class="hljs-string">Domain</span> -<span class="hljs-string">eq</span> <span class="hljs-string">&#x27;WHITE-BIRD&#x27;</span>&#125;|<span class="hljs-string">select</span> <span class="hljs-string">UserName</span>, <span class="hljs-string">LogonType</span>, <span class="hljs-string">AuthenticationPackage</span><br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/xmob5HpQYpMinxmT-image.png"><img src="/./assets/xmob5HpQYpMinxmT-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>因为 Web02 设置了 serveradm 的自动登陆，那么 serveradm 的交互式登陆自然是预期之中的。而 Web02 上同样运行着 SQL 服务，服务账号是 sql_service，因此服务登陆以及网络登陆同样是预期之中的。</p>
+<h4 id="令牌"><a href="#令牌" class="headerlink" title="令牌"></a><strong>令牌</strong></h4><p>当一个登陆会话被创建后，返回给 LSA 的信息被用于创建一个<strong>访问令牌</strong>。访问令牌是被保护的对象，它包含了一个认证用户的本地安全上下文。每个<strong>访问令牌</strong>被绑定给了一个<strong>登陆会话</strong>，访问令牌与进程或线程有关。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/tMZcOg9KvWfQq8WP-image.png"><img src="/./assets/tMZcOg9KvWfQq8WP-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>访问令牌包含了用户与其上下文的重要数据：<strong>用户 SID</strong>、<strong>用户组归属</strong>、<strong>特权列表</strong>、<strong>会话 ID</strong>、<strong>完整度等级</strong>、<strong>令牌类型</strong>等。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/iifjTNSxyOxv4jnp-image.png"><img src="/./assets/iifjTNSxyOxv4jnp-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/qtHrb2l7MLVYReKg-image.png"><img src="/./assets/qtHrb2l7MLVYReKg-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在 Windows 中，相同的用户可以有着不同的上下文，例如 UAC 区分了中等和高完整度等级。这是因为 Windows 允许相同用户在同一个系统中有着不同的访问令牌和登陆会话。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/qCg7wOgB0pANUO8Z-image.png"><img src="/./assets/qCg7wOgB0pANUO8Z-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>Windows 使用访问令牌实施访问控制决定。Windows 对象有着访问控制列表，访问这样的对象的进程或线程有着访问令牌，而令牌信息被拿来与对象的 DACL 进行比较从而决定是否允许访问。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/O70ps8s67Fi0whbb-image.png"><img src="/./assets/O70ps8s67Fi0whbb-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>令牌的类型有<strong>主要令牌</strong>与<strong>模仿令牌</strong>。主要令牌又被称为<strong>进程令牌</strong>，每个进程都有关联的主要令牌，当有新的进程被创建，默认是<strong>继承父进程的主要令牌</strong>。</p>
+<p><strong>模仿令牌</strong>又被称为<strong>线程令牌</strong>，得以让一个线程运行在<strong>与父进程所不同</strong>的安全上下文中，通常用于客户端服务端的情景。当每个客户端连接到服务，新线程得以创建。正是因为模仿令牌，线程得以运行在不同客户端的上下文中，这使得服务可以通过 ACL 控制访问。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/LepqaworT57wPnVV-image.png"><img src="/./assets/LepqaworT57wPnVV-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>支持 Windows 认证的服务执行被称为客户端模仿的操作。当一个客户端连接到服务，客户端的凭证会被验证，以这个客户端为安全上下文的访问令牌被创建，服务在新的线程中置入令牌的备份，进而该线程可以代表这个客户端，并且受 ACL 的限制。因为一些服务只需要客户端的部分信息，即不需要完全的模仿。根据服务的配置，模仿令牌可以有着不同的模仿等级：</p>
+<p>SecurityAnonymous：<strong>服务器不能模仿客户端的身份</strong></p>
+<p>SecurityIdentification：<strong>服务器可以获得客户端的身份和特权但不能模仿</strong></p>
+<p>SecurityImpersonation：<strong>服务器可以在本地主机上模仿用户的安全上下文</strong></p>
+<p>SecurityDelegation：<strong>服务器可以在远程主机上模仿用户的安全上下文</strong></p>
+<h3 id="用户模仿"><a href="#用户模仿" class="headerlink" title="用户模仿"></a><strong>用户模仿</strong></h3><p>用户模仿即<strong>创建</strong>或<strong>劫持</strong>另一个用户的安全上下文以在网络中代表这个用户。创建一个安全上下文通常需要凭证，而劫持一个安全上下文则需要特权。用户模仿可以通过这些途径实现：<strong>令牌操纵</strong>、<strong>密码</strong>、<strong>NT 哈希</strong>、<strong>Kerberos 票据</strong>等。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/4UE8CELvIXIQikQY-image.png"><img src="/./assets/4UE8CELvIXIQikQY-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>请回顾跟登陆会话绑定的凭证，通常是交互式认证的产物。如果想通过使用一个令牌来访问网络资源，这个令牌必须与一个有着凭证的会话相关联。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/uHCKhOBLIxubbaqV-image.png"><img src="/./assets/uHCKhOBLIxubbaqV-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>Windows API 提供了能用于操纵令牌的功能，例如<strong>复制令牌</strong>。但是，我们需要特权：<strong>本地管理员或者 SYSTEM</strong>，<strong>服务账号</strong> (土豆家族)。而低权限用户只能操纵自己的令牌。</p>
+<p><strong>DuplicateTokenEx</strong> API 可用于创建一个复制现有令牌的新访问令牌。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">BOOL DuplicateTokenEx(<br><span class="hljs-string">  [in]</span>           HANDLE                       hExistingToken,<br><span class="hljs-string">  [in]</span>           DWORD                        dwDesiredAccess,<br><span class="hljs-string">  [in, optional]</span> LPSECURITY_ATTRIBUTES        lpTokenAttributes,<br><span class="hljs-string">  [in]</span>           SECURITY_IMPERSONATION_LEVEL ImpersonationLevel,<br><span class="hljs-string">  [in]</span>           TOKEN_TYPE                   TokenType,<br><span class="hljs-string">  [out]</span>          PHANDLE                      phNewToken<br>);<br></code></pre></td></tr></table></figure>
+
+<p>如果是劫持一个已有令牌的方法，有着<strong>令牌模仿</strong>与<strong>进程注入</strong>的方法。前者<strong>复制目标的令牌</strong>并且将其用于已有进程或者新进程，后者将载荷注入到<strong>目标令牌所寄居的进程</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/wfKY1ylbvSI4dDTb-image.png"><img src="/./assets/wfKY1ylbvSI4dDTb-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>SharpToken (<a target="_blank" rel="noopener" href="https://github.com/BeichenDream/SharpToken">https://github.com/BeichenDream/SharpToken</a>) 是一款可以通过操纵令牌来实现用户模仿的工具，在 本地管理员或者 SYSTEM 权限下，我们可以列举所有可用令牌，并窃取想要的令牌。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/0KDd5Bt6u5u6vMej-image.png"><img src="/./assets/0KDd5Bt6u5u6vMej-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>Cobalt Strike 中的内置命令 <strong>steal_token</strong> 也可实现令牌窃取</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/11vfYsMRQXEcRIfB-image.png"><img src="/./assets/11vfYsMRQXEcRIfB-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>而通过<strong>进程注入实</strong>现令牌劫持的流程图如下：</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/GMlGjNi2VmXfV5bi-image.png"><img src="/./assets/GMlGjNi2VmXfV5bi-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h4 id="有明文密码！"><a href="#有明文密码！" class="headerlink" title="有明文密码！"></a><strong>有明文密码！</strong></h4><h5 id="runas-exe"><a href="#runas-exe" class="headerlink" title="runas.exe"></a><strong>runas.exe</strong></h5><p>Windows 原生程序 runas.exe 可以通过提供额外的凭证来创建进程，例如用户想以另一个账户的身份运行特定进程。runas.exe 默认 (不提供其他选项) 会通过 LSA 验证提供的凭证的正确与否，类似于交互式认证。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/qjnHOIipnb3OsnEu-image.png"><img src="/./assets/qjnHOIipnb3OsnEu-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>对本地账户以及域账户都成立。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/ef2N0jJFkhhjkpZU-image.png"><img src="/./assets/ef2N0jJFkhhjkpZU-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>如果没有提供正确的凭证，则会失败。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/2jJu9rC4ViA1AfeL-image.png"><img src="/./assets/2jJu9rC4ViA1AfeL-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在 Cobalt Strike 中，<strong>runas</strong> 命令则是对 Windows 系统中 runas.exe 的实现。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/u5z0upvv7RkG77Fe-image.png"><img src="/./assets/u5z0upvv7RkG77Fe-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>C# 工具 runascs (<a target="_blank" rel="noopener" href="https://github.com/antonioCoco/RunasCs">https://github.com/antonioCoco/RunasCs</a>) 也有着相似的功能和实现，并且自定义程度更高，用户可以指定登陆类型。例如，指定 <strong>-l</strong> 为 <strong>2</strong>，则是交互式认证。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/jfeYCQvxvhUywzdx-image.png"><img src="/./assets/jfeYCQvxvhUywzdx-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在使用 runas.exe 以 <strong>white-bird\condrey</strong> 身份创建的 <strong>cmd.exe</strong> 进程以及使用 runascs.exe 以 wanh 身份创建 cmd.exe 进程后，我们可以用之前的脚本命令发现新增了用户的登陆会话。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/dKBmTAsLfeqKUZv4-image.png"><img src="/./assets/dKBmTAsLfeqKUZv4-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="runas-exe-x2F-netonly"><a href="#runas-exe-x2F-netonly" class="headerlink" title="runas.exe &#x2F;netonly"></a><strong>runas.exe &#x2F;netonly</strong></h5><p>runas.exe 程序有着 <strong>&#x2F;netonly</strong> 的选项，它告诉 runas.exe 这个指定的凭证仅用于远程访问，而 LSA 并不会验证凭证的正确与否，也就是即便输入错误的凭证也不会有报错信息。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/dsWFC98OgxCwaRCD-image.png"><img src="/./assets/dsWFC98OgxCwaRCD-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>指定了 <strong>&#x2F;netonly</strong> 选项后，假设提供的凭证是有效的，那么新的进程在<strong>本地层面</strong>保持原来的身份，但在<strong>网络层面</strong>却是新的身份，即有着 <strong>2 个不同的安全上下文</strong>。<strong>prod\john</strong> 对于 <strong>Srv01</strong> 具有 <strong>WinRM</strong> 访问。通过 &#x2F;netonly 创建的新 <strong>powershell.exe</strong> 进程中，我们发现身份还是 <strong>prod\alice</strong>，但如果使用 john 的访问在 Srv01 上远程执行命令，身份则是 <strong>john</strong> 了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/Iye9koeSKz1rPTPx-image.png"><img src="/./assets/Iye9koeSKz1rPTPx-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>runas.exe 的实现使用的是 <strong>CreateProcessWithLogonW</strong> API，即以提供的凭证的安全上下文创建新的进程。&#x2F;netonly 选项使用了 <strong>LOGON_NETCREDENTIALS_ONLY</strong> 登陆选项，<strong>创建和使用新的登陆会话</strong>，但是<strong>令牌还是原来的</strong>。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">BOOL CreateProcessWithLogonW(<br><span class="hljs-string">  [in]</span>                LPCWSTR               lpUsername,<br><span class="hljs-string">  [in, optional]</span>      LPCWSTR               lpDomain,<br><span class="hljs-string">  [in]</span>                LPCWSTR               lpPassword,<br><span class="hljs-string">  [in]</span>                DWORD                 dwLogonFlags,<br><span class="hljs-string">  [in, optional]</span>      LPCWSTR               lpApplicationName,<br><span class="hljs-string">  [in, out, optional]</span> LPWSTR                lpCommandLine,<br><span class="hljs-string">  [in]</span>                DWORD                 dwCreationFlags,<br><span class="hljs-string">  [in, optional]</span>      LPVOID                lpEnvironment,<br><span class="hljs-string">  [in, optional]</span>      LPCWSTR               lpCurrentDirectory,<br><span class="hljs-string">  [in]</span>                LPSTARTUPINFOW        lpStartupInfo,<br><span class="hljs-string">  [out]</span>               LPPROCESS_INFORMATION lpProcessInformation<br>);<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="make-token"><a href="#make-token" class="headerlink" title="make_token"></a><strong>make_token</strong></h5><p>多个 C2 工具中都有着类似于 <strong>make_token</strong> 功能的命令，Cobalt Strike 自然也是有这样的功能和命令的。make_token 允许我们在知道其他用户明文密码的情况下模仿他们，调用的是 <strong>LogonUserA</strong> API。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">BOOL LogonUserA(<br><span class="hljs-string">  [in]</span>           LPCSTR  lpszUsername,<br><span class="hljs-string">  [in, optional]</span> LPCSTR  lpszDomain,<br><span class="hljs-string">  [in, optional]</span> LPCSTR  lpszPassword,<br><span class="hljs-string">  [in]</span>           DWORD   dwLogonType,<br><span class="hljs-string">  [in]</span>           DWORD   dwLogonProvider,<br><span class="hljs-string">  [out]</span>          PHANDLE phToken<br>);<br></code></pre></td></tr></table></figure>
+
+<p>LogonUserA 相比 CreateProcessWithLogon 更好的地方在于，我们可以在<strong>不创建新的进程</strong>的情况下创建新的<strong>登陆会话</strong>&#x2F;<strong>令牌对</strong>，并且可以指定不同的登陆类型 (在调用 LogonUserA 获得令牌后，可以创建新的进程)。Cobalt Strike 中的 make_token 使用的是 <strong>LOGON32_LOGON_NEW_CREDENTIALS</strong> 登陆类型，与 <strong>runas.exe &#x2F;netonly</strong> 一致、</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/zmzWu5G8MFJW0mfj-image.png"><img src="/./assets/zmzWu5G8MFJW0mfj-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>调用该 API 得到的令牌可以被传递给 <strong>ImpersonateLoggedOnUser</strong> API，这允许调用的线程模仿令牌的上下文 (被模样的用户的上下文)。</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs scss">BOOL <span class="hljs-built_in">ImpersonateLoggedOnUser</span>(<br>  [in] HANDLE hToken<br>);<br></code></pre></td></tr></table></figure>
+
+<p>当不需要模仿的时候，使用 rev2self 命令退出。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function">BOOL <span class="hljs-title">RevertToSelf</span>()</span>;<br></code></pre></td></tr></table></figure>
+
+<p>总之，在<strong>高完整度</strong>下，操纵令牌是容易的，我们可以做这些事情：<strong>窃取系统内的任何令牌</strong>、<strong>注入到任何进程</strong>、<strong>将窃取的令牌应用于当前的上下文</strong>、<strong>用窃取的凭证创建新的进程</strong>。如果是低完整度下，我们<strong>不能使用令牌创建新的进程</strong> (<strong>CreateProcessAsUser</strong> 或<strong>CreateProcessWithToken</strong> API 需要管理员特权)，因此考虑内联执行，例如 BOF。</p>
+<h4 id="有-NT-哈希！"><a href="#有-NT-哈希！" class="headerlink" title="有 NT 哈希！"></a><strong>有 NT 哈希！</strong></h4><p>如果我们没有明文密码，只有 NTLM 哈希呢？如何实现用户模仿？可惜的是，Windows 没有这样的认证功能，没有 LogonUserWithHash 或者 CreateProcessWithHash API。如果我们想通过 LSA 来利用哈希，我们需要与 LSASS 进程打交道。LSASS 存储着所有登陆会话以及缓存凭证，需要高权限，而且还很有风险。</p>
+<p>但我们其实也不必依赖于 LSA，这不局限于有 NTLM 哈希，包括有明文密码或者其他类型的凭证。我们可以使用对 NTLM 或者 Kerberos 有原生支持的工具。</p>
+<h5 id="与-LSA-交互"><a href="#与-LSA-交互" class="headerlink" title="与 LSA 交互"></a><strong>与 LSA 交互</strong></h5><p>Mimikatz 可以用来完成基于 LSA 的哈希传递。换句话说，哈希传递也可以不必依赖于 LSA。Mimikatz 可以使用 NTLM 哈希而非明文密码来创建进程，通过向 lsass 进程注入数据实现。因为需要修改 lsass 进程，自然需要高权限。</p>
+<p>在 <strong>Web02</strong> 上，任何目前可用的令牌都不足以访问 <strong>Dc05</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/Qp2zKUG2qSs9QNhk-image.png"><img src="/./assets/Qp2zKUG2qSs9QNhk-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在 SYSTEM 权限下，使用 mimikatz 的 PTH 命令</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/jEXMwUdfy1VTHKsd-image.png"><img src="/./assets/jEXMwUdfy1VTHKsd-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>我们可以看到现在 lsass.exe 进程是 <strong>RW</strong> 权限了。这个命令将新凭证通过<strong>命名管道</strong>传递，然后 Beacon 再模仿它。</p>
+<p>Mimikatz 的 PTH 相当于提供哈希而非明文密码版本的 runas.exe &#x2F;netonly。先通过 <strong>CreateProcessWithLogon</strong> API 创建新的进程，其中使用的是 <strong>LOGON_NETCREDENTIALS_ONLY</strong> 登陆选项。然后，识别出新创建的登陆会话，将<strong>凭证内容</strong>填充到<strong>目标的登陆会话</strong>中。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/b1hoRPm2FZi9ICgm-image.png"><img src="/./assets/b1hoRPm2FZi9ICgm-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>现在，我们可以访问 Dc05 了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/9RaO0B8zbWzR5kUT-image.png"><img src="/./assets/9RaO0B8zbWzR5kUT-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>用图来显示普通认证流程以及 Mimikatz 的 PTH 的话，如下所示：</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/bFSpeXVEcUUQJX75-image.png"><img src="/./assets/bFSpeXVEcUUQJX75-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/mXQj2mLrrsYnFV8B-image.png"><img src="/./assets/mXQj2mLrrsYnFV8B-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="不与-LSA-交互"><a href="#不与-LSA-交互" class="headerlink" title="不与 LSA 交互"></a><strong>不与 LSA 交互</strong></h5><p>不与 LSA 交互的 PTH 则就简单多了，只需要找到原生支持我们想要使用的协议的工具即可，例如 Impacket，CrackMapExec 等，而不需要与复杂的 Windows 组件打交道。</p>
+<p>如果是 <strong>NTLM</strong> 协议：</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/U0wa1ZE0lgLCZ93l-image.png"><img src="/./assets/U0wa1ZE0lgLCZ93l-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>如果是 <strong>Kerberos</strong> 协议，我们可以使用 Rubeus 或者 Impacket，这类工具可以产生获得 TGT&#x2F;TGS 的 Kerberos 原始流量。至于如何利用得到的票据，我们下文就说。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/MyfPX5xXnkkrPhDd-image.png"><img src="/./assets/MyfPX5xXnkkrPhDd-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a> </p>
+<h4 id="有-Kerberos-票据！"><a href="#有-Kerberos-票据！" class="headerlink" title="有 Kerberos 票据！"></a><strong>有 Kerberos 票据！</strong></h4><p>虽然 Windows 没有基于 NTLM 哈希的认证功能，但对于 Kerberos 票据是有的。我们同样可以选择与 LSASS 交互，或者不与 LSASS 交互。</p>
+<h5 id="与-LSA-交互-1"><a href="#与-LSA-交互-1" class="headerlink" title="与 LSA 交互"></a><strong>与 LSA 交互</strong></h5><p>我们可以将票据导入到存在的登陆会话中。将票据导入到<strong>当前的会话</strong>中不需要特权，而导入到<strong>其他会话</strong>中则需要特权。</p>
+<p>假如我们已经得到或伪造了其他用户的 Kerberos 票据，并且打算使用它们。<strong>PTK</strong>，即<strong>票据传递</strong>是将这样的票据导入到<strong>攻击者所控制的登陆会话</strong>的技术，这使得我们可以在网络中模仿受害者。如果导入了一张 TGT 到现有会话中，那么原来的会被覆盖。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/jI2CkzIYBf7bGOZP-image.png"><img src="/./assets/jI2CkzIYBf7bGOZP-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>Rubeus 的 <strong>PTT</strong> 命令正是这样的原理</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/VrmcuQHtckJsnknx-image.png"><img src="/./assets/VrmcuQHtckJsnknx-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>Cobalt Strike 的命令 <strong>kerberos_ticket_use</strong> 具有同样作用。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/HMS318Ou9VfZgerM-image.png"><img src="/./assets/HMS318Ou9VfZgerM-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>这项技术的实现，是使用了 <strong>LsaCallAuthenticationPackege</strong> API。这个 API 使得应用程序可以与 Windows AP 进行对话</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">NTSTATUS LsaCallAuthenticationPackage(<br><span class="hljs-string">  [in]</span>  HANDLE    LsaHandle,<br><span class="hljs-string">  [in]</span>  ULONG     AuthenticationPackage,<br><span class="hljs-string">  [in]</span>  PVOID     ProtocolSubmitBuffer,<br><span class="hljs-string">  [in]</span>  ULONG     SubmitBufferLength,<br><span class="hljs-string">  [out]</span> PVOID     *ProtocolReturnBuffer,<br><span class="hljs-string">  [out]</span> PULONG    ReturnBufferLength,<br><span class="hljs-string">  [out]</span> PNTSTATUS ProtocolStatus<br>);<br></code></pre></td></tr></table></figure>
+
+<p>总之，如果使用<strong>与 LSA 交互</strong>的方法导入票据，我们可以在<strong>低权限</strong>的情况下将票据导入到<strong>当前会话</strong>。可以是使用 <strong>make_token</strong> 创建并模仿一个<strong>新的登陆会话</strong>，导入票据以防止覆盖原有的 TGT。在 alice 会话的 file01 Beacon 中，我们使用 make_token 命令创建并模仿一个新的登陆会话，密码不需要是有效的。此时，这个新登陆会话的还不存在任何票据，我们使用 <strong>kerberos_ticket_use</strong> 导入 white-bird\administrator 的票据，发现可以访问 Dc05 了。如果使用 <strong>rev2self</strong> 退出模仿，便不能访问了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/BFHkgSJunkUwAfmS-image.png"><img src="/./assets/BFHkgSJunkUwAfmS-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/Wcb3rDAR1AK3B99J-image.png"><img src="/./assets/Wcb3rDAR1AK3B99J-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>或者在<strong>高权限</strong>的情况下，先<strong>创建一个牺牲进程</strong>用来导入票据，因为一个登陆会话每次只能持有 <strong>1</strong> 张 TGT，在当前会话导入 TGT 可能导致认证紊乱。将票据导入到该牺牲会话之后，<strong>窃取令牌</strong>或者在该进程<strong>注入载荷</strong>。</p>
+<p>目前，我们在 Web02 上不能访问 Dc05 (清除了现有票据以避免干扰)。使用 <strong>createnetonly</strong> 命令创建一个新的隐藏进程，我们可以看到新的会话 ID 以及进程 ID。但目前这个会话里还没有 TGT。我们还指定了<strong>域名</strong>、<strong>帐号</strong>、<strong>密码</strong>(不会被验证)，这是为了在日志中看起来更加清白，毕竟 Rubeus 随机生成的这些数据会成为嫌疑。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/X6xiH77d3lWLyOww-image.png"><img src="/./assets/X6xiH77d3lWLyOww-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>因此，我们导入 Administrator 的 TGT，指定<strong>目标 LUID</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/ks7VTDnM7EmIVHkt-image.png"><img src="/./assets/ks7VTDnM7EmIVHkt-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><strong>窃取令牌</strong>后，方可访问了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/BEXzQVVaFu6nPpyQ-image.png"><img src="/./assets/BEXzQVVaFu6nPpyQ-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="不与-LSA-交互-1"><a href="#不与-LSA-交互-1" class="headerlink" title="不与 LSA 交互"></a><strong>不与 LSA 交互</strong></h5><p>我们可以用 Impacket 之类的工具来使用得到的票据。我们可以使用 Impacket 中的 <strong>ticketConverter</strong> 将票据在 <strong>kirbi</strong> 格式与 <strong>ccache</strong> 格式直接互相转换。在 Linux 端，所接受的格式是 ccache，我们需要设置 <strong>KRB5CCNAME</strong> 环境变量指向该 ccache 票据。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/PiPOczMaUKeewBR8-image.png"><img src="/./assets/PiPOczMaUKeewBR8-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h1 id="哈希传递-Pass-The-Hash"><a href="#哈希传递-Pass-The-Hash" class="headerlink" title="哈希传递 Pass The Hash"></a>哈希传递 Pass The Hash</h1><p>Pass The Hash，即哈希传递，是一种可以让我们使用 NTLM 哈希对 Windows 服务进行认证，而无需明文密码的技术。在上一个小节，我们讨论了如果<strong>只有 NTLM 哈希</strong>，要实现<strong>用户模仿</strong>该怎么做的时候有提到 PTH，在这一小节我们继续延伸和补充一下。</p>
+<p>我们之前讲过 <strong>NTLM 认证</strong>的步骤，让我们再来回顾一下：</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/DWcjlqWIdXXrcPrU-image.png"><img src="/./assets/DWcjlqWIdXXrcPrU-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>哈希传递认证可以跳过上图中的<strong>第一步</strong>，通过使用例如 Mimikatz 之类的工具实现。需要注意的是，哈希传递攻击仅可以用于 <strong>NTLM 认证</strong>，而<strong>非 Kerberos 认证</strong>。一些安全工具，例如 Impacket, 不仅可以通过 PTH 认证，而且还可以实现代码执行，而这之后的原理则是攻击者通过 SMB 协议使用 NTLM 哈希连接目标服务器。大部分工具通过 <strong>Service Control Manager</strong> API 开启一个新的 Windows 服务并且通过<strong>命名管道</strong>来通信。这项技术需要与目标 SMB 服务的连通，并且可以访问目标主机的 <strong>ADMIN$</strong> (在 <strong>ADMIN$</strong> 中写入一个服务二进制文件)，这意味着需要<strong>本地管理员权限</strong>。接下来，我们来看看常见的 PTH 用法。</p>
+<h3 id="接触-LSASS"><a href="#接触-LSASS" class="headerlink" title="接触 LSASS"></a><strong>接触 LSASS</strong></h3><h5 id="Mimikatz-的-PTH"><a href="#Mimikatz-的-PTH" class="headerlink" title="Mimikatz 的 PTH"></a><strong>Mimikatz 的 PTH</strong></h5><p>我们可以通过以下命令创建一个新的<strong>牺牲会话</strong>，并用我们提供的<strong>帐号</strong>、<strong>NTLM 哈希</strong>、<strong>域信息</strong>来替换占位符信息。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/i6hTx0IYDyzuSxST-image.png"><img src="/./assets/i6hTx0IYDyzuSxST-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/HdhTjSG8zvFf0a0f-image.png"><img src="/./assets/HdhTjSG8zvFf0a0f-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>该方法需要<strong>本地管理员特权</strong>，并且该操作会与 LSASS 交互，而且如果 PPL 启用的话，也会失败。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ruby">sekurlsa::pth /<span class="hljs-symbol">user:</span>&lt;用户名&gt; <span class="hljs-regexp">/domain:&lt;域&gt; /ntlm</span><span class="hljs-symbol">:&lt;ntlm&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>执行该命令需要本地管理员特权，但被认证的用户不需要有本地管理员权限。</strong></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/Pa8fWvsdfmyowkOI-image.png"><img src="/./assets/Pa8fWvsdfmyowkOI-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h3 id="不接触-LSASS"><a href="#不接触-LSASS" class="headerlink" title="不接触 LSASS"></a><strong>不接触 LSASS</strong></h3><h5 id="Impacket-之-psexec"><a href="#Impacket-之-psexec" class="headerlink" title="Impacket 之 psexec"></a><strong>Impacket 之 psexec</strong></h5><p>如上文所说，psexec不仅可以通过 PTH 认证，还能实现远程代码执行。原理则是通过 SMB 服务进行认证，在目标的 <strong>ADMIN$</strong> 上传<strong>服务二进制文件</strong>，再通过 <strong>SCM</strong> 创建新的服务并获得 shell。需要目标用户对目标主机具有<strong>本地管理员</strong>特权。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/i7z4queQBSFOWhzu-image.png"><img src="/./assets/i7z4queQBSFOWhzu-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在 psexec 的<strong>日志信息</strong>中，我们可以窥探到中间的过程。</p>
+<h5 id="Impacket-之-mssqlclient"><a href="#Impacket-之-mssqlclient" class="headerlink" title="Impacket 之 mssqlclient"></a><strong>Impacket 之 mssqlclient</strong></h5><p>Impacket 不仅可以协助我们通过 PTH 认证获得远程代码执行，但是我们也可用于访问特定服务，例如 MSSQL。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/Jgnxs6LMlUYPVQsq-image.png"><img src="/./assets/Jgnxs6LMlUYPVQsq-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="Impacket-之-secretdump"><a href="#Impacket-之-secretdump" class="headerlink" title="Impacket 之 secretdump"></a><strong>Impacket 之 secretdump</strong></h5><p>除此之外，PTH 还可以通过 Impacket 来远程导出目标主机的凭证，包含 SAM 数据库、域缓存凭证、DPAPI、LSA 机密等内容。原理为在认证之后通过操纵<strong>远程注册表</strong>来进行凭证导出操作，需要认证用户具有<strong>本地管理员</strong>权限。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/NhmmReZLIq9v7ChD-image.png"><img src="/./assets/NhmmReZLIq9v7ChD-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="CrackMapExec-中各项功能"><a href="#CrackMapExec-中各项功能" class="headerlink" title="CrackMapExec 中各项功能"></a><strong>CrackMapExec 中各项功能</strong></h5><p>除了 Impacket 外，我们之前提到过 CME (<a target="_blank" rel="noopener" href="https://github.com/Porchetta-Industries/CrackMapExec">https://github.com/Porchetta-Industries/CrackMapExec</a>) 也是一款内网渗透瑞士军刀，其功能越发丰富和完整。CME 可以用于 AD 枚举与利用、密码喷洒、权限确认 (例如该用户对目标主机是否具有 WinRM 访问权)、代码执行等。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/n6njyctkdRQyouNB-image.png"><img src="/./assets/n6njyctkdRQyouNB-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="xfreerdp-的-PTH-认证"><a href="#xfreerdp-的-PTH-认证" class="headerlink" title="xfreerdp 的 PTH 认证"></a><strong>xfreerdp 的 PTH 认证</strong></h5><p>我们甚至可以通过 PTH 来访问远程主机的 RDP 服务，这里我们需要用到工具 xfreerdp。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">xfreerdp /v:&lt;IP&gt; /u:&lt;用户名&gt; /d:&lt;域名 FQDB&gt; /pth:&lt;哈希&gt; /dynamic-resolution<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/1Aga8XjY78KHtuYa-image.png"><img src="/./assets/1Aga8XjY78KHtuYa-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>然而，我们会得到这样的报错：</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/uhtY6g6oMlmWQ3dK-image.png"><img src="/./assets/uhtY6g6oMlmWQ3dK-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>因此，我们需要开启受限管理模式。<strong>受限管理模式</strong>，即 Restricted Admin，可以防止用户通过 RDP 访问目标主机后，在目标主机上留下凭证 (NTLM哈希)。在受限管理模式下，用户使用的是<strong>网络认证</strong>而非<strong>交互式认证</strong>。我们可以通过以下 Powershell 命令取消禁用受限管理模式 (即开启)。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">New</span>-ItemProperty -<span class="hljs-type">Path</span> &quot;HKLM:\System\CurrentControlSet\Control\Lsa&quot; -<span class="hljs-type">Name</span> DisableRestrictedAdmin -<span class="hljs-keyword">Value</span> <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<p> <a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/3Hq4gG7EN6sx3O3s-image.png"><img src="/./assets/3Hq4gG7EN6sx3O3s-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>然后，我们就可以通过 xfreerfp 使用 PTH 访问 RDP 服务了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/NJMUhNZJd8ZURmIt-image.png"><img src="/./assets/NJMUhNZJd8ZURmIt-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>当然，因为在受限管理模式下，RDP 是通过网络认证访问，我们也可以在 Mimikatz 中 直接进行 PTH 认证后通过网络认证访问 RDP 服务。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sekurlsa::pth <span class="hljs-regexp">/user:&lt;用户&gt; /</span>domain:&lt;域 FQDN&gt; <span class="hljs-regexp">/ntlm:&lt;NTLM 哈希&gt; /</span>run:<span class="hljs-string">&quot;mstsc.exe /restrictedadmin&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/S67E1w5sh1DN8EgI-image.png"><img src="/./assets/S67E1w5sh1DN8EgI-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h1 id="密钥传递-Overpass-The-Hash-x2F-Pass-The-Key"><a href="#密钥传递-Overpass-The-Hash-x2F-Pass-The-Key" class="headerlink" title="密钥传递 Overpass The Hash &#x2F; Pass The Key"></a>密钥传递 Overpass The Hash &#x2F; Pass The Key</h1><p>Overpass The Hash，又称为 <strong>Pass The Key</strong>，<strong>密钥传递</strong>，是 PTH 的一种延伸，我们通常在 NTLM 认证被禁用、只有 Kerberos 认证可用的情况下使用。相比与 PTH 直接用 NTLM 哈希进行认证，OTH 认证通过目标用户的 <strong>NTLM 哈希</strong> 或者 <strong>AES 密钥</strong>申请对应的 TGT 或者 TGS，从而访问相应的主机或者服务。</p>
+<p>AES 密钥是什么呢？我们在 mimikatz 终端里执行命令 <strong>sekurlsa::ekeys</strong>，我们可以提取出 AES 密钥。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/PZDs0Omr7Lj6M6WA-image.png"><img src="/./assets/PZDs0Omr7Lj6M6WA-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在申请 TGT的时候，我们可以使用工具 Rubeus 来帮助我们实现</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">Rubeus.exe asktgt <span class="hljs-regexp">/user:&lt;用户名&gt; /</span>domain:&lt;域名fqdn&gt; <span class="hljs-regexp">/aes256:&lt;aes 密钥&gt; /</span>nowrap<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/D7vmZydfmbZ1OfbQ-image.png"><img src="/./assets/D7vmZydfmbZ1OfbQ-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>需要注意的是，从技术上来说，**&#x2F;aes256** 也可以替换成 <strong>&#x2F;rc4</strong>，即 <strong>NTLM 哈希</strong>。但是，请求 TGT 会产生 <strong>4768 事件</strong>，并且我们会看到 密钥类型是**RC4-HMAC (0x17)**，但是如今 Windows 系统中的默认密钥类型是 **AES256 (0X12)**。因此，我们依旧选用 <strong>AES256</strong>，可以使我们的活动被正常操作所淹没。</p>
+<h1 id="票据传递-Pass-The-Ticket"><a href="#票据传递-Pass-The-Ticket" class="headerlink" title="票据传递 Pass The Ticket"></a>票据传递 Pass The Ticket</h1><p>票据传递技术类似于密钥传递技术，只不过相比使用密钥，用的是票据。在讲解 PTT 之前，我们先来了解一下在 Windows 与 Linux 平台上有关域凭证的文件，它们可以通过工具实现互相转换。</p>
+<h5 id="kirbi"><a href="#kirbi" class="headerlink" title="kirbi"></a><strong>kirbi</strong></h5><p>我们通过 Mimikatz 或者 rubeus 请求与导出的 TGT 或者 TGS票据格式为 kirbi。对于 Mimikatz，我们可以使用命令 <strong>sekurlsa::ticket &#x2F;export</strong> 导出所有票据，格式为 kirbi。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/EmMio6bmYavaJ3lO-image.png"><img src="/./assets/EmMio6bmYavaJ3lO-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/xp8V4g0jHQXlRGPr-image.png"><img src="/./assets/xp8V4g0jHQXlRGPr-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p> 如果使用 Rubeus，可以使用 <strong>rubeus.exe dump</strong> 命令导出目前所有票据。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/gjIuxc4iAT6q2pqL-image.png"><img src="/./assets/gjIuxc4iAT6q2pqL-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/E7TNOmqICupgDmVD-image.png"><img src="/./assets/E7TNOmqICupgDmVD-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>当然，我们可以指定导出哪些票据。先通过 r<strong>ubeus.exe triage</strong> 命令查看当前所有的登陆会话以及对应的票据，再通过 <strong>&#x2F;luid</strong> 参数指定要导出票据的登陆会话。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs gradle">rubeus.exe triage<br>rubeus.exe <span class="hljs-keyword">dump</span> <span class="hljs-regexp">/luid:&lt;登陆会话 ID&gt; /</span>nowrap<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/H1ZyA4sq0rEO01jA-image.png"><img src="/./assets/H1ZyA4sq0rEO01jA-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/vEwihfS7zYcCWrn1-image.png"><img src="/./assets/vEwihfS7zYcCWrn1-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>至于将文本保存为 kirbi 文件，在Windows端，我们可以通过如下的 Powershell 命令保存 kirbi 文件。在 Linux 端，我们可以通过命令 <strong>echo ‘<ticket>‘ | base64 -d &gt; example.kirbi</strong> 实现。</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs clojure">[System.IO.File]<span class="hljs-symbol">::WriteAllBytes</span>(<span class="hljs-string">&quot;&lt;目标地址&gt;&quot;</span><span class="hljs-punctuation">,</span> [System.Convert]<span class="hljs-symbol">::FromBase64String</span>(<span class="hljs-string">&quot;&lt;票据&gt;&quot;</span>))<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/j3MlBwCZLp6p9Dbw-image.png"><img src="/./assets/j3MlBwCZLp6p9Dbw-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/i8Zt7hEviHjSFgna-image.png"><img src="/./assets/i8Zt7hEviHjSFgna-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="ccache"><a href="#ccache" class="headerlink" title="ccache"></a><strong>ccache</strong></h5><p>在 Linux端，如果 Linux 主机上有活跃的会话，那么在 <strong>&#x2F;tmp</strong> 目录下会产生该用户的凭证缓存文件，Credential Cache，即 ccache 文件，格式为 krb5cc_xxx，例如krb5cc_1394201122_MerMmG。ccache 文件中保存了该用户的<strong>票据信息</strong>，例如 TGT，TGS 等。在 Linux 域主机上，环境变量 <strong>KRB5CCNAME</strong> 指向了票据的地址，以获得域用户的上下文。我们也可以通过命令 <strong>export KRB5CCNAME&#x3D;&lt;ccache 文件地址&gt;</strong> 来手动更改环境变量。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/moYentOKoUXY3azT-image.png"><img src="/./assets/moYentOKoUXY3azT-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/nej5fZu90BYVN0UV-image.png"><img src="/./assets/nej5fZu90BYVN0UV-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>我们可以通过 Impacket 的 <strong>ticketConverter</strong> 脚本将票据在 <strong>ccache</strong> 与 <strong>kirbi</strong> 形式中互相转换。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/llUnLQr5okN9IOcK-image.png"><img src="/./assets/llUnLQr5okN9IOcK-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/aTv1iApduTlpmtG1-image.png"><img src="/./assets/aTv1iApduTlpmtG1-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>ccache 文件仅对应域用户以及 <strong>root</strong> 用户可读。如果作为活跃用户，我们可以通过 <strong>kinit</strong> 申请新的 TGT，以及通过 <strong>kvno [SPN]</strong> 申请新的 TGS。</p>
+<h5 id="keytab"><a href="#keytab" class="headerlink" title="keytab"></a><strong>keytab</strong></h5><p>keytab 文件包含 <strong>Kerberos 主体名称</strong>和<strong>凭证</strong>，例如NTLM哈希。我们在之前提到过可以使用脚本 (<a target="_blank" rel="noopener" href="https://github.com/sosdave/KeyTabExtract">https://github.com/sosdave/KeyTabExtract</a>) 从中提取 <strong>NTLM</strong> 或者 <strong>AES256</strong> 凭证，那么在此基础上我们想要获得其他格式的票据自然不是难事。每台 Linux 域计算机的 <strong>&#x2F;etc&#x2F;krb5.keytab</strong> 文件是其 keytab 文件，默认情况下可由 root 访问。</p>
+<p>类似于 PTH，一些工具例如 Impacket 支持直接使用 keytab 进行认证。</p>
+<p><a target="_blank" rel="noopener" href="http://raven-medicine.com/uploads/images/gallery/2022-10/VPxW683nY4KjT1YL-image.png"><img src="/./assets/VPxW683nY4KjT1YL-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>好了，在了解了以上几种凭证文件类型后，我们来讨论如何利用及导入票据。</p>
+<h5 id="Windows-端票据传递"><a href="#Windows-端票据传递" class="headerlink" title="Windows 端票据传递"></a><strong>Windows 端票据传递</strong></h5><p>在 Windows 端，我们主要可以使用 Mimikatz 以及 Rubeus 等工具来导入票据。Cobalt Strike 则支持 <strong>kerberos_ticket_use</strong> 或 <strong>kerberos_ccache_use</strong> 命令来实现。</p>
+<p>在 CobaltStrike 中通过 <strong>make_token</strong> 命令生成一个<strong>牺牲会话</strong>，然后导入要传递的票据。至于创建一个牺牲会话后再导入凭证，原因在 Windows 认证原理小节中有提过，新导入的 TGT 会<strong>替换原有的</strong>，可能导致<strong>认证紊乱</strong>，而新创建的牺牲会话中尚无 TGT。</p>
+<p>然后，我们能在其他主机上以 <strong>white-bird\serveradm</strong> 身份顺利访问 Web02 的 **C$**。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/kt1A1QMrjJoDY9uq-image.png"><img src="/./assets/kt1A1QMrjJoDY9uq-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h5 id="Linux-端票据传递"><a href="#Linux-端票据传递" class="headerlink" title="Linux 端票据传递"></a><strong>Linux 端票据传递</strong></h5><p>而在 Linux 端传递票据的话，我们先需要将 kirbi 文件转换为 ccache 格式，然后设置 <strong>KRB5CCNAME</strong> 环境变量，之后就可以使用票据认证了。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/mdAWgS51eJLaPx0o-image.png"><img src="/./assets/mdAWgS51eJLaPx0o-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h1 id="LAPS-本地管理员密码解决方案"><a href="#LAPS-本地管理员密码解决方案" class="headerlink" title="LAPS 本地管理员密码解决方案"></a>LAPS 本地管理员密码解决方案</h1><p>为了进一步保护本地管理员的凭证，本地管理员密码解决方案 (LAPS) 是一种用于管理域主机上的<strong>本地管理员凭证</strong>的解决方案。 本地管理员帐户可以是<strong>默认帐户</strong>或<strong>自定义帐户</strong>。部署 LAPS 后，密码是随机的、自动更改的，并且与其他帐户的密码不同。在域计算机上安装 LAPS 后，计算机会多出两个属性 <strong>ms-mcs-AdmPwnExpirationTime</strong> 和 <strong>ms-msc-AdmPwd</strong>，分别是<strong>过期时间</strong>和<strong>明文密码</strong>。 LAPS 通过域中的 GPO <strong>LAPS</strong> 进行管理。 域管理员对 ms-msc-AdmPwd 属性具有读取权限，但可以将读取权限委派给其他主体，如特定域用户或组。从系统管理员的角度，我们可以在 DC 上查看最新的LAPS密码。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/hT9Y9xmeEMuKF6j4-image.png"><img src="/./assets/hT9Y9xmeEMuKF6j4-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/sSHOnh66xLoderWO-image.png"><img src="/./assets/sSHOnh66xLoderWO-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h3 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a><strong>枚举</strong></h3><p>在 RAVEN-MED 域中，LAPS 有为一些域主机 (其实也就 1 台 域主机) 安装。我们导入 powerview 脚本，执行以下命令：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">Get</span><span class="hljs-operator">-</span>NetComputer <span class="hljs-operator">-</span><span class="hljs-keyword">Filter</span> &quot;(ms-mcs-admpwdexpirationtime=*)&quot; <span class="hljs-operator">|</span> <span class="hljs-keyword">select</span> dnshostname<br></code></pre></td></tr></table></figure>
+
+<p>我们看到，RAVEN-MED 域中只有 mon01 被配置了 LAPS。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/PqQo90YY3q0DU0xG-image.png"><img src="/./assets/PqQo90YY3q0DU0xG-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>根据 Bloodhound，我们发现 PROD 域中的 harold 可以阅读 mon01 的 LAPS 密码。</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/XulDfI5UR8EABYxg-image.png"><img src="/./assets/XulDfI5UR8EABYxg-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h3 id="读取明文密码"><a href="#读取明文密码" class="headerlink" title="读取明文密码"></a><strong>读取明文密码</strong></h3><p>在确定了 prod\harold 可以阅读 mon01 的 LAPS 密码后，我们需要获得 harold 的上下文。根据之前的利用，我们可以很轻松地得到 harold 的凭证从而获得访问。</p>
+<p>然后执行以下命令以读取明文密码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">Get</span><span class="hljs-operator">-</span>NetComputer <span class="hljs-operator">-</span><span class="hljs-keyword">Filter</span> &quot;(ms-mcs-admpwd=*)&quot; <span class="hljs-operator">|</span> <span class="hljs-keyword">Select</span> dnshostname,ms<span class="hljs-operator">-</span>mcs<span class="hljs-operator">-</span>admpwd<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/Ome4zFXqFd7GaEBF-image.png"><img src="/./assets/Ome4zFXqFd7GaEBF-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h3 id="新-LAPS"><a href="#新-LAPS" class="headerlink" title="新 LAPS"></a><strong>新 LAPS</strong></h3><p>就在 2023 年 4 月，微软发布了新一代 LAPS，而我们目前为止所讲的 LAPS 成为旧版本的了。新的 LAPS 有以下特征</p>
+<p>1：Windows 原生集成。</p>
+<p>2：支持 Azure AD</p>
+<p>3：对本地 AD 的 LAPS 增加新的特性，例如下图所示</p>
+<p><a target="_blank" rel="noopener" href="https://raven-medicine.com/uploads/images/gallery/2023-05/A6sjXcU6NKLvIi7w-image.png"><img src="/./assets/A6sjXcU6NKLvIi7w-image.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<h1 id="gMSA-组托管服务账号"><a href="#gMSA-组托管服务账号" class="headerlink" title="gMSA 组托管服务账号"></a>gMSA 组托管服务账号</h1><p><strong>注：本小节作为知识拓展，本 Lab 尚未集成此内容。</strong></p>
+<p>gMSA，即<strong>组托管服务帐号</strong>，提供了对<strong>分布在多台服务器上的服务帐号</strong>的自动化的<strong>密码管理</strong>、<strong>SPN管理</strong>、以及<strong>委派管理权</strong>。使用 gMSA 有助于防御 Kerberoast 攻击。包含密码信息的 blob 被存储在 gMSA 的属性 <strong>msds-ManagedPassword</strong> 中。只有特定的主体可以读取<strong>密码 blob</strong>，默认情况下即便是域管理员也无法读取。</p>
+<p>因为 gMSA 具有 <strong>msDs-GroupManagedServiceAccount</strong> 的对象类，因此我们可以轻松找到。</p>
+<p><a target="_blank" rel="noopener" href="http://raven-medicine.com/uploads/images/gallery/2022-09/IJJUYnrLv0zaLU7x-l3Zimage.png"><img src="/./assets/IJJUYnrLv0zaLU7x-l3Zimage.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+<p>在找到了可以读取 gMSA 的主体之后，我们可以在其上下文中使用工具 GMSAPasswordReader (<a target="_blank" rel="noopener" href="https://github.com/rvazarkar/GMSAPasswordReader">https://github.com/rvazarkar/GMSAPasswordReader</a>) 获取 NTLM 哈希，之后从而破解哈希或者 进行 PTH 认证。</p>
+<p><a target="_blank" rel="noopener" href="http://raven-medicine.com/uploads/images/gallery/2022-09/s8kRMjKd4H5vZuAo-xYVimage.png"><img src="/./assets/s8kRMjKd4H5vZuAo-xYVimage.png" srcset="/img/loading.gif" lazyload alt="image.png"></a></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%86%85%E7%BD%91/" class="category-chain-item">内网</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%86%85%E7%BD%91/">#内网</a>
+      
+        <a href="/tags/privite/">#privite</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Active Directory的利用</div>
+      <div>https://c47sh4rk.github.io/2024/02/10/Windows凭证理论/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月10日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/02/05/Active-Directory%E7%9A%84%E5%88%A9%E7%94%A8/" title="Active Directory的利用">
+                        <span class="hidden-mobile">Active Directory的利用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

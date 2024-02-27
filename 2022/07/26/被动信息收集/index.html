@@ -1,0 +1,867 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="开源情报 -- OSINT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="被动信息收集">
+<meta property="og:url" content="https://c47sh4rk.github.io/2022/07/26/%E8%A2%AB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="开源情报 -- OSINT">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-26T02:32:01.000Z">
+<meta property="article:modified_time" content="2023-02-26T08:05:47.000Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="OSCP">
+<meta property="article:tag" content="web渗透">
+<meta property="article:tag" content="信息收集">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>被动信息收集 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="被动信息收集"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-26 10:32" pubdate>
+          2022年7月26日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">被动信息收集</h1>
+            
+            <div class="markdown-body">
+              
+              <h3 id="被动信息收集"><a href="#被动信息收集" class="headerlink" title="被动信息收集"></a>被动信息收集</h3><ul>
+<li>被动信息收集也称 开源情报 – OSINT</li>
+<li>在不与目标系统交互的情况下, 利用开放信息渠道搜索目标系统信息</li>
+<li>这是个循环而非线形的过程, 下一步如何攻击, 由前一步收集到的信息决定</li>
+<li>信息收集途径、渠道(第三方信息)</li>
+<li>此阶段在渗透测试过程中并非一定必须</li>
+<li>终极目标是了解目标系统, 扩大发展攻击面</li>
+<li>利用漏洞、社工、密码破解..<ul>
+<li>目标系统全无漏洞, 但一个员工在集邮论坛上求购邮票;</li>
+<li>攻击者创建邮票站点, 使其看起来真实, 并在页面中加入客户端攻击代码</li>
+<li>员工访问站点, 被执行攻击代码, 反弹shell</li>
+</ul>
+</li>
+</ul>
+<p><strong>记录一切发现的信息(笔记)</strong></p>
+<h3 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h3><ul>
+<li><p>Web侦查(MegaCorp 模拟的纳米科技公司)</p>
+<ul>
+<li>Web站点会泄漏大量信息, 并可能存在长期疏于维护的系统</li>
+<li>发现公司社交媒体账号、员工邮箱、 Twitter账号 <a target="_blank" rel="noopener" href="https://www.megacorpone.com/about.html">https://www.megacorpone.com/about.html</a></li>
+<li>关注邮件地址命名规则</li>
+</ul>
+</li>
+<li><p>Whois信息枚举</p>
+<ul>
+<li>基于TCP的服务, 可查询域名、域名服务器、注册者等公开信息</li>
+<li><code>kali@kali:~$ whois megacorpone.com</code></li>
+<li>关注<code>Registrant Name、Admin name、Tech Name、Name Server、电话邮箱、地址</code>等</li>
+<li>与网站联系人信息对比, 发现Tech Name是该公司的网络安全经理</li>
+</ul>
+</li>
+<li><p>反向查询IP地址(地址所有者)</p>
+<ul>
+<li><code>whois 38.100.193.70</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="Google黑客"><a href="#Google黑客" class="headerlink" title="Google黑客"></a>Google黑客</h3><ul>
+<li>发现重要信息、漏洞、配置错误的站点</li>
+<li>从广泛的信息收集开始，通过操作符不断缩小搜索结果范围</li>
+<li><code>site:magacorpone.com filetype:php  # 发现（SIEM）后台</code></li>
+<li><code>ext:jsp ext:cfm ext:pl             # 发现Java、Coldfusion、Perl页面</code></li>
+<li><code>site:megacorpone.com -filetype:admin       # 过滤信息，发现后台入口 </code></li>
+<li><code>intitle:&quot;index of&quot; &quot;parent directior&quot; # 目标列表</code></li>
+<li>Google Hacking Database(GHDB)<ul>
+<li><a target="_blank" rel="noopener" href="https://www.exploit-db.com/google-hacking-database">https://www.exploit-db.com/google-hacking-database</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="开源项目代码库"><a href="#开源项目代码库" class="headerlink" title="开源项目代码库"></a>开源项目代码库</h3><ul>
+<li><code>GitHub、GitLab、SourceForge</code></li>
+<li>发现程序语言、源码、框架、默认账号密码、秘钥、数据库连接设置等</li>
+<li>Github可以搜索用户或组织的库（全局搜索需要账号）</li>
+<li>搜索文件名包含users的所有信息<ul>
+<li><code>filename:users</code></li>
+</ul>
+</li>
+<li>大型库可以使用工具搜索Gitrob、Gitleaks、Recon-NG某些模块（需要token）<ul>
+<li>以上工具通常基于正则和墒检测潜在有价值的信息</li>
+<li>正则匹配特征，常用于搜索密码变体；墒检测用于发现所及字符串（密码）</li>
+<li><code>gitleaks detect -t</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="公开信息平台"><a href="#公开信息平台" class="headerlink" title="公开信息平台"></a>公开信息平台</h3><ul>
+<li>shodan 网路空间搜索引擎, 发现服务器、设备、路由器、ioT等设备资产</li>
+<li>搜索Megacorpone公司SSH服务资产<ul>
+<li><code>hostname:megacorpone.com port:&quot;22&quot;</code></li>
+<li>发现服务、版本、开放端口、主机信息、已知漏洞</li>
+</ul>
+</li>
+<li>贴吧类服务<ul>
+<li>存储和共享内容的网站</li>
+<li><a target="_blank" rel="noopener" href="https://pastebin.com/">https://pastebin.com</a></li>
+</ul>
+</li>
+<li>Stack Overflow<ul>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/">https://stackoverflow.com</a></li>
+<li>为开发人员提供咨询和回答编码相关问题的网站</li>
+<li>如果发现提问者是目标公司员工, 可以从员工的提问和回答中推断目标公司的情况</li>
+</ul>
+</li>
+</ul>
+<h3 id="安全头扫描器"><a href="#安全头扫描器" class="headerlink" title="安全头扫描器"></a>安全头扫描器</h3><ul>
+<li>代理平台模糊了主动与被动信息收集的边界 <ul>
+<li>Security Headers 分析HTTP响应头</li>
+<li>发现Megacorpone站点缺少众多安全投, 判断管理员并不了解安全加固</li>
+</ul>
+</li>
+<li>常见安全头<ul>
+<li>Content-Security-Policy<ul>
+<li>用来通过指定允许加载哪些资源来防止跨站点脚本攻击(防XSS)</li>
+</ul>
+</li>
+<li>X-Frame-Options<ul>
+<li>响应头，可用于防止您的网站在<code>&lt;frame&gt;，&lt;iframe&gt;或&lt;object&gt;</code>中呈现。(建议SAMEORIGIN)</li>
+</ul>
+</li>
+<li>X-Content-Type-Options<ul>
+<li>确保浏览器始终按照服务器设置的MIME类型来解析(X-Content-Type-Options: nosniff)</li>
+</ul>
+</li>
+<li>Referer-Policy<ul>
+<li>允许站点控制Referer头向外暴露多少信息(所有站点都应该设置它)</li>
+</ul>
+</li>
+<li>Permissions-Policy<ul>
+<li>允许站点控制浏览器可使用哪些特性和api</li>
+</ul>
+</li>
+<li>Cross-Origin Embedder Policy <ul>
+<li>允许网站禁止浏览器加载自残</li>
+</ul>
+</li>
+<li>Cross-Origin Opener Policy<ul>
+<li>允许站点控制起选择性的跨源隔离</li>
+</ul>
+</li>
+<li>Cross-Origin Resource Policy<ul>
+<li>允许资源所有者指定谁可以加载资源</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="SSL测试-x2F-硬件加固"><a href="#SSL测试-x2F-硬件加固" class="headerlink" title="SSL测试 &#x2F; 硬件加固"></a>SSL测试 &#x2F; 硬件加固</h3><ul>
+<li>分析当前服务器的SSl&#x2F;TLS配置<ul>
+<li>与最佳实践对比</li>
+<li>识别SSL&#x2F;TLS相关漏洞(Poodle、Heartbleed)</li>
+<li><a target="_blank" rel="noopener" href="https://ssllabs.com/ssltest/">https://ssllabs.com/ssltest/</a></li>
+</ul>
+</li>
+<li>服务器加固&#x2F;硬化思路<ul>
+<li>增强服务器安全配置</li>
+<li>禁用、删除不需要的服务和账号</li>
+<li>修改默认账号密码</li>
+<li>设置适当的安全头</li>
+</ul>
+</li>
+</ul>
+<h2 id="个人信息收集"><a href="#个人信息收集" class="headerlink" title="个人信息收集"></a>个人信息收集</h2><h3 id="个人信息"><a href="#个人信息" class="headerlink" title="个人信息"></a>个人信息</h3><ul>
+<li>搜索企业员工信息<ul>
+<li>用于后续社工、钓鱼、客户端攻击</li>
+<li><strong>收集个人信息可能触犯其他法律</strong></li>
+<li>渗透测试仅针对企业系统, 非个人设备账号</li>
+</ul>
+</li>
+<li>收集Email信息<ul>
+<li>多个公共数据源收集电子邮件信息</li>
+<li><code>kali@kali:~$ theHavester -d megacorpone.com -b google</code></li>
+</ul>
+</li>
+<li>收集泄漏密码<ul>
+<li>搜索泄漏的密码, 结合收集到的邮箱地址, 碰撞密码</li>
+</ul>
+</li>
+</ul>
+<h3 id="社交媒体"><a href="#社交媒体" class="headerlink" title="社交媒体"></a>社交媒体</h3><ul>
+<li>通过社交媒体, 获得公司及其运营相关的信息</li>
+</ul>
+<h3 id="信息收集框架"><a href="#信息收集框架" class="headerlink" title="信息收集框架"></a>信息收集框架</h3><ul>
+<li>OSINT Framework<ul>
+<li><strong><a target="_blank" rel="noopener" href="https://osintframework.com/">https://osintframework.com</a></strong></li>
+<li>在一个中心位置包含信息收集工具和网站</li>
+<li>框架中列出的一些工具涵盖了比信息安全更多的学科</li>
+</ul>
+</li>
+<li>Maltego<ul>
+<li>一个非常强大的数据挖掘工具</li>
+<li>搜索了数千个在线数据源</li>
+</ul>
+</li>
+</ul>
+<p><strong>不用追求100%的结果</strong></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OSCP-Notes/" class="category-chain-item">OSCP-Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OSCP/">#OSCP</a>
+      
+        <a href="/tags/web%E6%B8%97%E9%80%8F/">#web渗透</a>
+      
+        <a href="/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">#信息收集</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>被动信息收集</div>
+      <div>https://c47sh4rk.github.io/2022/07/26/被动信息收集/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月26日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/07/26/Golang%E5%85%A5%E9%97%A8/" title="Golang入门">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Golang入门</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/25/BASH%E8%84%9A%E6%9C%AC/" title="BASH脚本">
+                        <span class="hidden-mobile">BASH脚本</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

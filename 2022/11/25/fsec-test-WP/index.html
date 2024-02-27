@@ -1,0 +1,903 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="农夫安全开源课考核">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fsec-test-WP">
+<meta property="og:url" content="https://c47sh4rk.github.io/2022/11/25/fsec-test-WP/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="农夫安全开源课考核">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125012049840.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125012416326.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125012717067.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125012842042.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125013201777.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125013421392.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125014111234.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125020226694.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125013543188.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125014430476.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125014622889.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125013858276.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125014000383.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125015634283.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125015715456.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125020246835.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125020355143.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125020922853.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125021354812.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125021332807.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125021540677.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125021739934.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125022235614.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125024854450.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125025636296.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125030258678.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125030636575.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125033045434.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125033213936.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125033231451.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125033259825.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031156126.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031255226.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031410966.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031513850.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031727117.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031951901.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031811973.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126175338795.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126175815800.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126175852833.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126180420164.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126180840402.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126181317342.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126185904823.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126190021397.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208135604802.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208141456575.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208141605340.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208144702975-20221208162930576.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208144758357.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208145103818.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208151634578.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208151854136.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208151829714.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208155259139.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208155730294.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208155713491.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208161022946.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208161059257.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208161117088.png">
+<meta property="article:published_time" content="2022-11-24T17:18:06.000Z">
+<meta property="article:modified_time" content="2022-12-20T17:47:11.000Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="打靶">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125012049840.png">
+  
+  
+  
+  <title>fsec-test-WP - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="fsec-test-WP"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-25 01:18" pubdate>
+          2022年11月25日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          66 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">fsec-test-WP</h1>
+            
+            <div class="markdown-body">
+              
+              <p>测试域名 <a target="_blank" rel="noopener" href="http://www.fsec.io/">www.fsec.io</a></p>
+<h1 id="Part-1"><a href="#Part-1" class="headerlink" title="Part 1"></a>Part 1</h1><h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><h3 id="主机发现"><a href="#主机发现" class="headerlink" title="主机发现"></a>主机发现</h3><p>通过ping确定目标ip为10.0.0.103</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125012049840.png" srcset="/img/loading.gif" lazyload alt="image-20221125012049840"></p>
+<h3 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h3><p>通过全端口的扫描发现目标系统仅开放了22和80端口</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125012416326.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="服务探测"><a href="#服务探测" class="headerlink" title="服务探测"></a>服务探测</h3><p>TCP端口扫描 <code>sudo nmap -sV -sC -O -p22,80 10.0.0.103</code></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125012717067.png" srcset="/img/loading.gif" lazyload alt="image-20221125012717067"></p>
+<p>为了防止开放了UDP端口</p>
+<p>再通过UDP进行一遍端口扫描 <code>sudo nmap -sU -p22,80 10.0.0.103</code></p>
+<p>很显然，没有开放的UDO端口</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125012842042.png" srcset="/img/loading.gif" lazyload alt="image-20221125012842042"></p>
+<p>使用Nmap自带的脚本进行简单漏扫</p>
+<p><code>sudo nmap --script=vuln -p22,80 10.0.0.103</code></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125013201777.png" srcset="/img/loading.gif" lazyload alt="image-20221125013201777"></p>
+<p>通过简单的信息收集发现目标系统的web页面存在着<code>robots.txt</code></p>
+<p>并且通过经验可以大致知道manual目录为apache的默认文档</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125013421392.png" srcset="/img/loading.gif" lazyload alt="image-20221125013421392"></p>
+<p>所以突破点暂时只能放在robots.txt</p>
+<h3 id="访问web"><a href="#访问web" class="headerlink" title="访问web"></a>访问web</h3><p>访问首页没有发现什么有价值的信息，只有一张图片</p>
+<p>还提醒我这个靶机不难，别放弃</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125014111234.png" srcset="/img/loading.gif" lazyload alt="image-20221125014111234"></p>
+<p>看了看这张图没发现有价值的信息</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125020226694.png" srcset="/img/loading.gif" lazyload alt="image-20221125020226694"></p>
+<p>访问robots.txt 在这里发现一个隐藏目录&#x2F;~myfiles</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125013543188.png" srcset="/img/loading.gif" lazyload alt="image-20221125013543188"></p>
+<p>访问&#x2F;~myfiles这个路径发现重定向了</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125014430476.png" srcset="/img/loading.gif" lazyload alt="image-20221125014430476"></p>
+<p>在这里跟随重定向发现返回了一个code为200的假404页面，并且通过注释提醒我继续尝试</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125014622889.png" srcset="/img/loading.gif" lazyload alt="image-20221125014622889"></p>
+<h3 id="目录枚举"><a href="#目录枚举" class="headerlink" title="目录枚举"></a>目录枚举</h3><p>使用dirb的默认字典对网站进行枚举</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125013858276.png" srcset="/img/loading.gif" lazyload alt="image-20221125013858276"></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125014000383.png" srcset="/img/loading.gif" lazyload alt="image-20221125014000383"></p>
+<p>通过使用默认字典对目录枚举后没有发现更多有价值的信息</p>
+<p>卡了一段时间后，想了想会不会是因为有<code>～</code>的原因导致我啥也爆不出来</p>
+<h3 id="自制字典"><a href="#自制字典" class="headerlink" title="自制字典"></a>自制字典</h3><p>使用seclists的&#x2F;Discovery&#x2F;Web-Content&#x2F;directory-list-2.3-medium.txt为基础自制字典</p>
+<p><code>sed &quot;s/^/\~&amp;/g&quot; directory-list-2.3-medium.txt &gt; my_wordlist.txt</code></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125015634283.png" srcset="/img/loading.gif" lazyload alt="image-20221125015634283"></p>
+<h3 id="再次枚举目录"><a href="#再次枚举目录" class="headerlink" title="再次枚举目录"></a>再次枚举目录</h3><p>在这里使用dirb等了快两分钟发现还在生成字典，果断放弃</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125015715456.png" srcset="/img/loading.gif" lazyload alt="image-20221125015715456"></p>
+<p>使用gobuster枚举</p>
+<p><code>gobuster dir -u http://www.fsec.io -w my_wordlist.txt</code></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125020246835.png" srcset="/img/loading.gif" lazyload alt="image-20221125020246835"></p>
+<p>果然爆出了秘密信息</p>
+<p>通过访问它发现这个人创建了一个ssh私钥并且把它藏起来了，并且还留了个人名<code>icex64</code></p>
+<p>所以我只要找到它的私钥并且通过这个用户名使用私钥登录就能拿到一个shell了</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125020355143.png" srcset="/img/loading.gif" lazyload alt="image-20221125020355143"></p>
+<p>使用正常字典爆破发现没什么有价值的结果</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125020922853.png" srcset="/img/loading.gif" lazyload alt="image-20221125020922853"></p>
+<p>根据之前的套路以及它的提醒: “把这个ssh私钥藏起来了”</p>
+<p>所以猜测这个私钥是隐藏文件，也就是<code>.</code>开头的</p>
+<p> 继续自制字典爆破</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125021354812.png" srcset="/img/loading.gif" lazyload alt="image-20221125021354812"></p>
+<p>在这里发现一个看着就像的秘密文件<code>.mysecret.txt</code></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125021332807.png" srcset="/img/loading.gif" lazyload alt="."></p>
+<p>查看它发现一个像base64的编码后的数据</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125021540677.png" srcset="/img/loading.gif" lazyload alt="image-20221125021540677"></p>
+<h3 id="base解码"><a href="#base解码" class="headerlink" title="base解码"></a>base解码</h3><p>使用了base64解码后发现是乱码，丢到cyberchef里使用magic模块发现是base58</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125021739934.png" srcset="/img/loading.gif" lazyload alt="image-20221125021739934"></p>
+<p>解码后拿到私钥为</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs awk">-----<span class="hljs-keyword">BEGIN</span> OPENSSH PRIVATE KEY-----<br>b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jYmMAAAAGYmNyeXB0AAAAGAAAABDy33c2Fp<br>PBYANne4oz3usGAAAAEAAAAAEAAAIXAAAAB3NzaC1yc2EAAAADAQABAAACAQDBzHjzJcvk<br><span class="hljs-number">9</span>GXiytplgT9z<span class="hljs-regexp">/mP91NqOU9QoAwop5JNxhEfm/</span>j5KQmdj/JB7sQ1hBotONvqaAdmsK+OYL9<br>H6NSb0jMbMc4soFrBinoLEkx894B<span class="hljs-regexp">/PqUTODesMEV/</span>aK22UKegdwlJ9Arf+<span class="hljs-number">1</span>Y48V86gkzS6<br>xzoKn/ExVkApsdimIRvGhsv4ZMmMZEkTIoTEGz7raD7QHDEXiusWl0hkh33rQZCrFsZFT7<br>J0wKgLrX2pmoMQC6o42OQJaNLBzTxCY6jU2BDQECoVuRPL7eJa0<span class="hljs-regexp">/nRfCaOrIzPfZ/</span>NNYgu<br>/Dlf1CmbXEsCVmlD71cbPqwfWKGf3hWeEr0WdQhEuTf5OyDICwUbg0dLiKz4kcskYcDzH0<br>ZnaDsmjoYv2uLVLi19jrfnp/tVoLbKm39ImmV6Jubj6JmpHXewewKiv6z1nNE8mkHMpY5I<br>he0cLdyv316bFI8O+<span class="hljs-number">3</span>y5m3gPIhUUk78C5n0VUOPSQMsx56d+B9H2bFiI2lo18mTFawa0pf<br>XdcBVXZkouX3nlZB1/Xoip71LH3kPI7U7fPsz5EyFIPWIaENsRmznbtY9ajQhbjHAjFClA<br>hzXJi4LGZ6mjaGEil+<span class="hljs-number">9</span>g4U7pjtEAqYv1+<span class="hljs-number">3</span>x8F+zuiZsVdMr/<span class="hljs-number">66</span>Ma4e6iwPLqmtzt3UiFGb<br><span class="hljs-number">4</span>Ie1xaWQf7UnloKUyjLvMwBbb3gRYakBbQApoONhGoYQAAB1BkuFFctACNrlDxN180vczq<br>mXXs+ofdFSDieiNhKCLdSqFDsSALaXkLX8DFDpFY236qQE1poC+LJsPHJYSpZOr0cGjtWp<br>MkMcBnzD9uynCjhZ9ijaPY<span class="hljs-regexp">/vMY7mtHZNCY8SeoWAxYXToKy2cu/</span>+pVyGQ76KYt3J0AT7wA<br><span class="hljs-number">2</span>OR3aMMk0o1LoozuyvOrB3cXMHh75zBfgQyAeeD7LyYG<span class="hljs-regexp">/b7z6zGvVxZca/g</span>572CXxXSXlb<br>QOw/AR8ArhAP4SJRNkFoV2YRCe38WhQEp4R6k+<span class="hljs-number">34</span>tK+kUoEaVAbwU+IchYyM8ZarSvHVpE<br>vFUPiANSHCZ<span class="hljs-regexp">/b+pdKQtBzTk5/</span>VH<span class="hljs-regexp">/Jk3QPcH69EJyx8/g</span>RE/glQY6z6nC6uoG4AkIl+gOxZ<br><span class="hljs-number">0</span>hWJJv0R1Sgrc91mBVcYwmuUPFRB5YFMHDWbYmZ0IvcZtUxRsSk2/uWDWZcW4tDskEVPft<br>rqE36ftm9eJ/nWDsZoNxZbjo4cF44PTF0WU6U0UsJW6mDclDko6XSjCK4tk8vr4qQB8OLB<br>QMbbCOEVOOOm9ru89e1a+FCKhEPP6LfwoBGCZMkqdOqUmastvCeUmht6a1z6nXTizommZy<br>x+ltg9c9xfeO8tg1xasCel1BluIhUKwGDkLCeIEsD1HYDBXb+HjmHfwzRipn/tLuNPLNjG<br>nx9LpVd7M72Fjk6lly8KUGL7z95HAtwmSgqIRlN+M5iKlB5CVafq0z59VB8vb9oMUGkCC5<br>VQRfKlzvKnPk0Ae9QyPUzADy+gCuQ2HmSkJTxM6KxoZUpDCfvn08Txt0dn7CnTrFPGIcTO<br>cNi2xzGu3wC7jpZvkncZN+qRB0ucd6vfJ04mcT03U5oq++uyXx8t6EKESa4LXccPGNhpfh<br>nEcgvi6QBMBgQ1Ph0JSnUB7jjrkjqC1q8qRNuEcWHyHgtc75JwEo5ReLdV/hZBWPD8Zefm<br><span class="hljs-number">8</span>UytFDSagEB40Ej9jbD5GoHMPBx8VJOLhQ+<span class="hljs-number">4</span>/xuaairC7s9OcX4WDZeX3E0FjP9kq3QEYH<br>zcixzXCpk5KnVmxPul7vNieQ2gqBjtR9BA3PqCXPeIH0OWXYE+LRnG35W6meqqQBw8gSPw<br>n49YlYW3wxv1G3qxqaaoG23HT3dxKcssp+XqmSALaJIzYlpnH5Cmao4eBQ4jv7qxKRhspl<br>AbbL2740eXtrhk3AIWiaw1h0DRXrm2GkvbvAEewx3sXEtPnMG4YVyVAFfgI37MUDrcLO93<br>oVb4p<span class="hljs-regexp">/rHHqqPNMNwM1ns+adF7REjzFwr4/</span>trZq0XFkrpCe5fBYH58YyfO/g8up3DMxcSSI<br><span class="hljs-number">63</span>RqSbk60Z3iYiwB8iQgortZm0UsQbzLj9i1yiKQ6OekRQaEGxuiIUA1SvZoQO9NnTo0SV<br>y7mHzzG17nK4lMJXqTxl08q26OzvdqevMX9b3GABVaH7fsYxoXF7eDsRSx83pjrcSd+t0+<br>t<span class="hljs-regexp">/YYhQ/</span>r2z30YfqwLas7ltoJotTcmPqII28JpX/nlpkEMcuXoLDzLvCZORo7AYd8JQrtg2<br>Ays8pHGynylFMDTn13gPJTYJhLDO4H9+<span class="hljs-number">7</span>dZy825mkfKnYhPnioKUFgqJK2yswQaRPLakHU<br>yviNXqtxyqKc5qYQMmlF1M+fSjExEYfXbIcBhZ7gXYwalGX7uX8vk8zO5dh9W9SbO4LxlI<br><span class="hljs-number">8</span>nSvezGJJWBGXZAZSiLkCVp08PeKxmKN2S1TzxqoW7VOnI3jBvKD3IpQXSsbTgz5WB07BU<br>mUbxCXl1NYzXHPEAP95Ik8cMB8MOyFcElTD8BXJRBX2I6zHOh+<span class="hljs-number">4</span>Qa4+oVk9ZluLBxeu22r<br>VgG7l5THcjO7L4YubiXuE2P7u77obWUfeltC8wQ0jArWi26x<span class="hljs-regexp">/IUt/</span>FP8Nq964pD7m/dPHQ<br>E8<span class="hljs-regexp">/oh4V1NTGWrDsK3AbLk/</span>MrgROSg7Ic4BS/<span class="hljs-number">8</span>IwRVuC+d2w1Pq+X+zMkblEpD49IuuIazJ<br>BHk3s6SyWUhJfD6u4C3N8zC3Jebl6ixeVM2vEJWZ2Vhcy+<span class="hljs-number">31</span>qP80O/+Kk9NUWalsz+<span class="hljs-number">6</span>Kt2<br>yueBXN1LLFJNRVMvVO823rzVVOY2yXw8AVZKOqDRzgvBk1AHnS7r3lfHWEh5RyNhiEIKZ+<br>wDSuOKenqc71GfvgmVOUypYTtoI527fiF/<span class="hljs-number">9</span>rS3MQH2Z3l+qWMw5A1PU2BCkMso060OIE9P<br><span class="hljs-number">5</span>KfF3atxbiAVii6oKfBnRhqM2s4SpWDZd8xPafktBPMgN97TzLWM6pi0NgS+fJtJPpDRL8<br>vTGvFCHHVi4SgTB64+HTAH53uQC5qizj5t38in3LCWtPExGV3eiKbxuMxtDGwwSLT/DKcZ<br>Qb50sQsJUxKkuMyfvDQC9wyhYnH0/<span class="hljs-number">4</span>m9ahgaTwzQFfyf7DbTM0+sXKrlTYdMYGNZitKeqB<br><span class="hljs-number">1</span>bsU2HpDgh3HuudIVbtXG74nZaLPTevSrZKSAOit+Qz6M2ZAuJJ5s7UElqrLliR2FAN+gB<br>ECm2RqzB3Huj8mM39RitRGtIhejpsWrDkbSzVHMhTEz4tIwHgKk01BTD34ryeel/<span class="hljs-number">4</span>ORlsC<br>iUJ66WmRUN9EoVlkeCzQJwivI=<br>-----<span class="hljs-keyword">END</span> OPENSSH PRIVATE KEY-----<br></code></pre></td></tr></table></figure>
+
+<h3 id="ssh私钥登录"><a href="#ssh私钥登录" class="headerlink" title="ssh私钥登录"></a>ssh私钥登录</h3><p><code>ssh -i id_key icex64@10.0.0.103</code></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125022235614.png" srcset="/img/loading.gif" lazyload alt="image-20221125022235614"></p>
+<p>发现还是被拒绝了，需要密码</p>
+<h3 id="hash解密"><a href="#hash解密" class="headerlink" title="hash解密"></a>hash解密</h3><p><code>/usr/share/john/ssh2john.py id_key &gt; hash</code> 使用john自带脚本将ssh私钥转换为能解密的hash</p>
+<p><code>john hash --wordlist=/usr/share/wordlists/fasttrack.txt</code>使用一个小字典直接跑出来了密码<code>P@55w0rd!</code></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125024854450.png" srcset="/img/loading.gif" lazyload alt="image-20221125024854450"></p>
+<h3 id="ssh公钥身份认证加密码登录"><a href="#ssh公钥身份认证加密码登录" class="headerlink" title="ssh公钥身份认证加密码登录"></a>ssh公钥身份认证加密码登录</h3><p>![image-20221125025554896](&#x2F;Users&#x2F;Neil&#x2F;Library&#x2F;Application Support&#x2F;typora-user-images&#x2F;image-20221125025554896.png)</p>
+<p>成功拿到第一个flag</p>
+<p>3mp!r3{I_See_That_You_Manage_To_Get_My_Bunny}</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125025636296.png" srcset="/img/loading.gif" lazyload alt="image-20221125025636296"></p>
+<h2 id="权限提升1"><a href="#权限提升1" class="headerlink" title="权限提升1"></a>权限提升1</h2><p>内核提权</p>
+<h3 id="信息收集-1"><a href="#信息收集-1" class="headerlink" title="信息收集"></a>信息收集</h3><p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125030258678.png" srcset="/img/loading.gif" lazyload alt="image-20221125030258678"></p>
+<p>针对该linux内核版本(Linux LupinOne 5.10.0-8-amd64 #1 SMP Debian 5.10.46-5 (2021-09-23) x86_64 GNU&#x2F;Linux)进行Linux内核提权(CVE-2022-0847)</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125030636575.png" srcset="/img/loading.gif" lazyload alt="image-20221125030636575"></p>
+<p>使用<a target="_blank" rel="noopener" href="https://github.com/Arinerron/CVE-2022-0847-DirtyPipe-Exploit">https://github.com/Arinerron/CVE-2022-0847-DirtyPipe-Exploit</a> exp进行提权:</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125033045434.png" srcset="/img/loading.gif" lazyload alt="image-20221125033045434"></p>
+<h3 id="exp上传至目标机器"><a href="#exp上传至目标机器" class="headerlink" title="exp上传至目标机器"></a>exp上传至目标机器</h3><p>kali上开启python服务器后靶机下载</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125033213936.png" srcset="/img/loading.gif" lazyload alt="image-20221125033213936"></p>
+<h3 id="执行exp"><a href="#执行exp" class="headerlink" title="执行exp"></a>执行exp</h3><p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125033231451.png" srcset="/img/loading.gif" lazyload alt="image-20221125033231451"></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125033259825.png" srcset="/img/loading.gif" lazyload alt="image-20221125033259825"></p>
+<h2 id="权限提升2"><a href="#权限提升2" class="headerlink" title="权限提升2"></a>权限提升2</h2><p>针对该系统权限配置不当通过修改所找到的777文件<code>/usr/lib/python3.9/webbrowser.py</code></p>
+<p>来实现切换到arsene用户</p>
+<h3 id="写入执行shell的代码"><a href="#写入执行shell的代码" class="headerlink" title="写入执行shell的代码"></a>写入执行shell的代码</h3><p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031156126.png" srcset="/img/loading.gif" lazyload alt="image-20221125031156126"></p>
+<p>成功切换到arsene用户</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031255226.png" srcset="/img/loading.gif" lazyload alt="image-20221125031255226"></p>
+<p>在这个用户中发现可以通过root执行pip<img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031410966.png" srcset="/img/loading.gif" lazyload alt="image-20221125031410966"></p>
+<p>gtfobins找到提权方法</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031513850.png" srcset="/img/loading.gif" lazyload alt="image-20221125031513850"></p>
+<h3 id="成功提权"><a href="#成功提权" class="headerlink" title="成功提权"></a>成功提权</h3><p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031727117.png" srcset="/img/loading.gif" lazyload alt="image-20221125031727117"></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031951901.png" srcset="/img/loading.gif" lazyload alt="image-20221125031951901"></p>
+<p>root flag</p>
+<p>3mp!r3{congratulations_you_manage_to_pwn_the_lupin1_box}</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221125031811973.png" srcset="/img/loading.gif" lazyload alt="image-20221125031811973"></p>
+<h1 id="Part-2"><a href="#Part-2" class="headerlink" title="Part 2"></a>Part 2</h1><p>目标为10.0.0.101</p>
+<h3 id="信息收集-2"><a href="#信息收集-2" class="headerlink" title="信息收集"></a>信息收集</h3><p>通过masscan发现开放端口 80, 139, 445, 10000, 20000</p>
+<p>使用nmap先扫一遍</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126175338795.png" srcset="/img/loading.gif" lazyload alt="image-20221126175338795"></p>
+<h3 id="nmap简单漏扫"><a href="#nmap简单漏扫" class="headerlink" title="nmap简单漏扫"></a>nmap简单漏扫</h3><p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126175815800.png" srcset="/img/loading.gif" lazyload alt="image-20221126175815800"></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126175852833.png" srcset="/img/loading.gif" lazyload alt="image-20221126175852833"></p>
+<p>发现有samba和webmin服务</p>
+<h3 id="对web服务进行简单探测"><a href="#对web服务进行简单探测" class="headerlink" title="对web服务进行简单探测"></a>对web服务进行简单探测</h3><p>curl <a target="_blank" rel="noopener" href="http://10.0.0.101/">http://10.0.0.101</a></p>
+<p>发现注释中有一段密文</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs http">&lt;!--<br>don&#x27;t worry no one will get here, it&#x27;s safe to share with you my access. Its encrypted :)<br><br>++++++++++[&gt;+&gt;+++&gt;+++++++&gt;++++++++++&lt;&lt;&lt;&lt;-]&gt;&gt;++++++++++++++++.++++.&gt;&gt;+++++++++++++++++.----.&lt;++++++++++.-----------.&gt;-----------.++++.&lt;&lt;+.&gt;-.--------.++++++++++++++++++++.&lt;------------.&gt;&gt;---------.&lt;&lt;++++++.++++++.<br><br><br>--&gt;<br></code></pre></td></tr></table></figure>
+
+<p>看的出来是Brainfuck加密</p>
+<p>解密后为</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">.<span class="hljs-number">2</span>uqPEfj3D&lt;P<span class="hljs-symbol">&#x27;a</span>-<span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+
+<p>10000和20000端口均为Webmin服务</p>
+<p>通过admin:.2uqPEfj3D&lt;P’a-3尝试登录发现都失败了</p>
+<h3 id="smb枚举"><a href="#smb枚举" class="headerlink" title="smb枚举"></a>smb枚举</h3><p>因为139和445均为Samba服务</p>
+<p>直接<code>enum4linux 10.0.0.101</code></p>
+<p>发现用户cyber</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126180420164.png" srcset="/img/loading.gif" lazyload alt="image-20221126180420164"></p>
+<p>尝试通过cyber:.2uqPEfj3D&lt;P’a-3登录webmin服务</p>
+<p>在20000端口成功登录!</p>
+<p>在后台页面左下角发现有一个现有的终端</p>
+<p>直接利用拿到第一个flag:3mp!r3{You_Manage_To_Break_To_My_Secure_Access}</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126180840402.png" srcset="/img/loading.gif" lazyload alt="image-20221126180840402"></p>
+<p>然后又发现有个 old_pass.gz 这个文件我非常感兴趣</p>
+<p>解压后得到</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126181317342.png" srcset="/img/loading.gif" lazyload alt="image-20221126181317342"></p>
+<h3 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h3><p>看起来后面那个像密码</p>
+<p>直接su root提权</p>
+<p>发现在这个控制台su root老是失败</p>
+<p>反弹一个shell到kali上成功提权</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126185904823.png" srcset="/img/loading.gif" lazyload alt="image-20221126185904823"></p>
+<p>成功拿到第二个flag:3mp!r3{You_Manage_To_BreakOut_From_My_System_Congratulation}</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221126190021397.png" srcset="/img/loading.gif" lazyload alt="image-20221126190021397"></p>
+<h1 id="Part-3"><a href="#Part-3" class="headerlink" title="Part 3"></a>Part 3</h1><p>目标为 10.0.0.105</p>
+<h3 id="TCP端口扫描"><a href="#TCP端口扫描" class="headerlink" title="TCP端口扫描"></a>TCP端口扫描</h3><p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208135604802.png" srcset="/img/loading.gif" lazyload alt="image-20221208135604802"></p>
+<p>发现存在80, 81两个web服务</p>
+<p>curl一下发现没什么结果</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208141456575.png" srcset="/img/loading.gif" lazyload alt="image-20221208141456575"></p>
+<p>通过简单目录枚举发现有一个robots.txt</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208141605340.png" srcset="/img/loading.gif" lazyload alt="image-20221208141605340"></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208144702975-20221208162930576.png" srcset="/img/loading.gif" lazyload alt="image-20221208144702975"></p>
+<p>放个大字典再尝试一下</p>
+<p>![image-20221208144525968](&#x2F;Users&#x2F;Neil&#x2F;Library&#x2F;Application Support&#x2F;typora-user-images&#x2F;image-20221208144525968.png)</p>
+<p>这里少了张图 后来添加参数 -x html,txt,php,zip之后枚举出了graffiti.txt和graffiti.php两个路径</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208144758357.png" srcset="/img/loading.gif" lazyload alt="image-20221208144758357"></p>
+<p>访问这个php文件发现似乎是个类似留言板的网页</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208145103818.png" srcset="/img/loading.gif" lazyload alt="image-20221208145103818"></p>
+<p>查看源码发现下面这个input被hidden了</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">name</span>= <span class="hljs-string">&quot;file&quot;</span> <span class="hljs-attr">value</span>= <span class="hljs-string">&quot;graffiti.txt&quot;</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>尝试抓包看看请求信息</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208151634578.png" srcset="/img/loading.gif" lazyload alt="image-20221208151634578"></p>
+<p>后来发现这个包是可以写入文件的</p>
+<p>所以我直接写到这个php里面</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208151854136.png" srcset="/img/loading.gif" lazyload alt="image-20221208151854136"></p>
+<p>命令执行成功了</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208151829714.png" srcset="/img/loading.gif" lazyload alt="image-20221208151829714"></p>
+<p>然后我尝试用菜刀去连、使用bash、nc反弹shell均失败了 不知道什么原因</p>
+<p>没办法 只能使用命令执行在根目录找到FLAG.txt</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208155259139.png" srcset="/img/loading.gif" lazyload alt="image-20221208155259139"></p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">Flag <span class="hljs-number">1</span>! You&#x27;ve gotten <span class="hljs-keyword">onto</span> <span class="hljs-keyword">the</span> system. Now why has Cypher locked everyone <span class="hljs-keyword">out of</span> <span class="hljs-keyword">it</span>? Can you find a way <span class="hljs-keyword">to</span> <span class="hljs-keyword">get</span> Cypher&#x27;s password? It seems like he gave <span class="hljs-keyword">it</span> <span class="hljs-keyword">to</span> Agent Smith, so Smith could figure out <span class="hljs-keyword">where</span> <span class="hljs-keyword">to</span> meet him. Also, pull this image <span class="hljs-keyword">from</span> <span class="hljs-keyword">the</span> webserver <span class="hljs-keyword">on</span> port <span class="hljs-number">80</span> <span class="hljs-keyword">to</span> <span class="hljs-keyword">get</span> a flag. /.cypher-neo.png <br></code></pre></td></tr></table></figure>
+
+<p>想着开放了22端口，还有个81端口需要密码 我去检查了它的nginx的配置文件</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208155730294.png" srcset="/img/loading.gif" lazyload alt="image-20221208155730294"></p>
+<p>找到了一个像机密文件的配置文件</p>
+<p>美化后大概长这样</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">server</span> &#123;<br>        <span class="hljs-attribute">listen</span> <span class="hljs-number">81</span> default_server;<br>        <span class="hljs-attribute">listen</span> [::]:<span class="hljs-number">81</span> default_server;<br><br>        <span class="hljs-attribute">root</span> /var/nginx/html;<br><br>        <span class="hljs-attribute">auth_basic</span> <span class="hljs-string">&quot;Meeting Place&quot;</span>;<br>        <span class="hljs-attribute">auth_basic_user_file</span> /var/nginx/html/.htpasswd;<br><br>        <span class="hljs-comment"># Add index.php to the list if you are using PHP</span><br>        <span class="hljs-attribute">index</span> index.html index.htm index.nginx-debian.html;<br><br>        <span class="hljs-attribute">server_name</span> _;<br><br>        <span class="hljs-section">location</span> / &#123;<br>                <span class="hljs-comment"># First attempt to serve request as file, then</span><br>                <span class="hljs-comment"># as directory, then fall back to displaying a 404.</span><br>                <span class="hljs-attribute">try_files</span> <span class="hljs-variable">$uri</span> <span class="hljs-variable">$uri</span>/ =<span class="hljs-number">404</span>;<br>        &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>尝试离线解密这个东西 暂时也失败了..</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208155713491.png" srcset="/img/loading.gif" lazyload alt="image-20221208155713491"></p>
+<h1 id="Part-4"><a href="#Part-4" class="headerlink" title="Part 4"></a>Part 4</h1><p>10.0.0.132</p>
+<p>扫描扫到8080是thinkphp5</p>
+<p>直接用exp</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208161022946.png" srcset="/img/loading.gif" lazyload alt="image-20221208161022946"></p>
+<p>![image-20221208161043698](&#x2F;Users&#x2F;Neil&#x2F;Library&#x2F;Application Support&#x2F;typora-user-images&#x2F;image-20221208161043698.png)</p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208161059257.png" srcset="/img/loading.gif" lazyload alt="image-20221208161059257"></p>
+<p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/image-20221208161117088.png" srcset="/img/loading.gif" lazyload alt="image-20221208161117088"></p>
+<p>之后也是 想反弹shell出来但是失败了 …Org…</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%89%93%E9%9D%B6/">#打靶</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>fsec-test-WP</div>
+      <div>https://c47sh4rk.github.io/2022/11/25/fsec-test-WP/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月25日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/12/20/LampSecurityCTF4/" title="LampSecurityCTF4">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LampSecurityCTF4</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/18/Prime-Series-Level-1-WP/" title="Prime-Series-Level-1-WP">
+                        <span class="hidden-mobile">Prime-Series-Level-1-WP</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

